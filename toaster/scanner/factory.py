@@ -1,3 +1,5 @@
+"""This module contains the logic to build new scanner objects."""
+
 from dataclasses import dataclass, field
 
 from toaster.plugins import NodeType
@@ -17,9 +19,15 @@ from toaster.scanner.scanner import Scanner
 
 @dataclass
 class ETH1ScannerConfig:
-    # TODO: This can be defined by the user
-    # configs could be split up per check to pass parameters as well
-    # -> can map directly to user config interface
+    """The configuration to build an Ethereum 1.0 scanner.
+
+    .. todo:: Add details!
+    .. todo::
+        This can be defined by the user
+        configs could be split up per check to pass parameters as well
+        -> can map directly to user config interface
+    """
+
     uri: str
     node_type: NodeType
     account_creation: dict = field(default_factory=dict)
@@ -34,8 +42,16 @@ class ETH1ScannerConfig:
 
 
 class ScannerFactory:
+    """Factory to build new scanners."""
     @staticmethod
     def build_eth1(scanner_config: ETH1ScannerConfig):
+        """Build a new Ethereum 1.0 scanner.
+
+        .. todo:: Add details!
+
+        :param scanner_config:
+        :return:
+        """
         pipeline = (
             (scanner_config.account_creation, NewAccountCheck),
             (scanner_config.admin_info, AdminInformationLeakCheck),

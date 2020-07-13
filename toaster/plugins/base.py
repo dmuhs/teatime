@@ -1,3 +1,11 @@
+"""This module holds the base plugin class and exception.
+
+.. todo::
+
+    Explain base class functionality
+
+"""
+
 import abc
 
 import requests
@@ -6,26 +14,57 @@ from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
 
 
 class PluginException(Exception):
+    """An exception for RPC-related errors.
+
+    .. todo:: Add details!
+    """
     pass
 
 
 class Plugin(abc.ABC):
+    """The base plugin class.
+
+    .. todo:: Add details!
+    """
     name = None
     version = None
     node_type = None
 
     @abc.abstractmethod
     def run(self, context):
+        """The plugin's entrypoint as invoked by the scanner.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         pass
 
     @classmethod
     def setup(cls, config=None):
+        """Set up the plugin.
+
+        This classmethod takes a configuration dict and sets each
+        key-value pair as class-level attributes, returning the
+        class with all attributes set.
+
+        :param config:
+        :return:
+        """
         for key, value in config.items():
             setattr(cls, key, value)
         return cls
 
     @staticmethod
     def run_catch(check_name, check_func, context):
+        """Run a function and catch any PluginExceptions.
+
+        .. todo:: Add details!
+
+        :param check_name:
+        :param check_func:
+        :param context:
+        """
         logger.info(f"Running scan: {check_name}")
         try:
             check_func(context)
@@ -34,6 +73,16 @@ class Plugin(abc.ABC):
 
     @staticmethod
     def get_rpc_json(target, method, params=None, idx=0):
+        """Execute an RPC call against a given target.
+
+        .. todo:: Add details!
+
+        :param target:
+        :param method:
+        :param params:
+        :param idx:
+        :return:
+        """
         try:
             resp = requests.post(
                 target,

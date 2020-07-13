@@ -1,3 +1,5 @@
+"""This module contains a plugin checking for node sync issues."""
+
 import requests
 
 from toaster.plugins import Context, NodeType, Plugin
@@ -5,6 +7,7 @@ from toaster.reporting import Issue, Severity
 
 
 class NodeSyncedCheck(Plugin):
+    """A plugin to check for issues in node synchronization."""
     name = "RPC Node Sync Status"
     version = "0.2.0"
     node_type = (NodeType.GETH, NodeType.PARITY)
@@ -13,6 +16,12 @@ class NodeSyncedCheck(Plugin):
         return f"<NodeSyncedCheck v{self.version}>"
 
     def check_sync(self, context):
+        """Check the node's sync state and whether it's stuck.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         node_syncing = self.get_rpc_json(context.target, "eth_syncing")
         node_blocknum = int(self.get_rpc_json(context.target, "eth_blockNumber"), 16)
         net_blocknum = self.get_latest_block_number()
@@ -40,6 +49,12 @@ class NodeSyncedCheck(Plugin):
 
     @staticmethod
     def get_latest_block_number() -> int:
+        """Fetch the latest block number.
+
+        .. todo:: Add details!
+
+        :return:
+        """
         rpc_response = requests.post(
             "https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62",
             json={"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 1},
@@ -48,6 +63,12 @@ class NodeSyncedCheck(Plugin):
         return int(rpc_response.json()["result"], 16)
 
     def run(self, context: Context):
+        """Run the node sync check plugin.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         # SCAN[CRITICAL]: Node sync stuck at old block
         # SCAN[NONE]: Node is still syncing
         self.run_catch("Sync status", self.check_sync, context)

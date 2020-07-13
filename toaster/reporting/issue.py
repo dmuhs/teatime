@@ -1,9 +1,13 @@
+"""This module contains data structures regarding issues."""
+
 import json
 from enum import Enum
 from uuid import uuid4
 
 
 class Severity(Enum):
+    """An Enum denoting the severities an issue can have."""
+
     NONE = 0
     LOW = 1
     MEDIUM = 2
@@ -15,6 +19,7 @@ class Severity(Enum):
 
 
 class Issue:
+    """An object describing a vulnerability, weakness, or informational message."""
     def __init__(
         self,
         title: str = None,
@@ -29,9 +34,21 @@ class Issue:
         self.raw_data = raw_data
 
     def is_severe(self):
+        """Returns whether the issue is considered severe.
+
+        .. todo:: Add details!
+
+        :return:
+        """
         return not (self.severity == Severity.LOW or self.severity.NONE)
 
     def is_complete(self):
+        """Returns whether the issue is complete.
+
+        .. todo:: Add details!
+
+        :return:
+        """
         return all(
             (
                 self.id,
@@ -42,6 +59,12 @@ class Issue:
         )
 
     def to_dict(self):
+        """Converts the issue instance into a Python dict.
+
+        .. todo:: Add details!
+
+        :return:
+        """
         return {
             "id": self.id,
             "title": self.title,

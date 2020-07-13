@@ -1,8 +1,12 @@
+"""This module contains a plugin for mining-related checks."""
+
 from toaster.plugins import Context, NodeType, Plugin
 from toaster.reporting import Issue, Severity
 
 
 class MiningNodeDetector(Plugin):
+    """A plugin for mining-related checks."""
+
     name = "RPC Mining Check"
     version = "0.1.3"
     node_type = (NodeType.GETH, NodeType.PARITY)
@@ -15,6 +19,12 @@ class MiningNodeDetector(Plugin):
         return f"<MiningNodeDetector v{self.version}>"
 
     def check_mining(self, context):
+        """Check whether the node is mining.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         mining_status = self.get_rpc_json(context.target, "eth_mining")
 
         if self.should_mine is not None and mining_status != self.should_mine:
@@ -32,6 +42,12 @@ class MiningNodeDetector(Plugin):
             )
 
     def check_hashrate(self, context):
+        """Check whether the node has a certain hash rate.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         current_hashrate = self.get_rpc_json(context.target, "eth_hashrate")
         expected_hashrate = context.extra.get("expected_hashrate")
 
@@ -46,6 +62,12 @@ class MiningNodeDetector(Plugin):
             )
 
     def run(self, context: Context):
+        """Check for mining-related weaknesses and misconfigurations.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         # SCAN[MEDIUM]: Illegal mining state
         self.run_catch("Mining status", self.check_mining, context)
         # SCAN[MEDIUM]: Hashrate too low

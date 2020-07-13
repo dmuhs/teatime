@@ -1,3 +1,5 @@
+"""This module contains a plugin checking for account-related issues."""
+
 import requests
 
 from toaster.plugins import Context, NodeType, Plugin
@@ -15,6 +17,8 @@ DEFAULT_PASSWORDS = [
 
 # TODO: Parity open vault checks
 class OpenAccountsCheck(Plugin):
+    """This plugin checks for open and weakly-protected accounts."""
+
     name = "RPC Open Account Detection"
     version = "0.4.0"
     node_type = (NodeType.GETH, NodeType.PARITY)
@@ -23,6 +27,12 @@ class OpenAccountsCheck(Plugin):
         return f"<OpenAccountsCheck v{self.version}>"
 
     def check_accounts(self, context):
+        """Check for any accounts registered on the node.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
             context.report.add_issue(
@@ -35,6 +45,12 @@ class OpenAccountsCheck(Plugin):
             )
 
     def check_account_bruteforce(self, context):
+        """Check whether any accounts on the node are weakly protected.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         # TODO: custom wordlist
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
@@ -55,6 +71,13 @@ class OpenAccountsCheck(Plugin):
 
     @staticmethod
     def account_data(address: str):
+        """Fetch additional data on the account.
+
+        .. todo:: Add details!
+
+        :param address:
+        :return:
+        """
         # TODO: Robust error handling
         rpc_response = requests.post(
             "https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62",
@@ -68,6 +91,12 @@ class OpenAccountsCheck(Plugin):
         return {"balance": int(rpc_response.json()["result"], 16)}
 
     def run(self, context: Context):
+        """Run account-related checks for vulnerabilities and weaknesses.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         # TODO: Actions with the accounts possible?
         # SCAN[MEDIUM]: Account registered on node
         self.run_catch("Node accounts", self.check_accounts, context)

@@ -1,3 +1,5 @@
+"""This module contains plugins with admin interface checks."""
+
 from toaster.plugins import Context, NodeType, Plugin
 from toaster.reporting import Issue, Severity
 
@@ -10,6 +12,8 @@ TEST_ENODE = (
 
 
 class GethAdminCheck(Plugin):
+    """Check for weaknesses on the Geth admin interface."""
+
     name = "Geth Admin Information Leaks"
     version = "0.5.0"
     node_type = (NodeType.GETH,)
@@ -18,6 +22,12 @@ class GethAdminCheck(Plugin):
         return f"<GethAdminCheck v{self.version}>"
 
     def check_datadir_access(self, context):
+        """Try to fetch Geth's data directory.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_datadir", params=[])
         context.report.add_issue(
             Issue(
@@ -29,6 +39,12 @@ class GethAdminCheck(Plugin):
         )
 
     def check_add_peer(self, context):
+        """Try to add a peer to the node's peer list.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="admin_addPeer", params=TEST_ENODE
         )
@@ -42,6 +58,12 @@ class GethAdminCheck(Plugin):
         )
 
     def check_node_info(self, context):
+        """Try to fetch admin info about the node.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_nodeInfo", params=[])
         context.report.add_issue(
             Issue(
@@ -53,6 +75,12 @@ class GethAdminCheck(Plugin):
         )
 
     def check_peerlist_info(self, context):
+        """Try to fetch information about the node's peer list.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_peers", params=[])
         context.report.add_issue(
             Issue(
@@ -64,6 +92,12 @@ class GethAdminCheck(Plugin):
         )
 
     def check_rpc_start(self, context):
+        """Try to start the RPC service.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_startRPC", params=[])
         context.report.add_issue(
             Issue(
@@ -75,6 +109,13 @@ class GethAdminCheck(Plugin):
         )
 
     def check_rpc_stop(self, context):
+        """Try to stop the RPC service.
+
+        Talking about shooting yourself in the foot.
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_stopRPC", params=[])
         context.report.add_issue(
             Issue(
@@ -86,16 +127,29 @@ class GethAdminCheck(Plugin):
         )
 
     def check_websocket_start(self, context):
+        """Try to start the websocket service.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_startWS", params=[])
         context.report.add_issue(
             Issue(
                 title="Admin Websocket Start Rights",
                 description="The RPC Websocket service can be started using the admin_startWS RPC call.",
+                raw_data=payload,
                 severity=Severity.CRITICAL,
             )
         )
 
     def check_websocket_stop(self, context):
+        """Try to stop the websocket service.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="admin_stopWS", params=[])
         context.report.add_issue(
             Issue(
@@ -107,6 +161,13 @@ class GethAdminCheck(Plugin):
         )
 
     def run(self, context: Context):
+        """Run the Geth-related admin interface checks.
+
+        .. todo:: Add details!
+
+        :param context:
+        :return:
+        """
         if context.node_type != NodeType.GETH:
             return
 
@@ -131,6 +192,8 @@ class GethAdminCheck(Plugin):
 
 
 class ParityAdminCheck(Plugin):
+    """Check for weaknesses on the Parity/OpenEthereum admin interface."""
+
     name = "Parity Admin Information Leaks"
     version = "0.5.0"
     node_type = (NodeType.PARITY,)
@@ -139,6 +202,12 @@ class ParityAdminCheck(Plugin):
         return f"<ParityAdminCheck v{self.version}>"
 
     def check_dev_log(self, context):
+        """Try to fetch the node's developer logs.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="parity_devLogs", params=[])
         context.report.add_issue(
             Issue(
@@ -150,6 +219,12 @@ class ParityAdminCheck(Plugin):
         )
 
     def check_peerlist(self, context):
+        """Try to fetch peer list information.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="parity_netPeers", params=[])
         context.report.add_issue(
             Issue(
@@ -161,19 +236,32 @@ class ParityAdminCheck(Plugin):
         )
 
     def check_peerlist_manipulation(self, context):
+        """Try to add a reserved peer.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_addReservedPeer", params=[TEST_ENODE]
         )
         context.report.add_issue(
             Issue(
                 title="Peer list manipulation",
-                description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
+                description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC "
+                            "call",
                 raw_data=payload,
                 severity=Severity.HIGH,
             )
         )
 
     def check_drop_peers(self, context):
+        """Try to remove non-reserved peers from the peer list.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_dropNonReservedPeers"
         )
@@ -181,13 +269,20 @@ class ParityAdminCheck(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Anyone can drop the non-reserved peerlist on the node using the parity_dropNonReservedPeers RPC call.",
+                    description="Anyone can drop the non-reserved peerlist on the node using the "
+                                "parity_dropNonReservedPeers RPC call.",
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
             )
 
     def check_change_coinbase(self, context):
+        """Try to change the coinbase address.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target,
             method="parity_setAuthor",
@@ -196,13 +291,20 @@ class ParityAdminCheck(Plugin):
         context.report.add_issue(
             Issue(
                 title="Coinbase address change possible",
-                description="Anyone can change the coinbase address and redirect miner payouts using the parity_setAuthor RPC call.",
+                description="Anyone can change the coinbase address and redirect miner payouts using the "
+                            "parity_setAuthor RPC call.",
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
         )
 
     def check_change_target_chain(self, context):
+        """Try to change the target chain.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setChain", params=["mainnet"]
         )
@@ -216,18 +318,32 @@ class ParityAdminCheck(Plugin):
         )
 
     def change_extra_data(self, context):
+        """Try to set the extra data field.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setExtraData", params=["toasted"]
         )
         context.report.add_issue(
             Issue(
                 title="Extra data change possible",
-                description="Anyone can change the extra data attached to newly mined blocks using the parity_setExtraData RPC call.",
+                description="Anyone can change the extra data attached to newly mined blocks using the "
+                            "parity_setExtraData RPC call.",
+                raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
     def check_set_gas_ceiling(self, context):
+        """Try to set the gas ceiling.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setGasCeilTarget", params=["0x2540be400"]
         )
@@ -241,6 +357,12 @@ class ParityAdminCheck(Plugin):
         )
 
     def check_set_gas_floor(self, context):
+        """Try to set the gas floor.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setGasFloorTarget", params=["0x0"]
         )
@@ -254,32 +376,52 @@ class ParityAdminCheck(Plugin):
         )
 
     def check_set_max_tx_gas(self, context):
+        """Try to set the maximum transaction gas.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setMaxTransactionGas", params=["0x186a0"]
         )
         context.report.add_issue(
             Issue(
                 title="Transaction maximum gas can be changed",
-                description="Anyone can change the maximum transaction gas limit using the parity_setMaxTransactionGas RPC call.",
+                description="Anyone can change the maximum transaction gas limit using the "
+                            "parity_setMaxTransactionGas RPC call.",
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
         )
 
     def check_set_min_tx_gas(self, context):
+        """Try to set the minimum transaction gas limit.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setMinGasPrice", params=["0x0"]
         )
         context.report.add_issue(
             Issue(
                 title="Transaction minimum gas can be changed",
-                description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC call.",
+                description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC "
+                            "call.",
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
         )
 
     def check_set_sync_mode(self, context):
+        """Try to set the node's sync mode.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             context.target, method="parity_setMode", params=["active"]
         )
@@ -293,6 +435,12 @@ class ParityAdminCheck(Plugin):
         )
 
     def check_parity_upgrade(self, context):
+        """Try to check for an available upgrade.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(context.target, method="parity_upgradeReady")
         context.report.add_issue(
             Issue(
@@ -304,6 +452,13 @@ class ParityAdminCheck(Plugin):
         )
 
     def run(self, context: Context):
+        """Run the Parity/OpenEthereum-related admin interface checks.
+
+        .. todo:: Add details!
+
+        :param context:
+        :return:
+        """
         if context.node_type != NodeType.PARITY:
             return
 
@@ -340,10 +495,19 @@ class ParityAdminCheck(Plugin):
 
 
 class AdminInformationLeakCheck(Plugin):
+    """Detect admin-interface-related weaknesses."""
+
     name = "Admin Information Leaks"
     version = "0.0.2"
 
     def run(self, context):
+        """Run admin-interface checks.
+
+        .. todo:: Add details!
+
+        :param context:
+        :return:
+        """
         if context.node_type == NodeType.GETH:
             plugin = GethAdminCheck()
         elif context.node_type == NodeType.PARITY:

@@ -1,9 +1,13 @@
+"""This module contains a plugin for network-related checks."""
+
 from toaster.plugins import Context, NodeType, Plugin
 from toaster.reporting import Issue, Severity
 
 
 # TODO: Whisper (shh) checks for parity?
 class NetworkMethodCheck(Plugin):
+    """This plugin contains network-related checks."""
+
     name = "RPC Network Information"
     version = "0.1.3"
     node_type = (NodeType.GETH, NodeType.PARITY)
@@ -15,6 +19,12 @@ class NetworkMethodCheck(Plugin):
         return f"<NetworkMethodCheck v{self.version}>"
 
     def check_listening(self, context):
+        """Check whether the node is listening for peers.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         node_listening = self.get_rpc_json(context.target, "net_listening")
 
         # SCAN[HIGH]: Node not listening to peers
@@ -29,6 +39,12 @@ class NetworkMethodCheck(Plugin):
             )
 
     def check_peercount(self, context):
+        """Check whether the node has a certain peer count.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         current_peercount = self.get_rpc_json(context.target, "net_peerCount")
 
         if self.minimum_peercount is not None and self.minimum_peercount > int(
@@ -44,6 +60,12 @@ class NetworkMethodCheck(Plugin):
             )
 
     def run(self, context: Context):
+        """Check for network-related vulnerabilities and weaknesses.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         self.run_catch("Node listening", self.check_listening, context)
         self.run_catch("Peer count", self.check_peercount, context)
 

@@ -1,3 +1,5 @@
+"""This module contains a plugin with checks for account creation."""
+
 from toaster.plugins import Context, NodeType, Plugin
 from toaster.reporting import Issue, Severity
 
@@ -6,6 +8,8 @@ TEST_PASS = "fjaal38!dj==42"
 
 
 class NewAccountCheck(Plugin):
+    """Detect account import and creation weaknesses."""
+
     name = "RPC Account Import and Creation"
     version = "0.3.0"
     node_type = (NodeType.GETH, NodeType.PARITY)
@@ -16,6 +20,12 @@ class NewAccountCheck(Plugin):
     # TODO: Separate import and creation to two plugins
 
     def check_create_account(self, context):
+        """Detect whether it's possible to create an account on the node.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             target=context.target, method="personal_newAccount", params=[TEST_PASS]
         )
@@ -29,6 +39,12 @@ class NewAccountCheck(Plugin):
         )
 
     def check_import_account(self, context):
+        """Detect whether it's possible to import a private key on the node.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         payload = self.get_rpc_json(
             target=context.target,
             method="personal_importRawKey",
@@ -37,13 +53,20 @@ class NewAccountCheck(Plugin):
         context.report.add_issue(
             Issue(
                 title="We managed to import an account on your node",
-                description="A private key can be imported on the node to initialize an account using the personal_importRawKey RPC call.",
+                description="A private key can be imported on the node to initialize an account using the "
+                            "personal_importRawKey RPC call.",
                 raw_data=payload,
                 severity=Severity.MEDIUM,
             )
         )
 
     def run(self, context: Context):
+        """Run the account creation plugin.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
         # SCAN[MEDIUM]: create account
         self.run_catch("Account Generation", self.check_create_account, context)
 
