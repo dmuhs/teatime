@@ -12,6 +12,7 @@ class Report:
     .. todo:: Add details!
 
     """
+
     def __init__(self, target, issues=None):
         self.id = str(uuid4())
         self.target = target

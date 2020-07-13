@@ -2,17 +2,8 @@
 
 import requests
 
-from toaster.plugins import Context, NodeType, Plugin
+from toaster.plugins import Context, Plugin, PluginException
 from toaster.reporting import Issue, Severity
-
-DEFAULT_PASSWORDS = [
-    "",  # lol no way
-    "hunter2",  # from parity docs
-    "admin",
-    "password",
-    "test",
-    "ethereum",
-]
 
 
 # TODO: Parity open vault checks
@@ -21,12 +12,14 @@ class OpenAccountsCheck(Plugin):
 
     name = "RPC Open Account Detection"
     version = "0.4.0"
-    node_type = (NodeType.GETH, NodeType.PARITY)
+
+    # additional settings
+    wordlist = None
 
     def __repr__(self):
         return f"<OpenAccountsCheck v{self.version}>"
 
-    def check_accounts(self, context):
+    def check_accounts(self, context: Context) -> None:
         """Check for any accounts registered on the node.
 
         .. todo:: Add details!
@@ -44,22 +37,27 @@ class OpenAccountsCheck(Plugin):
                 )
             )
 
-    def check_account_bruteforce(self, context):
+    def check_account_bruteforce(self, context: Context) -> None:
         """Check whether any accounts on the node are weakly protected.
 
         .. todo:: Add details!
 
         :param context:
         """
-        # TODO: custom wordlist
+
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
-            for password in DEFAULT_PASSWORDS:
-                payload = self.get_rpc_json(
-                    context.target,
-                    method="personal_unlockAccount",
-                    params=[account, password, 1],  # unlock for only 1s
-                )
+            for password in self.wordlist:
+                try:
+                    payload = self.get_rpc_json(
+                        context.target,
+                        method="personal_unlockAccount",
+                        params=[account, password, 1],  # unlock for only 1s
+                    )
+                except PluginException:
+                    # explicitly catch here to not interrupt wordlist loop
+                    continue
+
                 context.report.add_issue(
                     Issue(
                         title="Weak password detected!",
@@ -70,7 +68,7 @@ class OpenAccountsCheck(Plugin):
                 )
 
     @staticmethod
-    def account_data(address: str):
+    def account_data(address: str) -> dict:
         """Fetch additional data on the account.
 
         .. todo:: Add details!
@@ -90,7 +88,7 @@ class OpenAccountsCheck(Plugin):
         )
         return {"balance": int(rpc_response.json()["result"], 16)}
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Run account-related checks for vulnerabilities and weaknesses.
 
         .. todo:: Add details!

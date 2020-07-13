@@ -10,6 +10,7 @@ class NodeType(Enum):
 
     .. todo:: Add details!
     """
+
     GETH = 0
     PARITY = 1
 
@@ -19,6 +20,7 @@ class Context:
 
     .. todo:: Add details!
     """
+
     def __init__(self, target, report, node_type, **kwargs):
         self.target: str = target
         self.report: Report = report

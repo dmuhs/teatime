@@ -2,20 +2,23 @@
 
 import requests
 
-from toaster.plugins import Context, NodeType, Plugin
+from toaster.plugins import Context, Plugin
 from toaster.reporting import Issue, Severity
 
 
 class NodeSyncedCheck(Plugin):
     """A plugin to check for issues in node synchronization."""
+
     name = "RPC Node Sync Status"
     version = "0.2.0"
-    node_type = (NodeType.GETH, NodeType.PARITY)
+
+    # additional settings
+    infura_url = None
 
     def __repr__(self):
         return f"<NodeSyncedCheck v{self.version}>"
 
-    def check_sync(self, context):
+    def check_sync(self, context: Context) -> None:
         """Check the node's sync state and whether it's stuck.
 
         .. todo:: Add details!
@@ -47,8 +50,7 @@ class NodeSyncedCheck(Plugin):
                 )
             )
 
-    @staticmethod
-    def get_latest_block_number() -> int:
+    def get_latest_block_number(self) -> int:
         """Fetch the latest block number.
 
         .. todo:: Add details!
@@ -56,13 +58,13 @@ class NodeSyncedCheck(Plugin):
         :return:
         """
         rpc_response = requests.post(
-            "https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62",
+            self.infura_url,
             json={"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 1},
         )
         # TODO: Better error handling
         return int(rpc_response.json()["result"], 16)
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Run the node sync check plugin.
 
         .. todo:: Add details!

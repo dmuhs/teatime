@@ -1,13 +1,11 @@
 """This module holds the base plugin class and exception.
 
-.. todo::
-
-    Explain base class functionality
+.. todo:: Explain base class functionality
 
 """
 
 import abc
-
+from typing import Callable, List, Union
 import requests
 from loguru import logger
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
@@ -18,6 +16,7 @@ class PluginException(Exception):
 
     .. todo:: Add details!
     """
+
     pass
 
 
@@ -26,12 +25,12 @@ class Plugin(abc.ABC):
 
     .. todo:: Add details!
     """
+
     name = None
     version = None
-    node_type = None
 
     @abc.abstractmethod
-    def run(self, context):
+    def run(self, context: "Context"):
         """The plugin's entrypoint as invoked by the scanner.
 
         .. todo:: Add details!
@@ -41,12 +40,14 @@ class Plugin(abc.ABC):
         pass
 
     @classmethod
-    def setup(cls, config=None):
+    def setup(cls, config: dict = None):
         """Set up the plugin.
 
         This classmethod takes a configuration dict and sets each
         key-value pair as class-level attributes, returning the
         class with all attributes set.
+
+        .. todo:: Add details!
 
         :param config:
         :return:
@@ -56,7 +57,7 @@ class Plugin(abc.ABC):
         return cls
 
     @staticmethod
-    def run_catch(check_name, check_func, context):
+    def run_catch(check_name: str, check_func: Callable, context: "Context"):
         """Run a function and catch any PluginExceptions.
 
         .. todo:: Add details!
@@ -72,7 +73,7 @@ class Plugin(abc.ABC):
             logger.info(f"{check_name}: Terminated with exception {e}")
 
     @staticmethod
-    def get_rpc_json(target, method, params=None, idx=0):
+    def get_rpc_json(target: str, method: str, params: List[Union[str, int]] = None, idx: int = 0):
         """Execute an RPC call against a given target.
 
         .. todo:: Add details!

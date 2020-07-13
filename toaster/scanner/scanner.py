@@ -13,6 +13,7 @@ class Scanner:
     .. todo:: Add details!
 
     """
+
     def __init__(self, target: str, node_type: NodeType, plugins: List[Type[Plugin]]):
         self.target = target
         self.plugins = (plugin() for plugin in plugins)

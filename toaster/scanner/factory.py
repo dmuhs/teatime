@@ -43,6 +43,7 @@ class ETH1ScannerConfig:
 
 class ScannerFactory:
     """Factory to build new scanners."""
+
     @staticmethod
     def build_eth1(scanner_config: ETH1ScannerConfig):
         """Build a new Ethereum 1.0 scanner.

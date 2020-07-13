@@ -3,23 +3,23 @@
 from toaster.plugins import Context, NodeType, Plugin
 from toaster.reporting import Issue, Severity
 
-TEST_PRIVKEY = "c7d26c414625a995584b347db39ebfce03129acb6386d5b2533a698614c138dc"
-TEST_PASS = "fjaal38!dj==42"
-
 
 class NewAccountCheck(Plugin):
     """Detect account import and creation weaknesses."""
 
     name = "RPC Account Import and Creation"
     version = "0.3.0"
-    node_type = (NodeType.GETH, NodeType.PARITY)
+
+    # additional settings
+    test_privkey = None
+    test_password = None
 
     def __repr__(self):
         return f"<NewAccountCheck v{self.version}>"
 
     # TODO: Separate import and creation to two plugins
 
-    def check_create_account(self, context):
+    def check_create_account(self, context: Context) -> None:
         """Detect whether it's possible to create an account on the node.
 
         .. todo:: Add details!
@@ -27,7 +27,9 @@ class NewAccountCheck(Plugin):
         :param context:
         """
         payload = self.get_rpc_json(
-            target=context.target, method="personal_newAccount", params=[TEST_PASS]
+            target=context.target,
+            method="personal_newAccount",
+            params=[self.test_password],
         )
         context.report.add_issue(
             Issue(
@@ -38,7 +40,7 @@ class NewAccountCheck(Plugin):
             )
         )
 
-    def check_import_account(self, context):
+    def check_import_account(self, context: Context) -> None:
         """Detect whether it's possible to import a private key on the node.
 
         .. todo:: Add details!
@@ -48,19 +50,19 @@ class NewAccountCheck(Plugin):
         payload = self.get_rpc_json(
             target=context.target,
             method="personal_importRawKey",
-            params=[TEST_PRIVKEY, TEST_PASS],
+            params=[self.test_password, self.test_password],
         )
         context.report.add_issue(
             Issue(
                 title="We managed to import an account on your node",
                 description="A private key can be imported on the node to initialize an account using the "
-                            "personal_importRawKey RPC call.",
+                "personal_importRawKey RPC call.",
                 raw_data=payload,
                 severity=Severity.MEDIUM,
             )
         )
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Run the account creation plugin.
 
         .. todo:: Add details!

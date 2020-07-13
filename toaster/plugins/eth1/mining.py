@@ -1,6 +1,6 @@
 """This module contains a plugin for mining-related checks."""
 
-from toaster.plugins import Context, NodeType, Plugin
+from toaster.plugins import Context, Plugin
 from toaster.reporting import Issue, Severity
 
 
@@ -9,7 +9,6 @@ class MiningNodeDetector(Plugin):
 
     name = "RPC Mining Check"
     version = "0.1.3"
-    node_type = (NodeType.GETH, NodeType.PARITY)
 
     # custom settings
     should_mine: bool
@@ -18,7 +17,7 @@ class MiningNodeDetector(Plugin):
     def __repr__(self):
         return f"<MiningNodeDetector v{self.version}>"
 
-    def check_mining(self, context):
+    def check_mining(self, context: Context) -> None:
         """Check whether the node is mining.
 
         .. todo:: Add details!
@@ -41,7 +40,7 @@ class MiningNodeDetector(Plugin):
                 )
             )
 
-    def check_hashrate(self, context):
+    def check_hashrate(self, context: Context) -> None:
         """Check whether the node has a certain hash rate.
 
         .. todo:: Add details!
@@ -61,7 +60,7 @@ class MiningNodeDetector(Plugin):
                 )
             )
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Check for mining-related weaknesses and misconfigurations.
 
         .. todo:: Add details!

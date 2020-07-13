@@ -1,6 +1,6 @@
 """This module contains a plugin for network-related checks."""
 
-from toaster.plugins import Context, NodeType, Plugin
+from toaster.plugins import Context, Plugin
 from toaster.reporting import Issue, Severity
 
 
@@ -10,7 +10,6 @@ class NetworkMethodCheck(Plugin):
 
     name = "RPC Network Information"
     version = "0.1.3"
-    node_type = (NodeType.GETH, NodeType.PARITY)
 
     # custom settings
     minimum_peercount: int
@@ -18,7 +17,7 @@ class NetworkMethodCheck(Plugin):
     def __repr__(self):
         return f"<NetworkMethodCheck v{self.version}>"
 
-    def check_listening(self, context):
+    def check_listening(self, context: Context) -> None:
         """Check whether the node is listening for peers.
 
         .. todo:: Add details!
@@ -38,7 +37,7 @@ class NetworkMethodCheck(Plugin):
                 )
             )
 
-    def check_peercount(self, context):
+    def check_peercount(self, context: Context) -> None:
         """Check whether the node has a certain peer count.
 
         .. todo:: Add details!
@@ -59,7 +58,7 @@ class NetworkMethodCheck(Plugin):
                 )
             )
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Check for network-related vulnerabilities and weaknesses.
 
         .. todo:: Add details!

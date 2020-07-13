@@ -20,6 +20,7 @@ class Severity(Enum):
 
 class Issue:
     """An object describing a vulnerability, weakness, or informational message."""
+
     def __init__(
         self,
         title: str = None,

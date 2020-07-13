@@ -15,12 +15,11 @@ class NodeVersionCheck(Plugin):
 
     name = "RPC Node Version Information"
     version = "0.2.0"
-    node_type = (NodeType.GETH, NodeType.PARITY)
 
     def __repr__(self):
         return f"<NodeVersionCheck v{self.version}>"
 
-    def check_stale_version(self, context):
+    def check_stale_version(self, context: Context) -> None:
         """Check whether a given node's version is stale.
 
         .. todo:: Add details!
@@ -54,7 +53,7 @@ class NodeVersionCheck(Plugin):
             )
 
     @staticmethod
-    def latest_geth_release():
+    def latest_geth_release() -> str:
         """Fetch the latest Geth release.
 
         .. todo:: Add details!
@@ -69,7 +68,7 @@ class NodeVersionCheck(Plugin):
         return tag
 
     @staticmethod
-    def latest_parity_release():
+    def latest_parity_release() -> str:
         """Fetch the latest Parity/OpenEthereum release.
 
         .. todo:: Add details!
@@ -82,7 +81,7 @@ class NodeVersionCheck(Plugin):
         tag = re.findall(SEMVER_REGEX, resp.json()["tag_name"])[0]
         return tag
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Run the plugin to detect stale node versions.
 
         .. todo:: Add details!

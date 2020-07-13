@@ -9,9 +9,8 @@ class GethTxPoolCheck(Plugin):
 
     name = "Geth Transaction Pool Information"
     version = "0.4.0"
-    node_type = (NodeType.GETH,)
 
-    def check_txpool_content(self, context):
+    def check_txpool_content(self, context: Context) -> None:
         """Try to fetch the transaction pool contents.
 
         .. todo:: Add details!
@@ -28,7 +27,7 @@ class GethTxPoolCheck(Plugin):
             )
         )
 
-    def check_txpool_inspection(self, context):
+    def check_txpool_inspection(self, context: Context) -> None:
         """Try to inspect the transaction pool.
 
         .. todo:: Add details!
@@ -45,7 +44,7 @@ class GethTxPoolCheck(Plugin):
             )
         )
 
-    def check_txpool_status(self, context):
+    def check_txpool_status(self, context: Context) -> None:
         """Try to fetch the transaction pool status.
 
         .. todo:: Add details!
@@ -62,7 +61,7 @@ class GethTxPoolCheck(Plugin):
             )
         )
 
-    def run(self, context):
+    def run(self, context: Context) -> None:
         """Run the Geth-related transaction pool checks.
 
         .. todo:: Add details!
@@ -86,9 +85,8 @@ class ParityTxPoolCheck(Plugin):
 
     name = "RPC Transaction Pool Information"
     version = "0.4.0"
-    node_type = (NodeType.PARITY,)
 
-    def check_txpool_stats(self, context):
+    def check_txpool_stats(self, context: Context) -> None:
         """Try to fetch the transaction pool statistics.
 
         .. todo:: Add details!
@@ -102,13 +100,13 @@ class ParityTxPoolCheck(Plugin):
             Issue(
                 title="TxPool Statistics",
                 description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats "
-                            "RPC call.",
+                "RPC call.",
                 raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
-    def check_txpool_content(self, context):
+    def check_txpool_content(self, context: Context) -> None:
         """Try to fetch the transaction pool contents.
 
         .. todo:: Add details!
@@ -122,13 +120,13 @@ class ParityTxPoolCheck(Plugin):
             Issue(
                 title="TxPool Content",
                 description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC "
-                            "call.",
+                "call.",
                 raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
-    def run(self, context):
+    def run(self, context: Context) -> None:
         """Run the Parity/OpenEthereum-related transaction pool checks.
 
         .. todo:: Add details!
@@ -147,14 +145,14 @@ class ParityTxPoolCheck(Plugin):
 
 class TxPoolCheck(Plugin):
     """A plugin to execute Geth- and Parity/OpenEthereum-related tx pool checks."""
+
     name = "RPC Transaction Pool Information"
     version = "0.5.0"
-    node_type = (NodeType.GETH, NodeType.PARITY)
 
     def __repr__(self):
         return f"<TxPoolCheck v{self.version}>"
 
-    def run(self, context: Context):
+    def run(self, context: Context) -> None:
         """Run Geth- or Parity/OpenEthereum-related tx pool checks.
 
         .. todo:: Add details!
