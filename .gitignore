@@ -104,3 +104,6 @@ ENV/
 # IDE settings
 .vscode/
 .idea/
+ethernodes.py
+fun.py
+nodes.json
