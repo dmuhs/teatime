@@ -1,21 +1,21 @@
-toaster.reporting package
+teatime.reporting package
 =========================
 
 Submodules
 ----------
 
-toaster.reporting.issue module
+teatime.reporting.issue module
 ------------------------------
 
-.. automodule:: toaster.reporting.issue
+.. automodule:: teatime.reporting.issue
    :members:
    :undoc-members:
    :show-inheritance:
 
-toaster.reporting.report module
+teatime.reporting.report module
 -------------------------------
 
-.. automodule:: toaster.reporting.report
+.. automodule:: teatime.reporting.report
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +24,7 @@ toaster.reporting.report module
 Module contents
 ---------------
 
-.. automodule:: toaster.reporting
+.. automodule:: teatime.reporting
    :members:
    :undoc-members:
    :show-inheritance:

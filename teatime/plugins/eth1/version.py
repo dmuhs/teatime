@@ -4,8 +4,8 @@ import re
 
 import requests
 
-from toaster.plugins import Context, NodeType, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, NodeType, Plugin
+from teatime.reporting import Issue, Severity
 
 SEMVER_REGEX = r"\d+.\d+.\d+"
 

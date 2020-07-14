@@ -25,5 +25,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: dmuhs/toaster
+    repo: dmuhs/teatime
     python: 3.8

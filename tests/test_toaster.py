@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-"""Tests for `toaster` package."""
+"""Tests for `teatime` package."""
 
 import pytest
 
-from toaster import toaster
+from teatime import teatime
 
 
 @pytest.fixture

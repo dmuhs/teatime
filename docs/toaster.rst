@@ -1,4 +1,4 @@
-toaster package
+teatime package
 ===============
 
 Subpackages
@@ -6,25 +6,25 @@ Subpackages
 
 .. toctree::
 
-    toaster.plugins
-    toaster.reporting
-    toaster.scanner
+    teatime.plugins
+    teatime.reporting
+    teatime.scanner
 
 Submodules
 ----------
 
-toaster.toaster module
+teatime.teatime module
 ----------------------
 
-.. automodule:: toaster.toaster
+.. automodule:: teatime.teatime
     :members:
     :undoc-members:
     :show-inheritance:
 
-toaster.utils module
+teatime.utils module
 --------------------
 
-.. automodule:: toaster.utils
+.. automodule:: teatime.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -33,7 +33,7 @@ toaster.utils module
 Module contents
 ---------------
 
-.. automodule:: toaster
+.. automodule:: teatime
     :members:
     :undoc-members:
     :show-inheritance:

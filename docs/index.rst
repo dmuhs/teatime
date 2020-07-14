@@ -1,4 +1,4 @@
-Welcome to Toaster's documentation!
+Welcome to Teatime's documentation!
 ======================================
 
 .. toctree::

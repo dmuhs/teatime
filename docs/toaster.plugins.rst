@@ -1,4 +1,4 @@
-toaster.plugins package
+teatime.plugins package
 =======================
 
 Subpackages
@@ -7,23 +7,23 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   toaster.plugins.eth1
+   teatime.plugins.eth1
 
 Submodules
 ----------
 
-toaster.plugins.base module
+teatime.plugins.base module
 ---------------------------
 
-.. automodule:: toaster.plugins.base
+.. automodule:: teatime.plugins.base
    :members:
    :undoc-members:
    :show-inheritance:
 
-toaster.plugins.context module
+teatime.plugins.context module
 ------------------------------
 
-.. automodule:: toaster.plugins.context
+.. automodule:: teatime.plugins.context
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,7 +32,7 @@ toaster.plugins.context module
 Module contents
 ---------------
 
-.. automodule:: toaster.plugins
+.. automodule:: teatime.plugins
    :members:
    :undoc-members:
    :show-inheritance:

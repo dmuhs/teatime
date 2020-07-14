@@ -1,21 +1,21 @@
-toaster.scanner package
+teatime.scanner package
 =======================
 
 Submodules
 ----------
 
-toaster.scanner.factory module
+teatime.scanner.factory module
 ------------------------------
 
-.. automodule:: toaster.scanner.factory
+.. automodule:: teatime.scanner.factory
    :members:
    :undoc-members:
    :show-inheritance:
 
-toaster.scanner.scanner module
+teatime.scanner.scanner module
 ------------------------------
 
-.. automodule:: toaster.scanner.scanner
+.. automodule:: teatime.scanner.scanner
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +24,7 @@ toaster.scanner.scanner module
 Module contents
 ---------------
 
-.. automodule:: toaster.scanner
+.. automodule:: teatime.scanner
    :members:
    :undoc-members:
    :show-inheritance:

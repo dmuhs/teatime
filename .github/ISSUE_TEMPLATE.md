@@ -1,4 +1,4 @@
-* Toaster version:
+* Teatime version:
 * Python version:
 * Operating System:
 

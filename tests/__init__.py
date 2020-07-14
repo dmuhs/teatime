@@ -1,1 +1,1 @@
-"""Unit test package for toaster."""
+"""Unit test package for teatime."""

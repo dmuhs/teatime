@@ -3,8 +3,8 @@
 import time
 from typing import List, Type
 
-from toaster.plugins import Context, NodeType, Plugin
-from toaster.reporting import Report
+from teatime.plugins import Context, NodeType, Plugin
+from teatime.reporting import Report
 
 
 class Scanner:

@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Toaster in a project::
+To use Teatime in a project::
 
-    import toaster
+    import teatime

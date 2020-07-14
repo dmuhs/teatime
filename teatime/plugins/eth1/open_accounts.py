@@ -2,8 +2,8 @@
 
 import requests
 
-from toaster.plugins import Context, Plugin, PluginException
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, Plugin, PluginException
+from teatime.reporting import Issue, Severity
 
 
 # TODO: Parity open vault checks

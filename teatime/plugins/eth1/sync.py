@@ -2,8 +2,8 @@
 
 import requests
 
-from toaster.plugins import Context, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, Plugin
+from teatime.reporting import Issue, Severity
 
 
 class NodeSyncedCheck(Plugin):

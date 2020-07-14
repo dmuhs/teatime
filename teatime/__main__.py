@@ -4,8 +4,8 @@ import json
 import subprocess
 import sys
 
-from toaster.plugins import NodeType
-from toaster.scanner import ETH1ScannerConfig, ScannerFactory
+from teatime.plugins import NodeType
+from teatime.scanner import ETH1ScannerConfig, ScannerFactory
 
 # ETH1 random stuck node
 # IP = "13.94.241.95"

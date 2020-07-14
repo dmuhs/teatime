@@ -1,7 +1,7 @@
 """This module contains a plugin for mining-related checks."""
 
-from toaster.plugins import Context, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, Plugin
+from teatime.reporting import Issue, Severity
 
 
 class MiningNodeDetector(Plugin):

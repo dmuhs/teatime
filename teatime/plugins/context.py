@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-from toaster.reporting.report import Report
+from teatime.reporting.report import Report
 
 
 class NodeType(Enum):

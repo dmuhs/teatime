@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass, field
 
-from toaster.plugins import NodeType
-from toaster.plugins.eth1 import (
+from teatime.plugins import NodeType
+from teatime.plugins.eth1 import (
     AdminInformationLeakCheck,
     MiningNodeDetector,
     NetworkMethodCheck,
@@ -14,7 +14,7 @@ from toaster.plugins.eth1 import (
     SHA3Check,
     TxPoolCheck,
 )
-from toaster.scanner.scanner import Scanner
+from teatime.scanner.scanner import Scanner
 
 
 @dataclass

@@ -1,7 +1,7 @@
-toaster
+teatime
 =======
 
 .. toctree::
    :maxdepth: 4
 
-   toaster
+   teatime

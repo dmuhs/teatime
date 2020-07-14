@@ -1,7 +1,7 @@
 """This module contains a plugin with checks for account creation."""
 
-from toaster.plugins import Context, NodeType, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, NodeType, Plugin
+from teatime.reporting import Issue, Severity
 
 
 class NewAccountCheck(Plugin):

@@ -1,7 +1,7 @@
 """This module contains a plugin for network-related checks."""
 
-from toaster.plugins import Context, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, Plugin
+from teatime.reporting import Issue, Severity
 
 
 # TODO: Whisper (shh) checks for parity?

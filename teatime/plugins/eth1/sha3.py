@@ -1,7 +1,7 @@
 """This module contains a plugin to check for SHA3 consistency."""
 
-from toaster.plugins import Context, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, Plugin
+from teatime.reporting import Issue, Severity
 
 
 class SHA3Check(Plugin):

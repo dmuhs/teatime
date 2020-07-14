@@ -1,7 +1,7 @@
 """This module contains plugins with admin interface checks."""
 
-from toaster.plugins import Context, NodeType, Plugin
-from toaster.reporting import Issue, Severity
+from teatime.plugins import Context, NodeType, Plugin
+from teatime.reporting import Issue, Severity
 
 
 class GethAdminCheck(Plugin):

@@ -27,8 +27,8 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 format:
-	isort toaster tests
-	black -t py37 toaster tests docs
+	isort teatime tests
+	black -t py37 teatime tests docs
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -52,7 +52,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 toaster tests
+	flake8 teatime tests
 
 test: ## run tests quickly with the default Python
 	pytest
@@ -61,15 +61,15 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source toaster -m pytest
+	coverage run --source teatime -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/toaster.rst
+	rm -f docs/teatime.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ toaster
+	sphinx-apidoc -o docs/ teatime
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html

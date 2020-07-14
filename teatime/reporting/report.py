@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import uuid4
 
-from toaster.reporting.issue import Issue
+from teatime.reporting.issue import Issue
 
 
 class Report:
