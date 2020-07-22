@@ -9,10 +9,10 @@ class NetworkMethodCheck(Plugin):
     """This plugin contains network-related checks."""
 
     name = "RPC Network Information"
-    version = "0.1.3"
+    version = "0.1.4"
 
-    # custom settings
-    minimum_peercount: int
+    def __init__(self, minimum_peercount: int):
+        self.minimum_peercount = minimum_peercount
 
     def __repr__(self):
         return f"<NetworkMethodCheck v{self.version}>"

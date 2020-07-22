@@ -8,11 +8,11 @@ class SHA3Check(Plugin):
     """A plugin checking for consistency of SHA3 hashes."""
 
     name = "RPC SHA3 Consistency Test"
-    version = "0.1.0"
+    version = "0.1.1"
 
-    # additional settings
-    test_input = None
-    test_output = None
+    def __init__(self, test_input: str, test_output: str):
+        self.test_input = test_input
+        self.test_output = test_output
 
     def __repr__(self):
         return f"<SHA3Check v{self.version}>"

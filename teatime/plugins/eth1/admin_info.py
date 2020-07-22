@@ -493,10 +493,10 @@ class AdminInformationLeakCheck(Plugin):
     """Detect admin-interface-related weaknesses."""
 
     name = "Admin Information Leaks"
-    version = "0.0.2"
+    version = "0.0.3"
 
-    # additional settings
-    test_enode = None
+    def __init__(self, test_enode: str):
+        self.test_enode = test_enode
 
     def run(self, context: Context) -> None:
         """Run admin-interface checks.

@@ -10,10 +10,10 @@ class NodeSyncedCheck(Plugin):
     """A plugin to check for issues in node synchronization."""
 
     name = "RPC Node Sync Status"
-    version = "0.2.0"
+    version = "0.2.1"
 
-    # additional settings
-    infura_url = None
+    def __init__(self, infura_url):
+        self.infura_url = infura_url
 
     def __repr__(self):
         return f"<NodeSyncedCheck v{self.version}>"

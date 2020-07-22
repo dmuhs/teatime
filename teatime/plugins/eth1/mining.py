@@ -8,11 +8,11 @@ class MiningNodeDetector(Plugin):
     """A plugin for mining-related checks."""
 
     name = "RPC Mining Check"
-    version = "0.1.3"
+    version = "0.1.4"
 
-    # custom settings
-    should_mine: bool
-    expected_hashrate: int
+    def __init__(self, should_mine: bool, expected_hashrate: int):
+        self.should_mine = should_mine
+        self.expected_hashrate = expected_hashrate
 
     def __repr__(self):
         return f"<MiningNodeDetector v{self.version}>"

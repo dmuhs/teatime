@@ -6,6 +6,7 @@
 
 import abc
 from typing import Callable, List, Union
+
 import requests
 from loguru import logger
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
@@ -39,23 +40,6 @@ class Plugin(abc.ABC):
         """
         pass
 
-    @classmethod
-    def setup(cls, config: dict = None):
-        """Set up the plugin.
-
-        This classmethod takes a configuration dict and sets each
-        key-value pair as class-level attributes, returning the
-        class with all attributes set.
-
-        .. todo:: Add details!
-
-        :param config:
-        :return:
-        """
-        for key, value in config.items():
-            setattr(cls, key, value)
-        return cls
-
     @staticmethod
     def run_catch(check_name: str, check_func: Callable, context: "Context"):
         """Run a function and catch any PluginExceptions.
@@ -73,7 +57,9 @@ class Plugin(abc.ABC):
             logger.info(f"{check_name}: Terminated with exception {e}")
 
     @staticmethod
-    def get_rpc_json(target: str, method: str, params: List[Union[str, int]] = None, idx: int = 0):
+    def get_rpc_json(
+        target: str, method: str, params: List[Union[str, int]] = None, idx: int = 0
+    ):
         """Execute an RPC call against a given target.
 
         .. todo:: Add details!

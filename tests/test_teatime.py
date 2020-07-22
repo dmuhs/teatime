@@ -4,7 +4,7 @@
 
 import pytest
 
-from teatime import teatime
+import teatime
 
 
 @pytest.fixture

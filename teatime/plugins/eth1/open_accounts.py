@@ -11,10 +11,10 @@ class OpenAccountsCheck(Plugin):
     """This plugin checks for open and weakly-protected accounts."""
 
     name = "RPC Open Account Detection"
-    version = "0.4.0"
+    version = "0.4.1"
 
-    # additional settings
-    wordlist = None
+    def __init__(self, wordlist=None):
+        self.wordlist = wordlist or []
 
     def __repr__(self):
         return f"<OpenAccountsCheck v{self.version}>"

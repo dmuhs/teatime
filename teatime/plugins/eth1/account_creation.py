@@ -8,14 +8,14 @@ class NewAccountCheck(Plugin):
     """Detect account import and creation weaknesses."""
 
     name = "RPC Account Import and Creation"
-    version = "0.3.0"
-
-    # additional settings
-    test_privkey = None
-    test_password = None
+    version = "0.3.1"
 
     def __repr__(self):
         return f"<NewAccountCheck v{self.version}>"
+
+    def __init__(self, test_privkey: str, test_password: str):
+        self.test_privkey = test_privkey
+        self.test_password = test_password
 
     # TODO: Separate import and creation to two plugins
 

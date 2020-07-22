@@ -14,9 +14,9 @@ class Scanner:
 
     """
 
-    def __init__(self, target: str, node_type: NodeType, plugins: List[Type[Plugin]]):
+    def __init__(self, target: str, node_type: NodeType, plugins: List[Plugin]):
         self.target = target
-        self.plugins = (plugin() for plugin in plugins)
+        self.plugins = plugins
         self.node_type = node_type
 
     def run(self) -> Report:
