@@ -4,7 +4,7 @@ from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
 
 
-class SHA3Check(Plugin):
+class SHA3Consistency(Plugin):
     """A plugin checking for consistency of SHA3 hashes."""
 
     def __init__(self, test_input: str, test_output: str):

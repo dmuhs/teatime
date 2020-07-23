@@ -4,12 +4,40 @@ import requests
 
 from teatime.plugins import Context, Plugin, PluginException
 from teatime.reporting import Issue, Severity
-
+from loguru import logger
 
 # TODO: Parity open vault checks
 
 
-class OpenAccounts(Plugin):
+class AccountBalanceMixin:
+    def __init__(self, infura_url: str):
+        self.infura_url = infura_url
+
+    def account_data(self, address: str) -> int:
+        """Fetch additional data on the account.
+
+        .. todo:: Add details!
+
+        :param address:
+        :return:
+        """
+        # TODO: Robust error handling
+        rpc_response = requests.post(
+            self.infura_url,
+            json={
+                "jsonrpc": "2.0",
+                "method": "eth_getBalance",
+                "params": [address, "latest"],
+                "id": 0,
+            },
+        )
+        return int(rpc_response.json()["result"], 16)
+
+
+class OpenAccounts(Plugin, AccountBalanceMixin):
+    def __init__(self, infura_url: str):
+        super().__init__(infura_url)
+
     def _check(self, context: Context) -> None:
         """Check for any accounts registered on the node.
 
@@ -28,33 +56,14 @@ class OpenAccounts(Plugin):
                 )
             )
 
-    @staticmethod
-    def account_data(address: str) -> dict:
-        """Fetch additional data on the account.
 
-        .. todo:: Add details!
-
-        :param address:
-        :return:
-        """
-        # TODO: Robust error handling
-        rpc_response = requests.post(
-            "https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62",  # TODO: make param
-            json={
-                "jsonrpc": "2.0",
-                "method": "eth_getBalance",
-                "params": [address, "latest"],
-                "id": 0,
-            },
-        )
-        return {"balance": int(rpc_response.json()["result"], 16)}
-
-
-class AccountUnlock(Plugin):
+class AccountUnlock(Plugin, AccountBalanceMixin):
     """This plugin checks for open and weakly-protected accounts."""
 
-    def __init__(self, wordlist=None):
+    def __init__(self, infura_url: str, wordlist=None, skip_below: int = None):
+        super().__init__(infura_url)
         self.wordlist = wordlist or []
+        self.skip_below = skip_below
 
     def _check(self, context: Context) -> None:
         """Check whether any accounts on the node are weakly protected.
@@ -66,16 +75,30 @@ class AccountUnlock(Plugin):
 
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
+            account_balance = self.account_data(account)
+            if self.skip_below is not None and account_balance < self.skip_below:
+                logger.debug(
+                    f"Skipping {account} because balance {account_balance} < {self.skip_below}"
+                )
+                continue
             for password in self.wordlist:
+                logger.debug(f"Trying password {password}")
                 try:
                     payload = self.get_rpc_json(
                         context.target,
                         method="personal_unlockAccount",
                         params=[account, password, 1],  # unlock for only 1s
                     )
-                except PluginException:
-                    # explicitly catch here to not interrupt wordlist loop
-                    continue
+                except PluginException as e:
+                    if str(e) == "Method not found":
+                        logger.debug(
+                            "Aborting wordlist attack because method is not supported"
+                        )
+                        # if the method is not supported, there is no point in checking
+                        break
+                    else:
+                        # explicitly catch here to not interrupt wordlist loop
+                        continue
 
                 context.report.add_issue(
                     Issue(

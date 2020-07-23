@@ -19,8 +19,8 @@ from .network import (
 )
 from .open_accounts import OpenAccounts, AccountUnlock
 from .rpc import GethStartRPC, GethStopRPC
-from .sha3 import SHA3Check
-from .sync import NodeSyncedCheck
+from .sha3 import SHA3Consistency
+from .sync import NodeSync
 from .tx_limits import ParityTxCeiling, ParityTxFloor
 from .txpool import (
     GethTxPoolInspection,

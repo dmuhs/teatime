@@ -6,7 +6,7 @@ from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
 
 
-class NodeSyncedCheck(Plugin):
+class NodeSync(Plugin):
     """A plugin to check for issues in node synchronization."""
 
     def __init__(self, infura_url):

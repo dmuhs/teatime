@@ -103,5 +103,6 @@ class Plugin(abc.ABC):
 
         :param context:
         """
-        self.run_catch(self.name, self._check, context)
-        context.report.add_meta(self.__class__.__name__, True)
+        scan_name = self.__class__.__name__
+        self.run_catch(scan_name, self._check, context)
+        context.report.add_meta(scan_name, True)
