@@ -6,15 +6,40 @@ import sys
 
 from teatime.plugins import NodeType
 from teatime.plugins.eth1 import (
-    AdminInformationLeakCheck,
-    MiningNodeDetector,
-    NetworkMethodCheck,
-    NewAccountCheck,
+    GethStartWebsocket,
+    GethStopWebsocket,
+    NodeVersion,
+    ParityUpgrade,
+    TxPoolContent,
+    ParityTxPoolStatistics,
+    GethTxPoolStatus,
+    GethTxPoolInspection,
+    ParityTxFloor,
+    ParityTxCeiling,
     NodeSyncedCheck,
-    NodeVersionCheck,
-    OpenAccountsCheck,
     SHA3Check,
-    TxPoolCheck,
+    GethStopRPC,
+    GethStartRPC,
+    AccountUnlock,
+    OpenAccounts,
+    PeerlistManipulation,
+    PeerCountStatus,
+    ParityDropPeers,
+    NetworkListening,
+    MiningStatus,
+    HashrateStatus,
+    ParityChangeCoinbase,
+    ParitySyncMode,
+    ParityChangeTarget,
+    ParityChangeExtra,
+    PeerlistLeak,
+    ParityDevLogs,
+    GethNodeInfo,
+    GethDatadir,
+    ParityGasFloor,
+    ParityGasCeiling,
+    AccountImport,
+    AccountCreation,
 )
 from teatime.scanner.scanner import Scanner
 
@@ -44,41 +69,7 @@ def check_connectivity(target):
 scanner = Scanner(
     target=f"http://{IP}:{PORT}",
     node_type=NodeType.GETH,
-    plugins=[
-        NewAccountCheck(
-            test_privkey="c7d26c414625a995584b347db39ebfce03129acb6386d5b2533a698614c138dc",
-            test_password="fjaal38!dj==42",
-        ),
-        AdminInformationLeakCheck(
-            test_enode=(
-                "enode://6f8a80d14311c39f35f516fa664deaaaa13"
-                "e85b2f7493f37f6144d86991ec012937307647bd3b9"
-                "a82abe2974e1407241d54947bbb39763a4cac9f7716"
-                "6ad92a0@10.3.58.6:30303?discport=30301"
-            )
-        ),
-        MiningNodeDetector(should_mine=False, expected_hashrate=0),
-        NetworkMethodCheck(minimum_peercount=15),
-        OpenAccountsCheck(
-            wordlist=[
-                "",  # lol no way
-                "hunter2",  # from parity docs
-                "admin",
-                "password",
-                "test",
-                "ethereum",
-            ]
-        ),
-        SHA3Check(
-            test_input="0x68656c6c6f20776f726c64",
-            test_output="0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
-        ),
-        NodeSyncedCheck(
-            infura_url="https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62"
-        ),
-        TxPoolCheck(),
-        NodeVersionCheck(),
-    ],
+    plugins=[AccountUnlock(wordlist=["test"])],
 )
 
 if not check_connectivity(IP):

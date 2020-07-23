@@ -7,19 +7,10 @@ from teatime.reporting import Issue, Severity
 
 
 # TODO: Parity open vault checks
-class OpenAccountsCheck(Plugin):
-    """This plugin checks for open and weakly-protected accounts."""
 
-    name = "RPC Open Account Detection"
-    version = "0.4.1"
 
-    def __init__(self, wordlist=None):
-        self.wordlist = wordlist or []
-
-    def __repr__(self):
-        return f"<OpenAccountsCheck v{self.version}>"
-
-    def check_accounts(self, context: Context) -> None:
+class OpenAccounts(Plugin):
+    def _check(self, context: Context) -> None:
         """Check for any accounts registered on the node.
 
         .. todo:: Add details!
@@ -37,7 +28,35 @@ class OpenAccountsCheck(Plugin):
                 )
             )
 
-    def check_account_bruteforce(self, context: Context) -> None:
+    @staticmethod
+    def account_data(address: str) -> dict:
+        """Fetch additional data on the account.
+
+        .. todo:: Add details!
+
+        :param address:
+        :return:
+        """
+        # TODO: Robust error handling
+        rpc_response = requests.post(
+            "https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62",  # TODO: make param
+            json={
+                "jsonrpc": "2.0",
+                "method": "eth_getBalance",
+                "params": [address, "latest"],
+                "id": 0,
+            },
+        )
+        return {"balance": int(rpc_response.json()["result"], 16)}
+
+
+class AccountUnlock(Plugin):
+    """This plugin checks for open and weakly-protected accounts."""
+
+    def __init__(self, wordlist=None):
+        self.wordlist = wordlist or []
+
+    def _check(self, context: Context) -> None:
         """Check whether any accounts on the node are weakly protected.
 
         .. todo:: Add details!
@@ -66,39 +85,3 @@ class OpenAccountsCheck(Plugin):
                         severity=Severity.CRITICAL,
                     )
                 )
-
-    @staticmethod
-    def account_data(address: str) -> dict:
-        """Fetch additional data on the account.
-
-        .. todo:: Add details!
-
-        :param address:
-        :return:
-        """
-        # TODO: Robust error handling
-        rpc_response = requests.post(
-            "https://mainnet.infura.io/v3/a17bd235fd4147259d03784b24bd3a62",
-            json={
-                "jsonrpc": "2.0",
-                "method": "eth_getBalance",
-                "params": [address, "latest"],
-                "id": 0,
-            },
-        )
-        return {"balance": int(rpc_response.json()["result"], 16)}
-
-    def run(self, context: Context) -> None:
-        """Run account-related checks for vulnerabilities and weaknesses.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
-        # TODO: Actions with the accounts possible?
-        # SCAN[MEDIUM]: Account registered on node
-        self.run_catch("Node accounts", self.check_accounts, context)
-        # SCAN[CRITICAL]: Account has weak auth credentials
-        self.run_catch("Account bruteforce", self.check_account_bruteforce, context)
-
-        context.report.add_meta(self.name, self.version)

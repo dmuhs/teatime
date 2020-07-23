@@ -10,16 +10,10 @@ from teatime.reporting import Issue, Severity
 SEMVER_REGEX = r"\d+.\d+.\d+"
 
 
-class NodeVersionCheck(Plugin):
+class NodeVersion(Plugin):
     """A plugin to check whether a node version is stale."""
 
-    name = "RPC Node Version Information"
-    version = "0.2.0"
-
-    def __repr__(self):
-        return f"<NodeVersionCheck v{self.version}>"
-
-    def check_stale_version(self, context: Context) -> None:
+    def _check(self, context: Context) -> None:
         """Check whether a given node's version is stale.
 
         .. todo:: Add details!
@@ -62,7 +56,7 @@ class NodeVersionCheck(Plugin):
         """
         # TODO: Handle missing versions
         resp = requests.get(
-            "https://api.github.com/repos/ethereum/go-ethereum/releases/latest"
+            "https://api.github.com/repos/ethereum/go-ethereum/releases/latest"  # TODO: make parameter
         )
         tag = re.findall(SEMVER_REGEX, resp.json()["tag_name"])[0]
         return tag
@@ -76,20 +70,7 @@ class NodeVersionCheck(Plugin):
         :return:
         """
         resp = requests.get(
-            "https://api.github.com/repos/openethereum/openethereum/releases/latest"
+            "https://api.github.com/repos/openethereum/openethereum/releases/latest"  # TODO: make parameter
         )
         tag = re.findall(SEMVER_REGEX, resp.json()["tag_name"])[0]
         return tag
-
-    def run(self, context: Context) -> None:
-        """Run the plugin to detect stale node versions.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
-        # SCAN[LOW]: Version information
-        # SCAN[HIGH]: Old client version
-        self.run_catch("Version check", self.check_stale_version, context)
-
-        context.report.add_meta(self.name, self.version)

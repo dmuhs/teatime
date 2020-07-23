@@ -125,7 +125,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass
 # [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "teatime.tex", "Teatime Documentation", "Dominik Muhs", "manual"),
+    (master_doc, "teatime.tex", "Teatime Documentation", "Dominik Muhs", "manual")
 ]
 
 
@@ -150,5 +150,5 @@ texinfo_documents = [
         "teatime",
         "One line description of project.",
         "Miscellaneous",
-    ),
+    )
 ]

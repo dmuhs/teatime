@@ -4,20 +4,11 @@ from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
 
 
-class MiningNodeDetector(Plugin):
-    """A plugin for mining-related checks."""
-
-    name = "RPC Mining Check"
-    version = "0.1.4"
-
-    def __init__(self, should_mine: bool, expected_hashrate: int):
+class MiningStatus(Plugin):
+    def __init__(self, should_mine: bool):
         self.should_mine = should_mine
-        self.expected_hashrate = expected_hashrate
 
-    def __repr__(self):
-        return f"<MiningNodeDetector v{self.version}>"
-
-    def check_mining(self, context: Context) -> None:
+    def _check(self, context: Context) -> None:
         """Check whether the node is mining.
 
         .. todo:: Add details!
@@ -40,7 +31,12 @@ class MiningNodeDetector(Plugin):
                 )
             )
 
-    def check_hashrate(self, context: Context) -> None:
+
+class HashrateStatus(Plugin):
+    def __init__(self, expected_hashrate: int):
+        self.expected_hashrate = expected_hashrate
+
+    def check_(self, context: Context) -> None:
         """Check whether the node has a certain hash rate.
 
         .. todo:: Add details!
@@ -59,17 +55,3 @@ class MiningNodeDetector(Plugin):
                     severity=Severity.MEDIUM,
                 )
             )
-
-    def run(self, context: Context) -> None:
-        """Check for mining-related weaknesses and misconfigurations.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
-        # SCAN[MEDIUM]: Illegal mining state
-        self.run_catch("Mining status", self.check_mining, context)
-        # SCAN[MEDIUM]: Hashrate too low
-        self.run_catch("Hashrate status", self.check_hashrate, context)
-
-        context.report.add_meta(self.name, self.version)

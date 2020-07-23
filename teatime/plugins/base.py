@@ -28,17 +28,9 @@ class Plugin(abc.ABC):
     """
 
     name = None
-    version = None
 
-    @abc.abstractmethod
-    def run(self, context: "Context"):
-        """The plugin's entrypoint as invoked by the scanner.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
-        pass
+    def __repr__(self):
+        return f"<{self.name}>"
 
     @staticmethod
     def run_catch(check_name: str, check_func: Callable, context: "Context"):
@@ -99,3 +91,17 @@ class Plugin(abc.ABC):
             raise PluginException(f"Received empty result in RPC response in {payload}")
 
         return payload["result"]
+
+    @abc.abstractmethod
+    def _check(self, context: "Context"):
+        pass
+
+    def run(self, context: "Context"):
+        """The plugin's entrypoint as invoked by the scanner.
+
+        .. todo:: Add details!
+
+        :param context:
+        """
+        self.run_catch(self.name, self._check, context)
+        context.report.add_meta(self.__class__.__name__, True)

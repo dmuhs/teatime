@@ -9,16 +9,10 @@ from teatime.reporting import Issue, Severity
 class NodeSyncedCheck(Plugin):
     """A plugin to check for issues in node synchronization."""
 
-    name = "RPC Node Sync Status"
-    version = "0.2.1"
-
     def __init__(self, infura_url):
         self.infura_url = infura_url
 
-    def __repr__(self):
-        return f"<NodeSyncedCheck v{self.version}>"
-
-    def check_sync(self, context: Context) -> None:
+    def _check(self, context: Context) -> None:
         """Check the node's sync state and whether it's stuck.
 
         .. todo:: Add details!
@@ -63,15 +57,3 @@ class NodeSyncedCheck(Plugin):
         )
         # TODO: Better error handling
         return int(rpc_response.json()["result"], 16)
-
-    def run(self, context: Context) -> None:
-        """Run the node sync check plugin.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
-        # SCAN[CRITICAL]: Node sync stuck at old block
-        # SCAN[NONE]: Node is still syncing
-        self.run_catch("Sync status", self.check_sync, context)
-        context.report.add_meta(self.name, self.version)
