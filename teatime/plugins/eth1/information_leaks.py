@@ -16,7 +16,7 @@ class GethDatadir(Plugin):
         if context.node_type != NodeType.GETH:
             return
 
-        payload = self.get_rpc_json(context.target, method="admin_datadir", params=[])
+        payload = self.get_rpc_json(context.target, method="admin_datadir")
         context.report.add_issue(
             Issue(
                 title="Admin datadir access",
@@ -39,7 +39,7 @@ class GethNodeInfo(Plugin):
         if context.node_type != NodeType.GETH:
             return
 
-        payload = self.get_rpc_json(context.target, method="admin_nodeInfo", params=[])
+        payload = self.get_rpc_json(context.target, method="admin_nodeInfo")
         context.report.add_issue(
             Issue(
                 title="Admin Node Info Leaks",
@@ -62,7 +62,7 @@ class ParityDevLogs(Plugin):
         if context.node_type != NodeType.PARITY:
             return
 
-        payload = self.get_rpc_json(context.target, method="parity_devLogs", params=[])
+        payload = self.get_rpc_json(context.target, method="parity_devLogs")
         context.report.add_issue(
             Issue(
                 title="Developer log information leak",
@@ -84,9 +84,7 @@ class PeerlistLeak(Plugin):
 
     def _check(self, context: Context) -> None:
         if context.node_type == NodeType.PARITY:
-            payload = self.get_rpc_json(
-                context.target, method="parity_netPeers", params=[]
-            )
+            payload = self.get_rpc_json(context.target, method="parity_netPeers")
             context.report.add_issue(
                 Issue(
                     title="Peer list information leak",
@@ -96,7 +94,7 @@ class PeerlistLeak(Plugin):
                 )
             )
         elif context.node_type == NodeType.GETH:
-            payload = self.get_rpc_json(context.target, method="admin_peers", params=[])
+            payload = self.get_rpc_json(context.target, method="admin_peers")
             context.report.add_issue(
                 Issue(
                     title="Admin Peerlist Access",

@@ -40,12 +40,15 @@ class ParityGasFloor(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasfloortarget
     """
 
+    def __init__(self, gas_floor: str):
+        self.gas_floor = gas_floor
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setGasFloorTarget", params=["0x0"]
+            context.target, method="parity_setGasFloorTarget", params=[self.gas_floor]
         )
         context.report.add_issue(
             Issue(
