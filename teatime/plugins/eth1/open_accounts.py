@@ -1,59 +1,13 @@
 """This module contains a plugin checking for account-related issues."""
 
-import json
-
-import requests
 from loguru import logger
-from requests import ConnectTimeout, ReadTimeout
 
 from teatime.plugins import Context, Plugin, PluginException
 from teatime.reporting import Issue, Severity
+from teatime.utils import decode_rpc_int
 
 
-class AccountBalanceMixin:
-    """A mixin class providing balance values for accounts.
-
-    This mixin requires an Infura endpoint URL to be passed to look up the account's balance on the
-    specified chain.
-    """
-
-    def __init__(self, infura_url: str):
-        self.infura_url = infura_url
-
-    def account_data(self, address: str) -> int:
-        """Fetch additional data on the account.
-
-        This method will call the passed Infura API URL and use the
-        :code:`eth_getBalance` method of the specified account, on the
-        latest block.
-
-        :param address: The address to get the balance for
-        :return: The account's balance as an integer
-        """
-        try:
-            rpc_response = requests.post(
-                self.infura_url,
-                json={
-                    "jsonrpc": "2.0",
-                    "method": "eth_getBalance",
-                    "params": [address, "latest"],
-                    "id": 0,
-                },
-            )
-        except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
-            raise PluginException(f"Connection Error: {e}")
-
-        try:
-            payload = rpc_response.json()
-        except json.JSONDecodeError:
-            raise PluginException(f"Could not decode response {rpc_response.text}")
-        try:
-            return int(payload["result"], 16)
-        except ValueError:
-            raise PluginException(f"Could not decode payload result {payload}")
-
-
-class OpenAccounts(Plugin, AccountBalanceMixin):
+class OpenAccounts(Plugin):
     """Check for any accounts registered on the node.
 
     Severity: Medium
@@ -64,22 +18,25 @@ class OpenAccounts(Plugin, AccountBalanceMixin):
     """
 
     def __init__(self, infura_url: str):
-        super().__init__(infura_url)
+        self.infura_url = infura_url
 
     def _check(self, context: Context) -> None:
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
+            balance = decode_rpc_int(
+                self.infura_url, method="eth_getBalance", params=[account, "latest"]
+            )
             context.report.add_issue(
                 Issue(
                     title="Found account",
-                    description=f"Account: {account} Balance: {self.account_data(account)}",
+                    description=f"Account: {account} Balance: {balance}",
                     raw_data=account,
                     severity=Severity.MEDIUM,
                 )
             )
 
 
-class AccountUnlock(Plugin, AccountBalanceMixin):
+class AccountUnlock(Plugin):
     """Check whether any accounts on the node are weakly protected.
 
     Severity: Critical
@@ -93,17 +50,19 @@ class AccountUnlock(Plugin, AccountBalanceMixin):
     """
 
     def __init__(self, infura_url: str, wordlist=None, skip_below: int = None):
-        super().__init__(infura_url)
+        self.infura_url = infura_url
         self.wordlist = wordlist or []
         self.skip_below = skip_below
 
     def _check(self, context: Context) -> None:
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
-            account_balance = self.account_data(account)
-            if self.skip_below is not None and account_balance < self.skip_below:
+            balance = decode_rpc_int(
+                self.infura_url, method="eth_getBalance", params=[account, "latest"]
+            )
+            if self.skip_below is not None and balance < self.skip_below:
                 logger.debug(
-                    f"Skipping {account} because balance {account_balance} < {self.skip_below}"
+                    f"Skipping {account} because balance {balance} < {self.skip_below}"
                 )
                 continue
             for password in self.wordlist:

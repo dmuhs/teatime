@@ -1,13 +1,8 @@
 """This module contains a plugin checking for node sync issues."""
 
-import json
-
-import requests
-from plugins import PluginException
-from requests import ConnectTimeout, ReadTimeout
-
 from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
+from teatime.utils import decode_rpc_int
 
 
 class NodeSync(Plugin):
@@ -30,7 +25,7 @@ class NodeSync(Plugin):
     def _check(self, context: Context) -> None:
         node_syncing = self.get_rpc_json(context.target, "eth_syncing")
         node_blocknum = int(self.get_rpc_json(context.target, "eth_blockNumber"), 16)
-        net_blocknum = self.get_latest_block_number()
+        net_blocknum = decode_rpc_int(self.infura_url, "eth_blockNumber")
 
         if node_blocknum < (net_blocknum - self.block_threshold) and not node_syncing:
             context.report.add_issue(
@@ -50,33 +45,3 @@ class NodeSync(Plugin):
                     severity=Severity.NONE,
                 )
             )
-
-    def get_latest_block_number(self) -> int:
-        """Fetch the latest block number.
-
-        This method fetches the latest block number using the :code:`eth_blockNumber`
-        from the user-specified Infura API URL.
-
-        :return: The current block number as an integer
-        """
-        try:
-            rpc_response = requests.post(
-                self.infura_url,
-                json={
-                    "jsonrpc": "2.0",
-                    "method": "eth_blockNumber",
-                    "params": [],
-                    "id": 1,
-                },
-            )
-        except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
-            raise PluginException(f"Connection Error: {e}")
-
-        try:
-            payload = rpc_response.json()
-        except json.JSONDecodeError:
-            raise PluginException(f"Could not decode response {rpc_response.text}")
-        try:
-            return int(payload["result"], 16)
-        except ValueError:
-            raise PluginException(f"Could not decode payload result {payload}")
