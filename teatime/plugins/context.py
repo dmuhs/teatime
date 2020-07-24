@@ -8,7 +8,11 @@ from teatime.reporting.report import Report
 class NodeType(Enum):
     """An Enum denoting a node type to scan.
 
-    .. todo:: Add details!
+    Currently, only Geth and Parity/OpenEthereum are supported.
+    Future considerations are:
+    - IPFS
+    - Filecoin
+    - ETH2 clients
     """
 
     GETH = 0
@@ -16,10 +20,7 @@ class NodeType(Enum):
 
 
 class Context:
-    """The context object passed between plugins.
-
-    .. todo:: Add details!
-    """
+    """The context object passed between plugins."""
 
     def __init__(self, target, report, node_type, **kwargs):
         self.target: str = target

@@ -4,14 +4,6 @@ teatime.scanner package
 Submodules
 ----------
 
-teatime.scanner.factory module
-------------------------------
-
-.. automodule:: teatime.scanner.factory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 teatime.scanner.scanner module
 ------------------------------
 

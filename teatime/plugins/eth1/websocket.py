@@ -1,15 +1,18 @@
-from teatime.plugins import Context, NodeType, Plugin
+"""This module contains plugins for controlling the Websocket RPC server
+status."""
+from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
 
 
 class GethStartWebsocket(Plugin):
+    """Try to start the websocket service.
+
+    Severity: Critical
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_startws
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to start the websocket service.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(context.target, method="admin_startWS", params=[])
         context.report.add_issue(
             Issue(
@@ -22,13 +25,14 @@ class GethStartWebsocket(Plugin):
 
 
 class GethStopWebsocket(Plugin):
+    """Try to stop the websocket service.
+
+    Severity: Critical
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_stopws
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to stop the websocket service.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(context.target, method="admin_stopWS", params=[])
         context.report.add_issue(
             Issue(

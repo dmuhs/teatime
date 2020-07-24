@@ -7,11 +7,7 @@ from teatime.reporting.issue import Issue
 
 
 class Report:
-    """A report class holding multiple issues and meta data.
-
-    .. todo:: Add details!
-
-    """
+    """A report class holding multiple issues and meta data."""
 
     def __init__(self, target, issues=None):
         self.id = str(uuid4())
@@ -23,9 +19,7 @@ class Report:
     def add_issue(self, issue: Issue):
         """Add an issue to the report.
 
-        .. todo:: Add details!
-
-        :param issue:
+        :param issue: The issue object to add
         """
         if not issue.is_complete():
             raise ValueError("Encountered incomplete issue")
@@ -34,19 +28,15 @@ class Report:
     def add_meta(self, key, value):
         """Add a meta data key-value pair to the report.
 
-        .. todo:: Add details!
-
-        :param key:
-        :param value:
+        :param key: The meta data key name
+        :param value: The meta data key's value to attach
         """
         self.meta[key] = value
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Convert the report and its issues to a Python dict.
 
-        .. todo:: Add details!
-
-        :return:
+        :return: The report's representation as a dict
         """
         return {
             "id": self.id,

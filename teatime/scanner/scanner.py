@@ -1,18 +1,14 @@
 """This module contains a scanner class running various Plugins."""
 
 import time
-from typing import List, Type
+from typing import List
 
 from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Report
 
 
 class Scanner:
-    """The scanner class holding multiple plugins.
-
-    .. todo:: Add details!
-
-    """
+    """The scanner class holding multiple plugins."""
 
     def __init__(self, target: str, node_type: NodeType, plugins: List[Plugin]):
         self.target = target
@@ -22,9 +18,7 @@ class Scanner:
     def run(self) -> Report:
         """Run the scanner to generate a report.
 
-        .. todo:: Add details!
-
-        :return:
+        :return: A report object holding all findings
         """
         start = time.time()
         context = Context(

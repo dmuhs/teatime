@@ -1,25 +1,31 @@
 """This module contains a plugin checking for account-related issues."""
 
 import requests
+from loguru import logger
 
 from teatime.plugins import Context, Plugin, PluginException
 from teatime.reporting import Issue, Severity
-from loguru import logger
-
-# TODO: Parity open vault checks
 
 
 class AccountBalanceMixin:
+    """A mixin class providing balance values for accounts.
+
+    This mixin requires an Infura endpoint URL to be passed to look up the account's balance on the
+    specified chain.
+    """
+
     def __init__(self, infura_url: str):
         self.infura_url = infura_url
 
     def account_data(self, address: str) -> int:
         """Fetch additional data on the account.
 
-        .. todo:: Add details!
+        This method will call the passed Infura API URL and use the
+        :code:`eth_getBalance` method of the specified account, on the
+        latest block.
 
-        :param address:
-        :return:
+        :param address: The address to get the balance for
+        :return: The account's balance as an integer
         """
         # TODO: Robust error handling
         rpc_response = requests.post(
@@ -35,16 +41,19 @@ class AccountBalanceMixin:
 
 
 class OpenAccounts(Plugin, AccountBalanceMixin):
+    """Check for any accounts registered on the node.
+
+    Severity: Medium
+
+    This plugin will use the :code:`eth_accounts` method to find accounts
+    registered on the target node, and fetch the account's latest balance
+    through Infura.
+    """
+
     def __init__(self, infura_url: str):
         super().__init__(infura_url)
 
     def _check(self, context: Context) -> None:
-        """Check for any accounts registered on the node.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
             context.report.add_issue(
@@ -58,7 +67,17 @@ class OpenAccounts(Plugin, AccountBalanceMixin):
 
 
 class AccountUnlock(Plugin, AccountBalanceMixin):
-    """This plugin checks for open and weakly-protected accounts."""
+    """Check whether any accounts on the node are weakly protected.
+
+    Severity: Critical
+
+    This plugin will use the :code:`eth_accounts` method to find accounts
+    registered on the target node, and attempt to unlock the accounts with
+    a given set of passwords. Each account is unlocked for a time of one
+    second, the minimum time possible.
+
+    Optionally, accounts below a minimum balance can be skipped.
+    """
 
     def __init__(self, infura_url: str, wordlist=None, skip_below: int = None):
         super().__init__(infura_url)
@@ -66,13 +85,6 @@ class AccountUnlock(Plugin, AccountBalanceMixin):
         self.skip_below = skip_below
 
     def _check(self, context: Context) -> None:
-        """Check whether any accounts on the node are weakly protected.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
-
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
             account_balance = self.account_data(account)

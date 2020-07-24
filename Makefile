@@ -29,6 +29,7 @@ help:
 format:
 	isort teatime tests
 	black -t py37 teatime tests docs
+	docformatter --wrap-descriptions 100 -ri teatime/
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 

@@ -5,10 +5,10 @@ from .account_import import AccountImport
 from .gas_limits import ParityGasCeiling, ParityGasFloor
 from .information_leaks import GethDatadir, GethNodeInfo, ParityDevLogs, PeerlistLeak
 from .manipulation import (
+    ParityChangeCoinbase,
     ParityChangeExtra,
     ParityChangeTarget,
     ParitySyncMode,
-    ParityChangeCoinbase,
 )
 from .mining import HashrateStatus, MiningStatus
 from .network import (
@@ -17,11 +17,11 @@ from .network import (
     PeerCountStatus,
     PeerlistManipulation,
 )
-from .open_accounts import OpenAccounts, AccountUnlock
+from .open_accounts import AccountUnlock, OpenAccounts
 from .rpc import GethStartRPC, GethStopRPC
 from .sha3 import SHA3Consistency
 from .sync import NodeSync
-from .tx_limits import ParityTxCeiling, ParityTxFloor
+from .tx_limits import ParityMinGasPrice, ParityTxCeiling
 from .txpool import (
     GethTxPoolInspection,
     GethTxPoolStatus,

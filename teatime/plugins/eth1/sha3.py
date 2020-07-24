@@ -5,19 +5,21 @@ from teatime.reporting import Issue, Severity
 
 
 class SHA3Consistency(Plugin):
-    """A plugin checking for consistency of SHA3 hashes."""
+    """Check for SHA3 consistency.
+
+    Severity: Critical
+
+    This plugin submits a user-specified value and lets the node
+    convert it into a SHA3 hash using the :code:`web3_sha3` method. If
+    the result value is different from the user-specified output value,
+    an issue is logged.
+    """
 
     def __init__(self, test_input: str, test_output: str):
         self.test_input = test_input
         self.test_output = test_output
 
     def _check(self, context: Context) -> None:
-        """Check for SHA3 consistency.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         sha_hash = self.get_rpc_json(
             target=context.target, method="web3_sha3", params=[self.test_input]
         )

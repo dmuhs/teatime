@@ -1,20 +1,24 @@
-from teatime.plugins import Context, Plugin, NodeType
+"""This module holds the plugin checking for accound imports."""
+from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Issue, Severity
 
 
 class AccountImport(Plugin):
-    """Detect account import weaknesses."""
+    """Detect whether it's possible to import an account on the node.
+
+    Severity: Medium
+
+    This check will try to import an existing account on the node using the
+    :code:`personal_importRawKey` and lock the new account with the given
+    password. This check only works with Geth client nodes.
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-personal#personal_importrawkey
+    """
 
     def __init__(self, test_password: str):
         self.test_password = test_password
 
     def _check(self, context: "Context"):
-        """Detect whether it's possible to import an account on the node.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.GETH:
             return
 

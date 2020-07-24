@@ -1,15 +1,18 @@
-from teatime.plugins import Context, NodeType, Plugin
+"""This module contains plugins for controlling the HTTP RPC server status."""
+from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
 
 
 class GethStartRPC(Plugin):
+    """Try to start the RPC service.
+
+    Severity: Critical
+
+    This plugin attempts to start the HTTP RPC interface using the
+    :code:`admin_startRPC` method.
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to start the RPC service.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(context.target, method="admin_startRPC", params=[])
         context.report.add_issue(
             Issue(
@@ -22,14 +25,17 @@ class GethStartRPC(Plugin):
 
 
 class GethStopRPC(Plugin):
+    """Try to stop the RPC service.
+
+    Severity: Critical
+
+    Talking about shooting yourself in the foot. This plugin attempts to stop
+    the HTTP RPC interface using the :code:`admin_stopRPC` method. In case you
+    didn't notice, this might affect the outcome of other plugins due to
+    connection failures.
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to stop the RPC service.
-
-        Talking about shooting yourself in the foot.
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(context.target, method="admin_stopRPC", params=[])
         context.report.add_issue(
             Issue(

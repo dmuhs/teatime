@@ -5,13 +5,15 @@ from teatime.reporting import Issue, Severity
 
 
 class TxPoolContent(Plugin):
+    """Try to fetch the transaction pool contents.
+
+    Severity: Low
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactions
+    Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to fetch the transaction pool contents.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type == NodeType.GETH:
             payload = self.get_rpc_json(
                 context.target, method="txpool_content", params=[]
@@ -40,13 +42,14 @@ class TxPoolContent(Plugin):
 
 
 class GethTxPoolInspection(Plugin):
+    """Try to inspect the transaction pool.
+
+    Severity: Low
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_inspect
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to inspect the transaction pool.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(context.target, method="txpool_inspect", params=[])
         context.report.add_issue(
             Issue(
@@ -59,13 +62,14 @@ class GethTxPoolInspection(Plugin):
 
 
 class GethTxPoolStatus(Plugin):
+    """Try to fetch the transaction pool status.
+
+    Severity: Low
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_status
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to fetch the transaction pool status.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(context.target, method="txpool_status", params=[])
         context.report.add_issue(
             Issue(
@@ -78,13 +82,14 @@ class GethTxPoolStatus(Plugin):
 
 
 class ParityTxPoolStatistics(Plugin):
+    """Try to fetch the transaction pool statistics.
+
+    Severity: Low
+
+    Parity: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactionsstats
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to fetch the transaction pool statistics.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         payload = self.get_rpc_json(
             context.target, method="parity_pendingTransactionsStats", params=[]
         )

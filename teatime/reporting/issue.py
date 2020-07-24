@@ -19,7 +19,8 @@ class Severity(Enum):
 
 
 class Issue:
-    """An object describing a vulnerability, weakness, or informational message."""
+    """An object describing a vulnerability, weakness, or informational
+    message."""
 
     def __init__(
         self,
@@ -34,21 +35,17 @@ class Issue:
         self.severity = severity
         self.raw_data = raw_data
 
-    def is_severe(self):
+    def is_severe(self) -> bool:
         """Returns whether the issue is considered severe.
 
-        .. todo:: Add details!
-
-        :return:
+        :return: A boolean indicating whether the issue is severe
         """
         return not (self.severity == Severity.LOW or self.severity.NONE)
 
-    def is_complete(self):
+    def is_complete(self) -> bool:
         """Returns whether the issue is complete.
 
-        .. todo:: Add details!
-
-        :return:
+        :return: A boolean indicating that the issue is complete
         """
         return all(
             (
@@ -59,12 +56,10 @@ class Issue:
             )
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Converts the issue instance into a Python dict.
 
-        .. todo:: Add details!
-
-        :return:
+        :return: A dict representing the issue
         """
         return {
             "id": self.id,

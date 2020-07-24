@@ -11,19 +11,25 @@ SEMVER_REGEX = r"\d+.\d+.\d+"
 
 
 class NodeVersion(Plugin):
-    """A plugin to check whether a node version is stale."""
+    """Check whether a given node's version is stale.
+
+    Severity: None/High
+
+    This plugin will fetch the client's version string, and attempt to extract the
+    node's semantic version number. For Geth and Parity/OpenEthereum, it will try to
+    fetch the latest repository tag and compare both versions. If there is a mismatch,
+    an issue is logged about the node version being stale. In any case, an informational
+    issue will be logged containing the version string.
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-web3-module#web3_clientversion
+    Geth: I couldn't find the web3 namespace in the official docs :(
+    """
 
     def _check(self, context: Context) -> None:
-        """Check whether a given node's version is stale.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         client_version = self.get_rpc_json(context.target, "web3_clientVersion")
         context.report.add_issue(
             Issue(
-                title=self.name,
+                title=self.__class__.__name__,
                 description="The node surfaces it's version information",
                 raw_data=client_version,
                 severity=Severity.NONE,
@@ -50,9 +56,10 @@ class NodeVersion(Plugin):
     def latest_geth_release() -> str:
         """Fetch the latest Geth release.
 
-        .. todo:: Add details!
+        This method will use the public Github API to fetch the latest release tag
+        for the Geth repository.
 
-        :return:
+        :return: The Geth semver as a string
         """
         # TODO: Handle missing versions
         resp = requests.get(
@@ -65,9 +72,10 @@ class NodeVersion(Plugin):
     def latest_parity_release() -> str:
         """Fetch the latest Parity/OpenEthereum release.
 
-        .. todo:: Add details!
+        This method will use the public Github API to fetch the latest release tag
+        for the OpenEthereum repository.
 
-        :return:
+        :return: The OpenEthereum semver as a string
         """
         resp = requests.get(
             "https://api.github.com/repos/openethereum/openethereum/releases/latest"  # TODO: make parameter

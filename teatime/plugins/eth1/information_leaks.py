@@ -5,15 +5,14 @@ from teatime.reporting import Issue, Severity
 
 
 class GethDatadir(Plugin):
-    """Check access to the data dir on the Geth admin interface."""
+    """Try to fetch Geth's data directory.
+
+    Severity: Low
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_datadir
+    """
 
     def _check(self, context: Context):
-        """Try to fetch Geth's data directory.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.GETH:
             return
 
@@ -29,13 +28,14 @@ class GethDatadir(Plugin):
 
 
 class GethNodeInfo(Plugin):
+    """Try to fetch admin info about the node.
+
+    Severity: Low
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_nodeinfo
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to fetch admin info about the node.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.GETH:
             return
 
@@ -51,13 +51,14 @@ class GethNodeInfo(Plugin):
 
 
 class ParityDevLogs(Plugin):
+    """Try to fetch the node's developer logs.
+
+    Severity: Critical
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_devlogs
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to fetch the node's developer logs.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.PARITY:
             return
 
@@ -73,13 +74,15 @@ class ParityDevLogs(Plugin):
 
 
 class PeerlistLeak(Plugin):
+    """Try to fetch peer list information.
+
+    Severity: Medium
+
+    Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_peers
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_netpeers
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to fetch peer list information.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type == NodeType.PARITY:
             payload = self.get_rpc_json(
                 context.target, method="parity_netPeers", params=[]
@@ -89,7 +92,7 @@ class PeerlistLeak(Plugin):
                     title="Peer list information leak",
                     description="Admin-only peer list information can be fetched with the parity_netPeers RPC call.",
                     raw_data=payload,
-                    severity=Severity.CRITICAL,
+                    severity=Severity.MEDIUM,
                 )
             )
         elif context.node_type == NodeType.GETH:
@@ -97,7 +100,8 @@ class PeerlistLeak(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Peerlist Access",
-                    description="Admin-only information about the peer list can be fetched using the admin_peers RPC call.",
+                    description="Admin-only information about the peer list can be fetched using the admin_peers RPC "
+                    "call.",
                     raw_data=payload,
                     severity=Severity.MEDIUM,
                 )

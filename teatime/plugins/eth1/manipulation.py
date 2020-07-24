@@ -1,15 +1,17 @@
+"""This module contains plugins around setting vital execution parameters."""
 from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Issue, Severity
 
 
 class ParityChangeCoinbase(Plugin):
+    """Try to change the coinbase address.
+
+    Severity: Critical
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setauthor
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to change the coinbase address.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.PARITY:
             return
 
@@ -30,13 +32,14 @@ class ParityChangeCoinbase(Plugin):
 
 
 class ParityChangeTarget(Plugin):
+    """Try to change the target chain.
+
+    Severity: Critical
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setchain
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to change the target chain.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.PARITY:
             return
 
@@ -56,13 +59,14 @@ class ParityChangeTarget(Plugin):
 
 
 class ParityChangeExtra(Plugin):
+    """Try to set the extra data field.
+
+    Severity: Low
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setextradata
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to set the extra data field.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.PARITY:
             return
 
@@ -83,13 +87,14 @@ class ParityChangeExtra(Plugin):
 
 
 class ParitySyncMode(Plugin):
+    """Try to set the node's sync mode.
+
+    Severity: Critical
+
+    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmode
+    """
+
     def _check(self, context: Context) -> None:
-        """Try to set the node's sync mode.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         if context.node_type != NodeType.PARITY:
             return
 

@@ -1,52 +1,26 @@
-"""This module holds the base plugin class and exception.
-
-.. todo:: Explain base class functionality
-
-"""
+"""This module holds the base plugin class and exception."""
 
 import abc
-from typing import Callable, List, Union
+from typing import List, Union
 
 import requests
 from loguru import logger
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
 
+from .context import Context
+
 
 class PluginException(Exception):
-    """An exception for RPC-related errors.
-
-    .. todo:: Add details!
-    """
+    """An exception for plugin-related errors."""
 
     pass
 
 
 class Plugin(abc.ABC):
-    """The base plugin class.
-
-    .. todo:: Add details!
-    """
-
-    name = None
+    """The base plugin class."""
 
     def __repr__(self):
-        return f"<{self.name}>"
-
-    @staticmethod
-    def run_catch(check_name: str, check_func: Callable, context: "Context"):
-        """Run a function and catch any PluginExceptions.
-
-        .. todo:: Add details!
-
-        :param check_name:
-        :param check_func:
-        :param context:
-        """
-        logger.info(f"Running scan: {check_name}")
-        try:
-            check_func(context)
-        except PluginException as e:
-            logger.info(f"{check_name}: Terminated with exception {e}")
+        return f"<Plugin[{self.__class__.__name__}]>"
 
     @staticmethod
     def get_rpc_json(
@@ -54,13 +28,17 @@ class Plugin(abc.ABC):
     ):
         """Execute an RPC call against a given target.
 
-        .. todo:: Add details!
+        The current timeout for the RPC request is three seconds. Any :code:`PluginException`
+        instances raised, contain the reason in the message string, e.g. if a connection
+        failure occurred, the response status code was not 200, an error field is present, or
+        if the result field is left empty.
 
-        :param target:
-        :param method:
-        :param params:
-        :param idx:
-        :return:
+        :param target: The target URI to send the request to
+        :param method: The RPC method to use
+        :param params: Additional parameters for the method (optional)
+        :param idx: The RPC call's ID (optional)
+        :return: The response payload's "result" field
+        :raises PluginException: If the request faied or the response is inconsistent
         """
         try:
             resp = requests.post(
@@ -93,16 +71,26 @@ class Plugin(abc.ABC):
         return payload["result"]
 
     @abc.abstractmethod
-    def _check(self, context: "Context"):
+    def _check(self, context: Context):
         pass
 
-    def run(self, context: "Context"):
+    def run(self, context: Context):
         """The plugin's entrypoint as invoked by the scanner.
 
-        .. todo:: Add details!
+        This method will call the plugin's :code:`_check` method, which should
+        be overridden by concrete Plugin instances. It will catch any
+        :code:`PluginException` and skip the execution. In any case, at the end
+        of the check run, the plugin name is added as a meta field to denote
+        that it has been executed.
 
-        :param context:
+        :param context: The context object containing report-related information
         """
         scan_name = self.__class__.__name__
-        self.run_catch(scan_name, self._check, context)
+
+        logger.info(f"Running scan: {scan_name}")
+        try:
+            self._check(context)
+        except PluginException as e:
+            logger.info(f"{scan_name}: Terminated with exception {e}")
+
         context.report.add_meta(scan_name, True)

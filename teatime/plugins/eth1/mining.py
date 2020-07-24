@@ -5,16 +5,19 @@ from teatime.reporting import Issue, Severity
 
 
 class MiningStatus(Plugin):
+    """Check whether the node is mining.
+
+    Severity: Medium
+
+    This plugin will use the :code:`eth_mining` method to find out whether
+    a node is mining or not. If there is a difference to the user-specified
+    value, an issue will be logged.
+    """
+
     def __init__(self, should_mine: bool):
         self.should_mine = should_mine
 
     def _check(self, context: Context) -> None:
-        """Check whether the node is mining.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
         mining_status = self.get_rpc_json(context.target, "eth_mining")
 
         if self.should_mine is not None and mining_status != self.should_mine:
@@ -33,16 +36,19 @@ class MiningStatus(Plugin):
 
 
 class HashrateStatus(Plugin):
+    """Check whether the node has a certain hash rate.
+
+    Severity: Medium
+
+    This plugin will use the :code:`eth_hashrate` method to fetch the
+    node's hash rate. If the hash rate is different from a user-specified
+    value, an issue will be logged.
+    """
+
     def __init__(self, expected_hashrate: int):
         self.expected_hashrate = expected_hashrate
 
-    def check_(self, context: Context) -> None:
-        """Check whether the node has a certain hash rate.
-
-        .. todo:: Add details!
-
-        :param context:
-        """
+    def _check(self, context: Context) -> None:
         current_hashrate = self.get_rpc_json(context.target, "eth_hashrate")
         expected_hashrate = context.extra.get("expected_hashrate")
 
