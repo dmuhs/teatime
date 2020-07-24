@@ -69,6 +69,7 @@ class AccountUnlock(Plugin):
                     f"Skipping {account} because balance {balance} < {self.skip_below}"
                 )
                 continue
+            logger.debug(f"Trying passwords with {account} with balance {balance}")
             for password in self.wordlist:
                 logger.debug(f"Trying password {password}")
                 try:

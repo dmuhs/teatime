@@ -5,8 +5,9 @@ from contextlib import closing
 from typing import List
 
 import requests
-from plugins import PluginException
 from requests import ConnectTimeout, ReadTimeout
+
+from teatime.plugins import PluginException
 
 
 def check_port(host: str, port: int, timeout: int = 2) -> bool:
@@ -39,7 +40,7 @@ def decode_rpc_int(target, method, params: List[str] = None, idx: int = 1) -> in
     try:
         rpc_response = requests.post(
             target,
-            json={"jsonrpc": "2.0", "method": method, "params": params, "id": idx,},
+            json={"jsonrpc": "2.0", "method": method, "params": params, "id": idx},
         )
     except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
         raise PluginException(f"Connection Error: {e}")
@@ -52,3 +53,16 @@ def decode_rpc_int(target, method, params: List[str] = None, idx: int = 1) -> in
         return int(payload["result"], 16)
     except ValueError:
         raise PluginException(f"Could not decode payload result {payload}")
+
+
+def reverse_dns(address: str) -> str:
+    """Attempt to resolve an IP address to its DNS name.
+
+    :param address: The IP address to resolve
+    :return: The IP's DNS name as a string
+    """
+    try:
+        result = socket.gethostbyaddr(address)[0]
+    except socket.herror:
+        result = address
+    return result
