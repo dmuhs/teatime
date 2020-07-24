@@ -13,7 +13,7 @@ class GethStartWebsocket(Plugin):
     """
 
     def _check(self, context: Context) -> None:
-        payload = self.get_rpc_json(context.target, method="admin_startWS", params=[])
+        payload = self.get_rpc_json(context.target, method="admin_startWS")
         context.report.add_issue(
             Issue(
                 title="Admin Websocket Start Rights",
@@ -33,7 +33,7 @@ class GethStopWebsocket(Plugin):
     """
 
     def _check(self, context: Context) -> None:
-        payload = self.get_rpc_json(context.target, method="admin_stopWS", params=[])
+        payload = self.get_rpc_json(context.target, method="admin_stopWS")
         context.report.add_issue(
             Issue(
                 title="Admin Websocket Stop Rights",

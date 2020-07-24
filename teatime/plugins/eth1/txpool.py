@@ -15,9 +15,7 @@ class TxPoolContent(Plugin):
 
     def _check(self, context: Context) -> None:
         if context.node_type == NodeType.GETH:
-            payload = self.get_rpc_json(
-                context.target, method="txpool_content", params=[]
-            )
+            payload = self.get_rpc_json(context.target, method="txpool_content")
             context.report.add_issue(
                 Issue(
                     title="TxPool Content",
@@ -28,7 +26,7 @@ class TxPoolContent(Plugin):
             )
         elif context.node_type == NodeType.PARITY:
             payload = self.get_rpc_json(
-                context.target, method="parity_pendingTransactions", params=[]
+                context.target, method="parity_pendingTransactions"
             )
             context.report.add_issue(
                 Issue(
@@ -50,7 +48,7 @@ class GethTxPoolInspection(Plugin):
     """
 
     def _check(self, context: Context) -> None:
-        payload = self.get_rpc_json(context.target, method="txpool_inspect", params=[])
+        payload = self.get_rpc_json(context.target, method="txpool_inspect")
         context.report.add_issue(
             Issue(
                 title="TxPool Inspection",
@@ -70,7 +68,7 @@ class GethTxPoolStatus(Plugin):
     """
 
     def _check(self, context: Context) -> None:
-        payload = self.get_rpc_json(context.target, method="txpool_status", params=[])
+        payload = self.get_rpc_json(context.target, method="txpool_status")
         context.report.add_issue(
             Issue(
                 title="TxPool Status",
@@ -91,7 +89,7 @@ class ParityTxPoolStatistics(Plugin):
 
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(
-            context.target, method="parity_pendingTransactionsStats", params=[]
+            context.target, method="parity_pendingTransactionsStats"
         )
         context.report.add_issue(
             Issue(

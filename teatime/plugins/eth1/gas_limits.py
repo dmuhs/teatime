@@ -12,14 +12,15 @@ class ParityGasCeiling(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasceiltarget
     """
 
+    def __init__(self, gas_target: str):
+        self.gas_target = gas_target
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target,
-            method="parity_setGasCeilTarget",
-            params=["0x2540be400"],  # TODO: parametrize
+            context.target, method="parity_setGasCeilTarget", params=[self.gas_target],
         )
         context.report.add_issue(
             Issue(

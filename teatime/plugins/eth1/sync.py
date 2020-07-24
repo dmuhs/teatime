@@ -1,6 +1,10 @@
 """This module contains a plugin checking for node sync issues."""
 
+import json
+
 import requests
+from plugins import PluginException
+from requests import ConnectTimeout, ReadTimeout
 
 from teatime.plugins import Context, Plugin
 from teatime.reporting import Issue, Severity
@@ -19,16 +23,16 @@ class NodeSync(Plugin):
     on the current sync state is logged.
     """
 
-    def __init__(self, infura_url):
+    def __init__(self, infura_url, block_threshold: int = 10):
         self.infura_url = infura_url
+        self.block_threshold = block_threshold
 
     def _check(self, context: Context) -> None:
         node_syncing = self.get_rpc_json(context.target, "eth_syncing")
         node_blocknum = int(self.get_rpc_json(context.target, "eth_blockNumber"), 16)
         net_blocknum = self.get_latest_block_number()
-        block_threshold = 10  # todo: param
 
-        if node_blocknum < (net_blocknum - block_threshold) and not node_syncing:
+        if node_blocknum < (net_blocknum - self.block_threshold) and not node_syncing:
             context.report.add_issue(
                 Issue(
                     title="Synchronization Status",
@@ -38,7 +42,6 @@ class NodeSync(Plugin):
                 )
             )
         else:
-            # TODO: More info if node is syncing? E.g. how many blocks to go
             context.report.add_issue(
                 Issue(
                     title="Synchronization Status",
@@ -56,9 +59,24 @@ class NodeSync(Plugin):
 
         :return: The current block number as an integer
         """
-        rpc_response = requests.post(
-            self.infura_url,
-            json={"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 1},
-        )
-        # TODO: Better error handling
-        return int(rpc_response.json()["result"], 16)
+        try:
+            rpc_response = requests.post(
+                self.infura_url,
+                json={
+                    "jsonrpc": "2.0",
+                    "method": "eth_blockNumber",
+                    "params": [],
+                    "id": 1,
+                },
+            )
+        except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
+            raise PluginException(f"Connection Error: {e}")
+
+        try:
+            payload = rpc_response.json()
+        except json.JSONDecodeError:
+            raise PluginException(f"Could not decode response {rpc_response.text}")
+        try:
+            return int(payload["result"], 16)
+        except ValueError:
+            raise PluginException(f"Could not decode payload result {payload}")

@@ -1,10 +1,11 @@
 """This module contains a plugin to check for stale node versions."""
 
+import json
 import re
 
 import requests
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, Plugin, PluginException
 from teatime.reporting import Issue, Severity
 
 SEMVER_REGEX = r"\d+.\d+.\d+"
@@ -25,6 +26,14 @@ class NodeVersion(Plugin):
     Geth: I couldn't find the web3 namespace in the official docs :(
     """
 
+    def __init__(
+        self,
+        geth_url: str = "https://api.github.com/repos/ethereum/go-ethereum/releases/latest",
+        parity_url: str = "https://api.github.com/repos/openethereum/openethereum/releases/latest",
+    ):
+        self.geth_url = geth_url
+        self.parity_url = parity_url
+
     def _check(self, context: Context) -> None:
         client_version = self.get_rpc_json(context.target, "web3_clientVersion")
         context.report.add_issue(
@@ -35,13 +44,20 @@ class NodeVersion(Plugin):
                 severity=Severity.NONE,
             )
         )
-        # TODO: Handle missing version
-        client_semver = re.findall(SEMVER_REGEX, client_version)[0]
-        node_semver = (
-            self.latest_geth_release()
-            if context.node_type == NodeType.GETH
-            else self.latest_parity_release()
-        )
+        try:
+            client_semver = re.findall(SEMVER_REGEX, client_version)[0]
+        except IndexError:
+            raise PluginException(
+                f"Could not extract the client version from string {client_version}"
+            )
+
+        if context.node_type == NodeType.GETH:
+            node_semver = self.latest_repo_release(self.geth_url)
+        elif context.node_type == NodeType.PARITY:
+            node_semver = self.latest_repo_release(self.parity_url)
+        else:
+            raise PluginException(f"No repo known for node type {context.node_type}")
+
         if client_semver != node_semver:
             context.report.add_issue(
                 Issue(
@@ -53,32 +69,26 @@ class NodeVersion(Plugin):
             )
 
     @staticmethod
-    def latest_geth_release() -> str:
-        """Fetch the latest Geth release.
+    def latest_repo_release(url: str) -> str:
+        """Fetch the latest release tag for the given repository URL.
 
         This method will use the public Github API to fetch the latest release tag
-        for the Geth repository.
+        for the given repository.
 
-        :return: The Geth semver as a string
+        :return: The repo's semver as a string
         """
-        # TODO: Handle missing versions
-        resp = requests.get(
-            "https://api.github.com/repos/ethereum/go-ethereum/releases/latest"  # TODO: make parameter
-        )
-        tag = re.findall(SEMVER_REGEX, resp.json()["tag_name"])[0]
-        return tag
 
-    @staticmethod
-    def latest_parity_release() -> str:
-        """Fetch the latest Parity/OpenEthereum release.
+        resp = requests.get(url)
+        try:
+            repo_information = resp.json()
+        except json.JSONDecodeError:
+            raise PluginException(f"Could not decode API response {resp.text}")
 
-        This method will use the public Github API to fetch the latest release tag
-        for the OpenEthereum repository.
+        try:
+            tag = re.findall(SEMVER_REGEX, repo_information["tag_name"])[0]
+        except (KeyError, IndexError):
+            raise PluginException(
+                f"Could not extract repo tag from response {repo_information}"
+            )
 
-        :return: The OpenEthereum semver as a string
-        """
-        resp = requests.get(
-            "https://api.github.com/repos/openethereum/openethereum/releases/latest"  # TODO: make parameter
-        )
-        tag = re.findall(SEMVER_REGEX, resp.json()["tag_name"])[0]
         return tag

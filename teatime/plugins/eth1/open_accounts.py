@@ -1,7 +1,10 @@
 """This module contains a plugin checking for account-related issues."""
 
+import json
+
 import requests
 from loguru import logger
+from requests import ConnectTimeout, ReadTimeout
 
 from teatime.plugins import Context, Plugin, PluginException
 from teatime.reporting import Issue, Severity
@@ -27,17 +30,27 @@ class AccountBalanceMixin:
         :param address: The address to get the balance for
         :return: The account's balance as an integer
         """
-        # TODO: Robust error handling
-        rpc_response = requests.post(
-            self.infura_url,
-            json={
-                "jsonrpc": "2.0",
-                "method": "eth_getBalance",
-                "params": [address, "latest"],
-                "id": 0,
-            },
-        )
-        return int(rpc_response.json()["result"], 16)
+        try:
+            rpc_response = requests.post(
+                self.infura_url,
+                json={
+                    "jsonrpc": "2.0",
+                    "method": "eth_getBalance",
+                    "params": [address, "latest"],
+                    "id": 0,
+                },
+            )
+        except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
+            raise PluginException(f"Connection Error: {e}")
+
+        try:
+            payload = rpc_response.json()
+        except json.JSONDecodeError:
+            raise PluginException(f"Could not decode response {rpc_response.text}")
+        try:
+            return int(payload["result"], 16)
+        except ValueError:
+            raise PluginException(f"Could not decode payload result {payload}")
 
 
 class OpenAccounts(Plugin, AccountBalanceMixin):

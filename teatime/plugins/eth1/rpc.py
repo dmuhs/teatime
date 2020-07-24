@@ -13,7 +13,7 @@ class GethStartRPC(Plugin):
     """
 
     def _check(self, context: Context) -> None:
-        payload = self.get_rpc_json(context.target, method="admin_startRPC", params=[])
+        payload = self.get_rpc_json(context.target, method="admin_startRPC")
         context.report.add_issue(
             Issue(
                 title="Admin RPC Start Rights",
@@ -36,7 +36,7 @@ class GethStopRPC(Plugin):
     """
 
     def _check(self, context: Context) -> None:
-        payload = self.get_rpc_json(context.target, method="admin_stopRPC", params=[])
+        payload = self.get_rpc_json(context.target, method="admin_stopRPC")
         context.report.add_issue(
             Issue(
                 title="Admin RPC Stop Rights",

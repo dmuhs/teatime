@@ -11,14 +11,15 @@ class ParityChangeCoinbase(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setauthor
     """
 
+    def __init__(self, author: str):
+        self.author = author
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target,
-            method="parity_setAuthor",
-            params=["0x25862BB810eEC365C4562FEAA8B2739B59B70A6a"],  # TODO: Author param
+            context.target, method="parity_setAuthor", params=[self.author],
         )
         context.report.add_issue(
             Issue(
@@ -39,14 +40,15 @@ class ParityChangeTarget(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setchain
     """
 
+    def __init__(self, target_chain: str):
+        self.target_chain = target_chain
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target,
-            method="parity_setChain",
-            params=["mainnet"],  # TODO: target param
+            context.target, method="parity_setChain", params=[self.target_chain],
         )
         context.report.add_issue(
             Issue(
@@ -66,14 +68,15 @@ class ParityChangeExtra(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setextradata
     """
 
+    def __init__(self, extra_data: str):
+        self.extra_data = extra_data
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target,
-            method="parity_setExtraData",
-            params=["toasted"],  # TODO: extra parameter
+            context.target, method="parity_setExtraData", params=[self.extra_data],
         )
         context.report.add_issue(
             Issue(
@@ -94,12 +97,15 @@ class ParitySyncMode(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmode
     """
 
+    def __init__(self, mode: str):
+        self.mode = mode
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setMode", params=["active"]
+            context.target, method="parity_setMode", params=[self.mode]
         )
         context.report.add_issue(
             Issue(

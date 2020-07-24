@@ -3,8 +3,6 @@
 from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Issue, Severity
 
-# TODO: Whisper (shh) checks for parity?
-
 
 class NetworkListening(Plugin):
     """Check whether the node is listening for peers.

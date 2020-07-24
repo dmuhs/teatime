@@ -11,12 +11,17 @@ class ParityTxCeiling(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmaxtransactiongas
     """
 
+    def __init__(self, gas_limit: str):
+        self.gas_limit = gas_limit
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setMaxTransactionGas", params=["0x186a0"]
+            context.target,
+            method="parity_setMaxTransactionGas",
+            params=[self.gas_limit],
         )
         context.report.add_issue(
             Issue(
@@ -37,12 +42,15 @@ class ParityMinGasPrice(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmingasprice
     """
 
+    def __init__(self, gas_price: str):
+        self.gas_price = gas_price
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setMinGasPrice", params=["0x0"]
+            context.target, method="parity_setMinGasPrice", params=[self.gas_price]
         )
         context.report.add_issue(
             Issue(

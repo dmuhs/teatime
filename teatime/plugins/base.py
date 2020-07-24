@@ -56,7 +56,6 @@ class Plugin(abc.ABC):
         except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
             raise PluginException(f"Connection Error: {e}")
 
-        # TODO: More explicit RPC exception for better catches
         if resp.status_code != 200:
             raise PluginException(f"RPC call returned with status {resp.status_code}")
 
