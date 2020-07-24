@@ -12,6 +12,8 @@ class GethDatadir(Plugin):
     Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_datadir
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context):
         if context.node_type != NodeType.GETH:
             return
@@ -34,6 +36,8 @@ class GethNodeInfo(Plugin):
 
     Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_nodeinfo
     """
+
+    INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.GETH:
@@ -58,6 +62,8 @@ class ParityDevLogs(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_devlogs
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return
@@ -81,6 +87,8 @@ class PeerlistLeak(Plugin):
     Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_peers
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_netpeers
     """
+
+    INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
         if context.node_type == NodeType.PARITY:

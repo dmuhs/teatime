@@ -12,6 +12,8 @@ class GethStartRPC(Plugin):
     :code:`admin_startRPC` method.
     """
 
+    INTRUSIVE = True
+
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(context.target, method="admin_startRPC")
         context.report.add_issue(
@@ -34,6 +36,8 @@ class GethStopRPC(Plugin):
     didn't notice, this might affect the outcome of other plugins due to
     connection failures.
     """
+
+    INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(context.target, method="admin_stopRPC")

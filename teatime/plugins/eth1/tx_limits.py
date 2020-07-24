@@ -11,6 +11,8 @@ class ParityTxCeiling(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmaxtransactiongas
     """
 
+    INTRUSIVE = True
+
     def __init__(self, gas_limit: str):
         self.gas_limit = gas_limit
 
@@ -41,6 +43,8 @@ class ParityMinGasPrice(Plugin):
 
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmingasprice
     """
+
+    INTRUSIVE = True
 
     def __init__(self, gas_price: str):
         self.gas_price = gas_price

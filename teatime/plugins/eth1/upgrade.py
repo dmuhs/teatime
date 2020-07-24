@@ -11,6 +11,8 @@ class ParityUpgrade(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module.html#parity_upgradeready
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
             return

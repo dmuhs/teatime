@@ -12,6 +12,8 @@ class ParityGasCeiling(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasceiltarget
     """
 
+    INTRUSIVE = True
+
     def __init__(self, gas_target: str):
         self.gas_target = gas_target
 
@@ -39,6 +41,8 @@ class ParityGasFloor(Plugin):
 
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasfloortarget
     """
+
+    INTRUSIVE = True
 
     def __init__(self, gas_floor: str):
         self.gas_floor = gas_floor

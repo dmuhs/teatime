@@ -14,6 +14,8 @@ class MiningStatus(Plugin):
     value, an issue will be logged.
     """
 
+    INTRUSIVE = False
+
     def __init__(self, should_mine: bool):
         self.should_mine = should_mine
 
@@ -44,6 +46,8 @@ class HashrateStatus(Plugin):
     node's hash rate. If the hash rate is different from a user-specified
     value, an issue will be logged.
     """
+
+    INTRUSIVE = False
 
     def __init__(self, expected_hashrate: int):
         self.expected_hashrate = expected_hashrate

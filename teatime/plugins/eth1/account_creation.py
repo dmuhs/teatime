@@ -17,6 +17,8 @@ class AccountCreation(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-personal-module#personal_newaccount
     """
 
+    INTRUSIVE = True
+
     def __init__(self, test_password: str):
         self.test_password = test_password
 

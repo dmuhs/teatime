@@ -14,6 +14,8 @@ class NetworkListening(Plugin):
     case, an issue will be logged.
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context) -> None:
         node_listening = self.get_rpc_json(context.target, "net_listening")
 
@@ -38,6 +40,8 @@ class PeerCountStatus(Plugin):
     node's peer count. If the value is lower than the user-specified
     value of minimum peers, an issue will be logged.
     """
+
+    INTRUSIVE = False
 
     def __init__(self, minimum_peercount: int):
         self.minimum_peercount = minimum_peercount
@@ -66,6 +70,8 @@ class PeerlistManipulation(Plugin):
     This plugin will attempt to add a given peer to the node's peer
     list.
     """
+
+    INTRUSIVE = True
 
     def __init__(self, test_enode: str):
         self.test_enode = test_enode
@@ -109,6 +115,8 @@ class ParityDropPeers(Plugin):
     This plugin will attempt to drop all non-reserved peer entries
     from the node's peer table.
     """
+
+    INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(

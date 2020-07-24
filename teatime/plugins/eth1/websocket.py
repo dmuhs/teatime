@@ -12,6 +12,8 @@ class GethStartWebsocket(Plugin):
     Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_startws
     """
 
+    INTRUSIVE = True
+
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(context.target, method="admin_startWS")
         context.report.add_issue(
@@ -31,6 +33,8 @@ class GethStopWebsocket(Plugin):
 
     Geth: https://geth.ethereum.org/docs/rpc/ns-admin#admin_stopws
     """
+
+    INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(context.target, method="admin_stopWS")

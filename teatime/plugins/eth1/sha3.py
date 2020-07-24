@@ -15,6 +15,8 @@ class SHA3Consistency(Plugin):
     an issue is logged.
     """
 
+    INTRUSIVE = False
+
     def __init__(self, test_input: str, test_output: str):
         self.test_input = test_input
         self.test_output = test_output

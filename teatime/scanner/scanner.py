@@ -3,6 +3,8 @@
 import time
 from typing import List
 
+from loguru import logger
+
 from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Report
 
@@ -27,6 +29,12 @@ class Scanner:
             node_type=self.node_type,
         )
         for plugin in self.plugins:
+            if plugin.INTRUSIVE:
+                name = plugin.__class__.__name__
+                logger.warning(
+                    f"Plugin {name} is intrusive. Please make sure you have permission to run this scan on "
+                    "the target. Don't be a douchebag."
+                )
             plugin.run(context)
         context.report.add_meta("elapsed", time.time() - start)
         return context.report

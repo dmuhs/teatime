@@ -11,6 +11,8 @@ class ParityChangeCoinbase(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setauthor
     """
 
+    INTRUSIVE = True
+
     def __init__(self, author: str):
         self.author = author
 
@@ -40,6 +42,8 @@ class ParityChangeTarget(Plugin):
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setchain
     """
 
+    INTRUSIVE = True
+
     def __init__(self, target_chain: str):
         self.target_chain = target_chain
 
@@ -67,6 +71,8 @@ class ParityChangeExtra(Plugin):
 
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setextradata
     """
+
+    INTRUSIVE = True
 
     def __init__(self, extra_data: str):
         self.extra_data = extra_data
@@ -96,6 +102,8 @@ class ParitySyncMode(Plugin):
 
     Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmode
     """
+
+    INTRUSIVE = True
 
     def __init__(self, mode: str):
         self.mode = mode

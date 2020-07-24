@@ -17,6 +17,8 @@ class OpenAccounts(Plugin):
     through Infura.
     """
 
+    INTRUSIVE = False
+
     def __init__(self, infura_url: str):
         self.infura_url = infura_url
 
@@ -48,6 +50,8 @@ class AccountUnlock(Plugin):
 
     Optionally, accounts below a minimum balance can be skipped.
     """
+
+    INTRUSIVE = True
 
     def __init__(self, infura_url: str, wordlist=None, skip_below: int = None):
         self.infura_url = infura_url

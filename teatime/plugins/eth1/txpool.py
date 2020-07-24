@@ -13,6 +13,8 @@ class TxPoolContent(Plugin):
     Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context) -> None:
         if context.node_type == NodeType.GETH:
             payload = self.get_rpc_json(context.target, method="txpool_content")
@@ -47,6 +49,8 @@ class GethTxPoolInspection(Plugin):
     Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_inspect
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(context.target, method="txpool_inspect")
         context.report.add_issue(
@@ -67,6 +71,8 @@ class GethTxPoolStatus(Plugin):
     Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_status
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(context.target, method="txpool_status")
         context.report.add_issue(
@@ -86,6 +92,8 @@ class ParityTxPoolStatistics(Plugin):
 
     Parity: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactionsstats
     """
+
+    INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
         payload = self.get_rpc_json(

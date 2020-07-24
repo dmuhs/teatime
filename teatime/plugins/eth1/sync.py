@@ -18,6 +18,8 @@ class NodeSync(Plugin):
     on the current sync state is logged.
     """
 
+    INTRUSIVE = False
+
     def __init__(self, infura_url, block_threshold: int = 10):
         self.infura_url = infura_url
         self.block_threshold = block_threshold

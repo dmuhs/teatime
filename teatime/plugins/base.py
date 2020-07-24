@@ -19,6 +19,8 @@ class PluginException(Exception):
 class Plugin(abc.ABC):
     """The base plugin class."""
 
+    INTRUSIVE: bool = True
+
     def __repr__(self):
         return f"<Plugin[{self.__class__.__name__}]>"
 

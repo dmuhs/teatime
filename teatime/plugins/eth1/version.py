@@ -26,6 +26,8 @@ class NodeVersion(Plugin):
     Geth: I couldn't find the web3 namespace in the official docs :(
     """
 
+    INTRUSIVE = False
+
     def __init__(
         self,
         geth_url: str = "https://api.github.com/repos/ethereum/go-ethereum/releases/latest",
