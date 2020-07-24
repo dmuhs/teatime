@@ -5,13 +5,24 @@ python:
   - 3.8
   - 3.7
   - 3.6
-  - 3.5
+
+jobs:
+  include:
+    - name: "Check Formatting"
+      python: 3.8
+      script: tox -e lint
+    - name: "Check Documentation"
+      python: 3.8
+      script: tox -e doctest
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
 
 # Command to run tests, e.g. python setup.py test
 script: tox
+
+after_success:
+- coveralls
 
 # Assuming you have installed the travis-ci CLI tool, after you
 # create the Github repo and add it to Travis, run the
