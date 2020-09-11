@@ -34,6 +34,29 @@ Please note that this library is still a PoC and lacks documentation. If there
 are plugins you would like to see, feel free to contact me on Twitter!
 
 
+Installation
+------------
+Teatime runs on Python 3.6+ and PyPy3.
+
+To get started, simply run
+
+.. code-block:: console
+
+    $ pip3 install teatime
+
+Alternatively, clone the repository and run
+
+.. code-block:: console
+
+    $ pip3 install .
+
+Or directly through Python's :code:`setuptools`:
+
+.. code-block:: console
+
+    $ python3 setup.py install
+
+
 Future Development
 ------------------
 
