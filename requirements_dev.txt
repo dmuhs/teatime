@@ -1,6 +1,6 @@
 pip==20.2.3
 bump2version==1.0.0
-wheel
+wheel==0.35.1
 watchdog
 black==19.3b0
 isort
