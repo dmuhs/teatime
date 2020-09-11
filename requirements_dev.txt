@@ -4,7 +4,7 @@ wheel==0.35.1
 watchdog==0.10.3
 black==20.8b1
 isort==5.5.2
-tox
+tox==3.20.0
 coverage
 Sphinx
 sphinx_rtd_theme
