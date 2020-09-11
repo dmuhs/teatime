@@ -2,7 +2,7 @@ pip
 bump2version
 wheel
 watchdog
-black
+black==19.3b0
 isort
 tox
 coverage
