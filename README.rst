@@ -8,6 +8,9 @@ Teatime - A Blockchain RPC Attack Framework
 .. image:: https://img.shields.io/travis/dmuhs/teatime.svg
         :target: https://travis-ci.com/dmuhs/teatime
 
+.. image:: https://coveralls.io/repos/github/dmuhs/teatime/badge.svg?branch=master
+        :target: https://coveralls.io/github/dmuhs/teatime?branch=master
+
 .. image:: https://readthedocs.org/projects/teatime/badge/?version=latest
         :target: https://teatime.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
