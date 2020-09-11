@@ -1,39 +1,26 @@
-# Config file for automatic testing at travis-ci.com
-
 language: python
 python:
-  - 3.8
-  - 3.7
-  - 3.6
-
+- 3.8
+- 3.7
+- 3.6
 jobs:
   include:
-    - name: "Check Formatting"
-      python: 3.8
-      script: tox -e lint
-    - name: "Check Documentation"
-      python: 3.8
-      script: tox -e doctest
-
-# Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+  - name: Check Formatting
+    python: 3.8
+    script: tox -e lint
+  - name: Check Documentation
+    python: 3.8
+    script: tox -e doctest
 install: pip install -U tox-travis
-
-# Command to run tests, e.g. python setup.py test
 script: tox
-
 after_success:
 - coveralls
-
-# Assuming you have installed the travis-ci CLI tool, after you
-# create the Github repo and add it to Travis, run the
-# following command to finish PyPI deployment setup:
-# $ travis encrypt --add deploy.password
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
   user: dmuhs
   password:
-    secure: PLEASE_REPLACE_ME
+    secure: PS25eDD8KBk8mZTHPj+P5vEPGOfHmOoLqdciVL7dbzH2QSc2Fy13fY03ZmXCH2mEBBHiGGrXTn6MDhAu+ct/PPGJufgD2ih5vY1x+BCKc7uYqFC1wTl29hI0EPK0wIUp79HatbdPG6SPs9hvC0Kd1YR0PDI4dWSKdbJ/UsVCozdyeGdHGNIaByrC8Hq6jMfK5z27tOokFSXAPwRysS4gh7JRE3Fag/fU8bNaHb84sSvWFqqhClqsSx5F+OhQWBayhAo8a7gCBrgcZ53aVzjgUzl4tiehuRaNE8Mk2j6C/9wtogYnkWXFTZVby5HGz8aNeYHWeX3mhhwAsqZy7POYj777gSv0HwTKrx+3R6Y3YHJXQo7MJa04SnxLPdhS5EFyLTuc7YOPiDEitEb6AqdOOAjvXrsEqdYLPprKHiZWTpMeRelsd6fQi/50cktRZKnajU8Rg/AKg9wyajYi8NobqLsGOhK0JHaaepms9RDLYcBdhFoYSLs7YYOyRgOdpN2ZoDy9A0ELBqnEAsWonMVCQe3vTecuMyB+xPbDO2DVjR1DzeNPCIE+NX8EOkRlSQKGUbB0m0PM6nSjTcRHz+xcySDsoYlumu1eBAOWQ7mXyQW3JZlvhRx6G5OA1kiMEvkqNbbVCBcvoGjQEzdTiuJLbQUi7IENQTmvEDafLOOJN+Y=
   on:
     tags: true
     repo: dmuhs/teatime
