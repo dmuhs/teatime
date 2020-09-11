@@ -1,7 +1,6 @@
-=======
-Teatime
-=======
-
+===========================================
+Teatime - A Blockchain RPC Attack Framework
+===========================================
 
 .. image:: https://img.shields.io/pypi/v/teatime.svg
         :target: https://pypi.python.org/pypi/teatime
@@ -18,11 +17,33 @@ Teatime
      :alt: Updates
 
 
+Deployed a node? Have a cup.
+----------------------------
 
-Deployed a node? Have a cup of tea. :tea:
+Teatime is an RPC attack framework aimed at making it easy to spot
+misconfigurations in blockchain nodes. It detects a large variety of issues,
+ranging from information leaks to open accounts, and configuration
+manipulation.
 
-"I promise to add details here."  - Dominik
+The goal is to enable tools scanning for vulnerable nodes and minimizing
+the risk of node-based attacks due to common vulnerabilities. Teatime uses
+a plugin-based architecture, so extending the library with your own checks
+is straightforward.
+
+Please note that this library is still a PoC and lacks documentation. If there
+are plugins you would like to see, feel free to contact me on Twitter!
 
 
-* Free software: MIT license
-* Documentation: https://teatime.readthedocs.io.
+Future Development
+------------------
+
+The future of Teatime is uncertain, even though I would love to add broader
+checks that go beyond RPC interfaces, specifically for technologies such as:
+
+- Ethereum 2.0
+- Filecoin
+- IPFS
+
+If you want to integrate plugins for smaller, less meaningful chains such
+as Bitcoin or Ethereum knock-offs, feel free to fork the project and integrate
+them separately.
