@@ -21,7 +21,9 @@ class ParityChangeCoinbase(Plugin):
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setAuthor", params=[self.author],
+            context.target,
+            method="parity_setAuthor",
+            params=[self.author],
         )
         context.report.add_issue(
             Issue(
@@ -52,7 +54,9 @@ class ParityChangeTarget(Plugin):
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setChain", params=[self.target_chain],
+            context.target,
+            method="parity_setChain",
+            params=[self.target_chain],
         )
         context.report.add_issue(
             Issue(
@@ -82,7 +86,9 @@ class ParityChangeExtra(Plugin):
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setExtraData", params=[self.extra_data],
+            context.target,
+            method="parity_setExtraData",
+            params=[self.extra_data],
         )
         context.report.add_issue(
             Issue(

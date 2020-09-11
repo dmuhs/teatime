@@ -22,7 +22,9 @@ class ParityGasCeiling(Plugin):
             return
 
         payload = self.get_rpc_json(
-            context.target, method="parity_setGasCeilTarget", params=[self.gas_target],
+            context.target,
+            method="parity_setGasCeilTarget",
+            params=[self.gas_target],
         )
         context.report.add_issue(
             Issue(
