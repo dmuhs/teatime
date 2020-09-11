@@ -36,7 +36,7 @@ are plugins you would like to see, feel free to contact me on Twitter!
 
 Installation
 ------------
-Teatime runs on Python 3.6+ and PyPy3.
+Teatime runs on Python 3.6+.
 
 To get started, simply run
 
