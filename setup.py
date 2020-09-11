@@ -21,7 +21,7 @@ test_requirements = [
 setup(
     author="Dominik Muhs",
     author_email="dmuhs@protonmail.ch",
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
@@ -35,7 +35,10 @@ setup(
         "Topic :: Utilities",
         "Typing :: Typed",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: Implementation :: PyPy",
     ],
     description="Just deployed a blockchain node? Have some tea.",
     install_requires=requirements,
