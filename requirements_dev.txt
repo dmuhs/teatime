@@ -1,5 +1,5 @@
 pip==20.2.3
-bump2version
+bump2version==1.0.0
 wheel
 watchdog
 black==19.3b0
