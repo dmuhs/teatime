@@ -11,7 +11,11 @@ jobs:
   - name: Check Documentation
     python: 3.8
     script: tox -e doctest
-install: pip install -U tox-travis
+install:
+    - pip install pytest
+    - pip install pytest-cov
+    - pip install coveralls
+    - pip install tox-travis
 script: tox
 after_success:
 - coveralls

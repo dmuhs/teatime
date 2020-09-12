@@ -60,6 +60,45 @@ Or directly through Python's :code:`setuptools`:
     $ python3 setup.py install
 
 
+Example
+-------
+
+To get started, simply instantiate a :code:`Scanner` class and pass in the
+target IP, port, node type, and a list of instantiated plugins. Consider the
+following sample to check whether a node is synced and mining:
+
+.. code-block:: python
+
+    from teatime.scanner import Scanner
+    from teatime.plugins.context import NodeType
+    from teatime.plugins.eth1 import NodeSync, MiningStatus
+
+    TARGET_IP = "127.0.0.1"
+    TARGET_PORT = 8545
+    INFURA_URL = "Infura API Endpoint"
+
+    def get_scanner():
+        return Scanner(
+            ip=TARGET_IP,
+            port=TARGET_PORT,
+            node_type=NodeType.GETH,
+            plugins=[
+                NodeSync(infura_url=INFURA_URL, block_threshold=10),
+                MiningStatus(should_mine=False)
+            ]
+        )
+
+    if __name__ == '__main__':
+        scanner = get_scanner()
+        report = scanner.run()
+        print(report.to_dict())
+
+
+Check out the examples directory for more small samples! Teatime is fully
+typed, so also feel free to explore options in your IDE if reading the
+documentation is not your preferred choice. :)
+
+
 Future Development
 ------------------
 
