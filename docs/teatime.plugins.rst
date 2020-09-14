@@ -16,23 +16,27 @@ teatime.plugins.base module
 ---------------------------
 
 .. automodule:: teatime.plugins.base
-   :members:
-   :undoc-members:
-   :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :private-members:
+
 
 teatime.plugins.context module
 ------------------------------
 
 .. automodule:: teatime.plugins.context
-   :members:
-   :undoc-members:
-   :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :private-members:
 
 
 Module contents
 ---------------
 
 .. automodule:: teatime.plugins
-   :members:
-   :undoc-members:
-   :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :private-members:

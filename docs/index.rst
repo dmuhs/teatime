@@ -2,16 +2,17 @@ Welcome to Teatime's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-   readme
-   installation
-   usage
-   modules
-   contributing
-   authors
-   history
+    readme
+    installation
+    usage
+    architecture
+    modules
+    contributing
+    authors
+    history
 
 Indices and tables
 ==================
