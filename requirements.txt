@@ -1,2 +1,2 @@
 requests
-loguru
+loguru==0.5.3
