@@ -21,6 +21,7 @@ after_success:
 - coveralls
 deploy:
   provider: pypi
+  skip_cleanup: true
   distributions: sdist bdist_wheel
   user: dmuhs
   password:
