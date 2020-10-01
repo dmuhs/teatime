@@ -1,7 +1,7 @@
 """This package contains plugins related to Ethereum 1.0."""
 
 from .account_creation import AccountCreation
-from .account_import import AccountImport
+from .account_import import GethAccountImport
 from .gas_limits import ParityGasCeiling, ParityGasFloor
 from .information_leaks import GethDatadir, GethNodeInfo, ParityDevLogs, PeerlistLeak
 from .manipulation import (

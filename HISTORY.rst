@@ -2,7 +2,7 @@
 History
 =======
 
-0.2.1 (2020-10-01)
+0.2.3 (2020-10-01)
 ------------------
 
 - Add missing node check in account import check
