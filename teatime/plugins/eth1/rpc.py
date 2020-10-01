@@ -1,5 +1,5 @@
 """This module contains plugins for controlling the HTTP RPC server status."""
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Issue, Severity
 
 
@@ -15,6 +15,9 @@ class GethStartRPC(Plugin):
     INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
+
         payload = self.get_rpc_json(context.target, method="admin_startRPC")
         context.report.add_issue(
             Issue(
@@ -40,6 +43,9 @@ class GethStopRPC(Plugin):
     INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
+
         payload = self.get_rpc_json(context.target, method="admin_stopRPC")
         context.report.add_issue(
             Issue(

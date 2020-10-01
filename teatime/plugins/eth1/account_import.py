@@ -3,7 +3,7 @@ from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Issue, Severity
 
 
-class AccountImport(Plugin):
+class GethAccountImport(Plugin):
     """Detect whether it's possible to import an account on the node.
 
     Severity: Medium
