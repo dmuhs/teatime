@@ -1,6 +1,7 @@
 """This module contains the reporting functionality."""
 
 from datetime import datetime
+from typing import List
 from uuid import uuid4
 
 from teatime.reporting.issue import Issue
@@ -10,11 +11,11 @@ class Report:
     """A report class holding multiple issues and meta data."""
 
     def __init__(self, target, issues=None):
-        self.id = str(uuid4())
-        self.target = target
-        self.timestamp = datetime.now().isoformat()
-        self.issues = issues or []
-        self.meta = {}
+        self.id: str = str(uuid4())
+        self.target: str = target
+        self.timestamp: str = datetime.now().isoformat()
+        self.issues: List[Issue] = issues or []
+        self.meta: dict = {}
 
     def add_issue(self, issue: Issue):
         """Add an issue to the report.
@@ -44,5 +45,5 @@ class Report:
             "issues": [i.to_dict() for i in self.issues],
             "timestamp": self.timestamp,
             "meta": self.meta,
-            "ok": any([i.is_severe() for i in self.issues]),
+            "ok": any(i.is_severe() for i in self.issues) if self.issues else True,
         }
