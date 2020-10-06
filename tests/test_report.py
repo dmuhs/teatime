@@ -1,5 +1,6 @@
 import pytest
-from teatime import Report, Issue, Severity
+
+from teatime import Issue, Report, Severity
 
 
 def test_valid_report():
@@ -10,7 +11,14 @@ def test_valid_report():
     assert isinstance(report.id, str)
     assert isinstance(report.timestamp, str)
     assert report.meta == {}
-    assert sorted(report.to_dict().keys()) == ['id', 'issues', 'meta', 'ok', 'target', 'timestamp']
+    assert sorted(report.to_dict().keys()) == [
+        "id",
+        "issues",
+        "meta",
+        "ok",
+        "target",
+        "timestamp",
+    ]
 
 
 def test_report_add_issue():
