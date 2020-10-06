@@ -35,6 +35,11 @@ def assert_report(report: Report, target, meta):
     assert report_dict.get("ok") is True
 
 
+def test_repr_name():
+    plugin = SamplePlugin()
+    assert "SamplePlugin" in str(plugin)
+
+
 def test_run_context():
     plugin = SamplePlugin()
     target = "127.0.0.1:8545"
@@ -46,6 +51,27 @@ def test_run_context():
         node_type=node_type,
     )
     plugin._check = MagicMock()
+    plugin.run(context=context)
+
+    plugin._check.assert_called_once()
+    assert plugin.INTRUSIVE is True
+    assert_context(
+        context=context, target=target, node_type=node_type, meta=expected_meta
+    )
+    assert_report(report=context.report, target=target, meta=expected_meta)
+
+
+def test_run_plugin_exception():
+    plugin = SamplePlugin()
+    target = "127.0.0.1:8545"
+    node_type = NodeType.GETH
+    expected_meta = {"SamplePlugin": True}
+    context = Context(
+        target=target,
+        report=Report(target=target),
+        node_type=node_type,
+    )
+    plugin._check = MagicMock(side_effect=PluginException)
     plugin.run(context=context)
 
     plugin._check.assert_called_once()
@@ -116,4 +142,21 @@ def test_json_rpc_missing_result():
     plugin = SamplePlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(requests_mock.ANY, target, json={})
+        plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
+
+
+def test_json_rpc_error_key():
+    target = "http://127.0.0.1:8545"
+    plugin = SamplePlugin()
+    with requests_mock.Mocker() as mock, pytest.raises(PluginException):
+        mock.request(
+            requests_mock.ANY,
+            target,
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "result": "garbage",
+                "error": {"code": -32601, "message": "Method not found", "data": None},
+            },
+        )
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
