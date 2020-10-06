@@ -37,3 +37,14 @@ def test_intrusive_logging(logger_mock, node_type: NodeType):
     )
     scanner.run()
     logger_mock.warning.assert_called_once()
+
+
+def test_repr():
+    target = "127.0.0.1"
+    plugins = [None, None, None]
+    node_type = NodeType.GETH
+    scanner = Scanner(target, port=8545, node_type=node_type, plugins=plugins)
+    scanner_repr = str(scanner)
+    assert target in scanner_repr
+    assert str(len(plugins)) in scanner_repr
+    assert str(node_type) in scanner_repr
