@@ -1,4 +1,4 @@
-from teatime import Context, Report, NodeType
+from teatime import Context, NodeType, Report
 
 
 def test_valid_context():

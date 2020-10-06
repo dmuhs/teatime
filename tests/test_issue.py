@@ -81,7 +81,9 @@ def test_issue_dict():
     description = "description"
     severity = Severity.NONE
     raw_data = "raw_data"
-    issue = Issue(title=title, description=description, severity=severity, raw_data=raw_data)
+    issue = Issue(
+        title=title, description=description, severity=severity, raw_data=raw_data
+    )
     issue_dict = issue.to_dict()
 
     assert issue_dict["title"] == title
