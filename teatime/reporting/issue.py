@@ -40,7 +40,7 @@ class Issue:
 
         :return: A boolean indicating whether the issue is severe
         """
-        return not (self.severity == Severity.LOW or self.severity.NONE)
+        return not (self.severity is Severity.LOW or self.severity is Severity.NONE)
 
     def is_complete(self) -> bool:
         """Returns whether the issue is complete.
