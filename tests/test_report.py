@@ -31,6 +31,15 @@ def test_report_add_issue():
     assert len(report.to_dict()["issues"])
 
 
+def test_report_add_incomplete_issue():
+    report = Report("127.0.0.1:8545")
+    assert report.issues == []
+
+    issue = Issue(title="test", description="test")  # missing severity!
+    with pytest.raises(ValueError):
+        report.add_issue(issue)
+
+
 def test_report_add_meta():
     report = Report("127.0.0.1:8545")
     assert report.meta == {}
