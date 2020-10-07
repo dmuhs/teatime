@@ -3,7 +3,7 @@ import requests_mock
 from teatime import Issue
 
 
-def mocked_execute(target, rpc_result, plugin, context, rpc_method):
+def mocked_execute(target, rpc_result, plugin, context, rpc_method, skipped=False):
     with requests_mock.Mocker() as mock:
         mock.request(
             requests_mock.ANY,
@@ -11,9 +11,9 @@ def mocked_execute(target, rpc_result, plugin, context, rpc_method):
             json=rpc_result,
         )
         plugin.run(context=context)
-
-    assert mock.called
-    assert mock.request_history[0].json()["method"] == rpc_method
+    if not skipped:
+        assert mock.called
+        assert mock.request_history[0].json()["method"] == rpc_method
 
 
 def assert_report_has_issue(report, meta_name, title, description, rpc_raw, severity):
