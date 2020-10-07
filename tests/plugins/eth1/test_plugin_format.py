@@ -1,16 +1,15 @@
-import sys
-import teatime.plugins.eth1
 import inspect
-from teatime import Plugin
+import sys
+
 import pytest
 
+import teatime.plugins.eth1
+from teatime import Plugin
 
 PLUGINS = [
     obj
-    for name, obj
-    in inspect.getmembers(
-        sys.modules['teatime.plugins.eth1']
-    ) if inspect.isclass(obj)
+    for name, obj in inspect.getmembers(sys.modules["teatime.plugins.eth1"])
+    if inspect.isclass(obj)
 ]
 
 
