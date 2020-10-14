@@ -16,7 +16,7 @@ RPC_RESULT_FAILED = {"jsonrpc": "2.0", "id": 1, "result": True}
 RPC_RESULT_ACCOUNTS = {
     "jsonrpc": "2.0",
     "id": 1,
-    "result": ["0x06012c8cf97bead5deae237070f9587f8e7a266d"],
+    "result": [TEST_ADDR],
 }
 RPC_RESULT_NO_ACCOUNTS = {
     "jsonrpc": "2.0",
