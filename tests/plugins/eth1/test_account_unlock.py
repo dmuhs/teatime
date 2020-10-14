@@ -129,6 +129,24 @@ def test_issue_found(plugin, node_type, rpc_results, rpc_methods):
         ),
         pytest.param(
             AccountUnlock(infura_url=INFURA_URL, wordlist=WORDLIST),
+            NodeType.GETH,
+            (
+                {"status_code": 200, "json": RPC_RESULT_ACCOUNTS},
+                {"status_code": 200, "json": RPC_RESULT_BALANCE},
+                {
+                    "status_code": 200,
+                    "json": {
+                        "id": 1,
+                        "jsonrpc": "2.0",
+                        "error": {"message": "Method not found"},
+                    },
+                },
+            ),
+            [RPC_METHOD_ACCOUNTS, RPC_METHOD_BALANCE, RPC_METHOD_UNLOCK],
+            id="geth unlock not found",
+        ),
+        pytest.param(
+            AccountUnlock(infura_url=INFURA_URL, wordlist=WORDLIST),
             NodeType.PARITY,
             ({"status_code": 200, "json": {}},),
             [RPC_METHOD_ACCOUNTS, RPC_METHOD_BALANCE, RPC_METHOD_UNLOCK],
@@ -169,6 +187,24 @@ def test_issue_found(plugin, node_type, rpc_results, rpc_methods):
             ),
             [RPC_METHOD_ACCOUNTS, RPC_METHOD_BALANCE, RPC_METHOD_UNLOCK],
             id="parity unlock missing payload",
+        ),
+        pytest.param(
+            AccountUnlock(infura_url=INFURA_URL, wordlist=WORDLIST),
+            NodeType.PARITY,
+            (
+                {"status_code": 200, "json": RPC_RESULT_ACCOUNTS},
+                {"status_code": 200, "json": RPC_RESULT_BALANCE},
+                {
+                    "status_code": 200,
+                    "json": {
+                        "id": 1,
+                        "jsonrpc": "2.0",
+                        "error": {"message": "Method not found"},
+                    },
+                },
+            ),
+            [RPC_METHOD_ACCOUNTS, RPC_METHOD_BALANCE, RPC_METHOD_UNLOCK],
+            id="parity unlock not found",
         ),
     ),
 )
