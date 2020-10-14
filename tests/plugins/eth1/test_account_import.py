@@ -3,7 +3,7 @@ import pytest
 from teatime import Context, NodeType, Report, Severity
 from teatime.plugins.eth1 import GethAccountImport
 
-from .util import assert_empty_report, assert_report_has_issue, mocked_execute
+from .util import assert_empty_report, assert_mocked_execute, assert_report_has_issue
 
 TARGET = "127.0.0.1:8545"
 RPC_METHOD = "personal_importRawKey"
@@ -19,31 +19,33 @@ SEVERITY = Severity.MEDIUM
 
 
 @pytest.mark.parametrize(
-    "plugin,node_type",
+    "plugin,node_type,rpc_results",
     (
         pytest.param(
             GethAccountImport(keydata=TEST_PK, password=TEST_PASSWORD),
             NodeType.GETH,
+            ({"status_code": 200, "json": RPC_RESULT},),
             id="geth",
         ),
         pytest.param(
             GethAccountImport(keydata=TEST_PK, password=TEST_PASSWORD),
             NodeType.PARITY,
+            ({"status_code": 200, "json": RPC_RESULT},),
             id="parity",
         ),
     ),
 )
-def test_issue_found(plugin, node_type):
+def test_issue_found(plugin, node_type, rpc_results):
     skipped = node_type == NodeType.PARITY
     context = Context(
         target=TARGET, report=Report(target=TARGET, issues=[]), node_type=node_type
     )
-    mocked_execute(
+    assert_mocked_execute(
         target=TARGET,
-        rpc_result=RPC_RESULT,
+        rpc_results=rpc_results,
         plugin=plugin,
         context=context,
-        rpc_method=RPC_METHOD,
+        rpc_methods=[RPC_METHOD],
         skipped=skipped,
     )
     if not skipped:
@@ -60,44 +62,44 @@ def test_issue_found(plugin, node_type):
 
 
 @pytest.mark.parametrize(
-    "plugin,node_type,rpc_result",
+    "plugin,node_type,rpc_results",
     (
         pytest.param(
             GethAccountImport(keydata=TEST_PK, password=TEST_PASSWORD),
             NodeType.GETH,
-            {},
+            ({"status_code": 200, "json": {}},),
             id="geth missing payload",
         ),
         pytest.param(
             GethAccountImport(keydata=TEST_PK, password=TEST_PASSWORD),
             NodeType.PARITY,
-            {},
+            ({"status_code": 200, "json": {}},),
             id="parity missing payload",
         ),
         pytest.param(
             GethAccountImport(keydata=TEST_PK, password=TEST_PASSWORD),
             NodeType.GETH,
-            {"id": 1, "jsonrpc": "2.0", "error": {}},
+            ({"status_code": 200, "json": {"id": 1, "jsonrpc": "2.0", "error": {}}},),
             id="geth error present",
         ),
         pytest.param(
             GethAccountImport(keydata=TEST_PK, password=TEST_PASSWORD),
             NodeType.PARITY,
-            {"id": 1, "jsonrpc": "2.0", "error": {}},
+            ({"status_code": 200, "json": {"id": 1, "jsonrpc": "2.0", "error": {}}},),
             id="parity error present",
         ),
     ),
 )
-def test_no_issue_found(plugin, node_type, rpc_result):
+def test_no_issue_found(plugin, node_type, rpc_results):
     context = Context(
         target=TARGET, report=Report(target=TARGET, issues=[]), node_type=node_type
     )
-    mocked_execute(
+    assert_mocked_execute(
         target=TARGET,
-        rpc_result=rpc_result,
+        rpc_results=rpc_results,
         plugin=plugin,
         context=context,
-        rpc_method=RPC_METHOD,
+        rpc_methods=[RPC_METHOD],
         skipped=node_type == NodeType.PARITY,
     )
     assert_empty_report(report=context.report, meta_name=plugin.__class__.__name__)
