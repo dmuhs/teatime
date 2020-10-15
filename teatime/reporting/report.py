@@ -47,3 +47,12 @@ class Report:
             "meta": self.meta,
             "ok": any(i.is_severe() for i in self.issues) if self.issues else True,
         }
+
+    def __eq__(self, other: "Report"):
+        return all((
+            self.id == other.id,
+            self.target == other.target,
+            self.timestamp == other.timestamp,
+            self.issues == other.issues,
+            self.meta == other.meta,
+        ))

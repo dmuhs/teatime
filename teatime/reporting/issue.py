@@ -68,3 +68,12 @@ class Issue:
             "severity": str(self.severity).lower(),
             "raw": json.dumps(self.raw_data),
         }
+
+    def __eq__(self, other: "Issue"):
+        return all((
+            self.id == other.id,
+            self.title == other.title,
+            self.description == other.description,
+            self.severity == other.severity,
+            self.raw_data == other.raw_data,
+        ))
