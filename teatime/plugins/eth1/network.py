@@ -47,11 +47,9 @@ class PeerCountStatus(Plugin):
         self.minimum_peercount = minimum_peercount
 
     def _check(self, context: Context) -> None:
-        current_peercount = self.get_rpc_json(context.target, "net_peerCount")
+        current_peercount = int(self.get_rpc_json(context.target, "net_peerCount"), 16)
 
-        if self.minimum_peercount is not None and self.minimum_peercount > int(
-            current_peercount, 16
-        ):
+        if self.minimum_peercount > current_peercount:
             context.report.add_issue(
                 Issue(
                     title="Number of peers too low!",

@@ -22,6 +22,7 @@ from teatime.plugins.eth1 import (
     ParityGasCeiling,
     ParityGasFloor,
     ParitySyncMode,
+    PeerCountStatus,
     PeerlistLeak,
 )
 
@@ -1501,6 +1502,128 @@ TESTCASES += [
         ["net_listening"],
         [],
         id="NetworkListening geth no issue",
+    ),
+]
+
+# HashrateStatus
+TESTCASES += [
+    pytest.param(
+        PeerCountStatus(minimum_peercount=2),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x2",
+                },
+            }
+        ],
+        ["net_peerCount"],
+        [],
+        id="PeerCountStatus geth peer count equals",
+    ),
+    pytest.param(
+        PeerCountStatus(minimum_peercount=1),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x2",
+                },
+            }
+        ],
+        ["net_peerCount"],
+        [],
+        id="PeerCountStatus geth peer count larger",
+    ),
+    pytest.param(
+        PeerCountStatus(minimum_peercount=10),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x2",
+                },
+            }
+        ],
+        ["net_peerCount"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Number of peers too low!",
+                description="Too few peers (current < minimum): 2 < 10",
+                severity=Severity.MEDIUM,
+                raw_data=2,
+            )
+        ],
+        id="PeerCountStatus geth peer count smaller",
+    ),
+    pytest.param(
+        PeerCountStatus(minimum_peercount=2),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x2",
+                },
+            }
+        ],
+        ["net_peerCount"],
+        [],
+        id="PeerCountStatus parity peer count equals",
+    ),
+    pytest.param(
+        PeerCountStatus(minimum_peercount=1),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x2",
+                },
+            }
+        ],
+        ["net_peerCount"],
+        [],
+        id="PeerCountStatus parity peer count larger",
+    ),
+    pytest.param(
+        PeerCountStatus(minimum_peercount=10),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x2",
+                },
+            }
+        ],
+        ["net_peerCount"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Number of peers too low!",
+                description="Too few peers (current < minimum): 2 < 10",
+                severity=Severity.MEDIUM,
+                raw_data=2,
+            )
+        ],
+        id="PeerCountStatus parity peer count smaller",
     ),
 ]
 
