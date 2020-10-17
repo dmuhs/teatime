@@ -1883,6 +1883,114 @@ TESTCASES += [
     ),
 ]
 
+# GethStartWebsocket
+TESTCASES += [
+    pytest.param(
+        GethStartWebsocket(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["admin_startWS"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Admin Websocket Start Rights",
+                description="The RPC Websocket service can be started using the admin_startWS RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="GethStartWebsocket geth issue logged",
+    ),
+    pytest.param(
+        GethStartWebsocket(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["admin_startWS"],
+        [],
+        id="GethStartWebsocket geth no issue",
+    ),
+    pytest.param(
+        GethStartWebsocket(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethStartWebsocket parity skipped no issue",
+    ),
+]
+
+# GethStopWebsocket
+TESTCASES += [
+    pytest.param(
+        GethStopWebsocket(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["admin_stopWS"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Admin Websocket Stop Rights",
+                description="The RPC Websocket service can be stopped using the admin_stopWS RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="GethStopWebsocket geth issue logged",
+    ),
+    pytest.param(
+        GethStopWebsocket(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["admin_stopWS"],
+        [],
+        id="GethStopWebsocket geth no issue",
+    ),
+    pytest.param(
+        GethStopWebsocket(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethStopWebsocket parity skipped no issue",
+    ),
+]
+
 
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
