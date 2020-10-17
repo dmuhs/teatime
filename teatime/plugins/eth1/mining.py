@@ -53,14 +53,13 @@ class HashrateStatus(Plugin):
         self.expected_hashrate = expected_hashrate
 
     def _check(self, context: Context) -> None:
-        current_hashrate = self.get_rpc_json(context.target, "eth_hashrate")
-        expected_hashrate = context.extra.get("expected_hashrate")
+        current_hashrate = int(self.get_rpc_json(context.target, "eth_hashrate"), 16)
 
-        if expected_hashrate is not None and current_hashrate < expected_hashrate:
+        if current_hashrate < self.expected_hashrate:
             context.report.add_issue(
                 Issue(
                     title="Mining Hashrate Low",
-                    description=f"The hashrate should be >= {expected_hashrate} but only is {current_hashrate}",
+                    description=f"The hashrate should be >= {self.expected_hashrate} but only is {current_hashrate}",
                     raw_data=current_hashrate,
                     severity=Severity.MEDIUM,
                 )

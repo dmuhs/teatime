@@ -1293,6 +1293,128 @@ TESTCASES += [
     ),
 ]
 
+# HashrateStatus
+TESTCASES += [
+    pytest.param(
+        HashrateStatus(expected_hashrate=1000),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x3e8",
+                },
+            }
+        ],
+        ["eth_hashrate"],
+        [],
+        id="HashrateStatus geth hashrate equals",
+    ),
+    pytest.param(
+        HashrateStatus(expected_hashrate=100),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x3e8",
+                },
+            }
+        ],
+        ["eth_hashrate"],
+        [],
+        id="HashrateStatus geth hashrate larger",
+    ),
+    pytest.param(
+        HashrateStatus(expected_hashrate=10000),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x3e8",
+                },
+            }
+        ],
+        ["eth_hashrate"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Mining Hashrate Low",
+                description="The hashrate should be >= 10000 but only is 1000",
+                severity=Severity.MEDIUM,
+                raw_data=1000,
+            )
+        ],
+        id="HashrateStatus geth hashrate smaller",
+    ),
+    pytest.param(
+        HashrateStatus(expected_hashrate=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x3e8",
+                },
+            }
+        ],
+        ["eth_hashrate"],
+        [],
+        id="HashrateStatus parity hashrate equals",
+    ),
+    pytest.param(
+        HashrateStatus(expected_hashrate=100),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x3e8",
+                },
+            }
+        ],
+        ["eth_hashrate"],
+        [],
+        id="HashrateStatus parity hashrate larger",
+    ),
+    pytest.param(
+        HashrateStatus(expected_hashrate=10000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x3e8",
+                },
+            }
+        ],
+        ["eth_hashrate"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Mining Hashrate Low",
+                description="The hashrate should be >= 10000 but only is 1000",
+                severity=Severity.MEDIUM,
+                raw_data=1000,
+            )
+        ],
+        id="HashrateStatus parity hashrate smaller",
+    ),
+]
+
 
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
