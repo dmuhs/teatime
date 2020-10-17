@@ -1,6 +1,6 @@
 """This module contains plugins for controlling the Websocket RPC server
 status."""
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, NodeType, Plugin
 from teatime.reporting import Issue, Severity
 
 
@@ -15,6 +15,8 @@ class GethStartWebsocket(Plugin):
     INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
         payload = self.get_rpc_json(context.target, method="admin_startWS")
         context.report.add_issue(
             Issue(
@@ -37,6 +39,8 @@ class GethStopWebsocket(Plugin):
     INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
         payload = self.get_rpc_json(context.target, method="admin_stopWS")
         context.report.add_issue(
             Issue(
