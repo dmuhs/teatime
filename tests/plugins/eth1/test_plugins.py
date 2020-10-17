@@ -1010,6 +1010,61 @@ TESTCASES += [
 ]
 
 
+# ParityChangeExtra
+TESTCASES += [
+    pytest.param(
+        ParityChangeExtra(extra_data="pwn'd"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["parity_setExtraData"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Extra data change possible",
+                description="Anyone can change the extra data attached to newly mined blocks using the parity_setExtraData RPC call.",
+                severity=Severity.LOW,
+                raw_data=True,
+            )
+        ],
+        id="ParityChangeExtra parity issue logged",
+    ),
+    pytest.param(
+        ParityChangeExtra(extra_data="pwn'd"),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityChangeExtra geth skipped",
+    ),
+    pytest.param(
+        ParityChangeExtra(extra_data="pwn'd"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setExtraData"],
+        [],
+        id="ParityChangeExtra parity error",
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
     TESTCASES,
