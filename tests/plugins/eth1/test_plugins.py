@@ -11,6 +11,10 @@ from teatime.plugins.eth1 import (
     GethAccountImport,
     GethDatadir,
     GethNodeInfo,
+    GethStartRPC,
+    GethStartWebsocket,
+    GethStopRPC,
+    GethStopWebsocket,
     HashrateStatus,
     MiningStatus,
     NetworkListening,
@@ -1768,6 +1772,114 @@ TESTCASES += [
         ["parity_dropNonReservedPeers"],
         [],
         id="ParityDropPeers parity no issue",
+    ),
+]
+
+# GethStartRPC
+TESTCASES += [
+    pytest.param(
+        GethStartRPC(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["admin_startRPC"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Admin RPC Start Rights",
+                description="The HTTP RPC service can be started using the admin_startRPC RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="GethStartRPC geth issue logged",
+    ),
+    pytest.param(
+        GethStartRPC(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["admin_startRPC"],
+        [],
+        id="GethStartRPC geth no issue",
+    ),
+    pytest.param(
+        GethStartRPC(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethStartRPC parity skipped no issue",
+    ),
+]
+
+# GethStopRPC
+TESTCASES += [
+    pytest.param(
+        GethStopRPC(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["admin_stopRPC"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Admin RPC Stop Rights",
+                description="The HTTP RPC service can be stopped using the admin_stopRPC RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="GethStartRPC geth issue logged",
+    ),
+    pytest.param(
+        GethStopRPC(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["admin_stopRPC"],
+        [],
+        id="GethStartRPC geth no issue",
+    ),
+    pytest.param(
+        GethStopRPC(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethStartRPC parity skipped no issue",
     ),
 ]
 
