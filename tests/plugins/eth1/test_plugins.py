@@ -14,6 +14,7 @@ from teatime.plugins.eth1 import (
     GethNodeInfo,
     OpenAccounts,
     ParityDevLogs,
+    PeerlistLeak,
 )
 
 TARGET = "127.0.0.1:8545"
@@ -706,6 +707,86 @@ TESTCASES += [
             )
         ],
         id="ParityDevLogs geth skipped",
+    ),
+]
+
+# PeerlistLeak
+TESTCASES += [
+    pytest.param(
+        PeerlistLeak(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": "peer stuff"},
+            }
+        ],
+        ["parity_netPeers"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Peer list information leak",
+                description="Admin-only peer list information can be fetched with the parity_netPeers RPC call.",
+                severity=Severity.MEDIUM,
+                raw_data="peer stuff",
+            )
+        ],
+        id="PeerlistLeak parity issue logged",
+    ),
+    pytest.param(
+        PeerlistLeak(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": "peer stuff"},
+            }
+        ],
+        ["admin_peers"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Admin Peerlist Access",
+                description="Admin-only information about the peer list can be fetched using the admin_peers RPC call.",
+                severity=Severity.MEDIUM,
+                raw_data="peer stuff",
+            )
+        ],
+        id="PeerlistLeak geth issue logged",
+    ),
+    pytest.param(
+        PeerlistLeak(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["admin_peers"],
+        [],
+        id="PeerlistLeak geth error",
+    ),
+    pytest.param(
+        PeerlistLeak(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_netPeers"],
+        [],
+        id="PeerlistLeak parity error",
     ),
 ]
 
