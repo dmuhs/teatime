@@ -13,6 +13,7 @@ from teatime.plugins.eth1 import (
     GethNodeInfo,
     HashrateStatus,
     MiningStatus,
+    NetworkListening,
     OpenAccounts,
     ParityChangeCoinbase,
     ParityChangeExtra,
@@ -1412,6 +1413,94 @@ TESTCASES += [
             )
         ],
         id="HashrateStatus parity hashrate smaller",
+    ),
+]
+
+# NetworkListening
+TESTCASES += [
+    pytest.param(
+        NetworkListening(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["net_listening"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Node not listening to peers",
+                description="The node is not listening to new peer requests",
+                severity=Severity.HIGH,
+                raw_data=False,
+            )
+        ],
+        id="NetworkListening parity issue logged",
+    ),
+    pytest.param(
+        NetworkListening(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["net_listening"],
+        [],
+        id="NetworkListening parity no issue",
+    ),
+    pytest.param(
+        NetworkListening(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["net_listening"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Node not listening to peers",
+                description="The node is not listening to new peer requests",
+                severity=Severity.HIGH,
+                raw_data=False,
+            )
+        ],
+        id="NetworkListening geth issue logged",
+    ),
+    pytest.param(
+        NetworkListening(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["net_listening"],
+        [],
+        id="NetworkListening geth no issue",
     ),
 ]
 
