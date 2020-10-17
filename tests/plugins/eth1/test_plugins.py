@@ -14,6 +14,8 @@ from teatime.plugins.eth1 import (
     GethNodeInfo,
     OpenAccounts,
     ParityDevLogs,
+    ParityGasCeiling,
+    ParityGasFloor,
     PeerlistLeak,
 )
 
@@ -787,6 +789,107 @@ TESTCASES += [
         ["parity_netPeers"],
         [],
         id="PeerlistLeak parity error",
+    ),
+]
+
+# ParityGasCeiling
+TESTCASES += [
+    pytest.param(
+        ParityGasCeiling(gas_target=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": True},
+            }
+        ],
+        ["parity_setGasCeilTarget"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Gas ceiling target can be changed",
+                description="Anyone can change the gas ceiling value using the parity_setGasCeilTarget RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityGasCeiling parity issue logged",
+    ),
+    pytest.param(
+        ParityGasCeiling(gas_target=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setGasCeilTarget"],
+        [],
+        id="ParityGasCeiling parity error",
+    ),
+    pytest.param(
+        ParityGasCeiling(gas_target=1000),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityGasCeiling geth skipped",
+    ),
+]
+
+
+# ParityGasFloor
+TESTCASES += [
+    pytest.param(
+        ParityGasFloor(gas_floor=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": True},
+            }
+        ],
+        ["parity_setGasFloorTarget"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Gas floor target can be changed",
+                description="Anyone can change the gas floor value using the parity_setGasFloorTarget RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityGasFloor parity issue logged",
+    ),
+    pytest.param(
+        ParityGasFloor(gas_floor=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setGasFloorTarget"],
+        [],
+        id="ParityGasFloor parity error",
+    ),
+    pytest.param(
+        ParityGasFloor(gas_floor=1000),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityGasFloor geth skipped",
     ),
 ]
 
