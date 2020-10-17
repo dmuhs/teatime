@@ -2,6 +2,7 @@
 
 import json
 from enum import Enum
+from typing import Any
 from uuid import uuid4
 
 
@@ -28,7 +29,7 @@ class Issue:
         title: str = None,
         description: str = None,
         severity: Severity = None,
-        raw_data: str = None,
+        raw_data: Any = None,
     ):
         self.id = uuid or str(uuid4())
         self.title = title
@@ -71,10 +72,12 @@ class Issue:
         }
 
     def __eq__(self, other: "Issue"):
-        return all((
-            self.id == other.id,
-            self.title == other.title,
-            self.description == other.description,
-            self.severity == other.severity,
-            self.raw_data == other.raw_data,
-        ))
+        return all(
+            (
+                self.id == other.id,
+                self.title == other.title,
+                self.description == other.description,
+                self.severity == other.severity,
+                self.raw_data == other.raw_data,
+            )
+        )

@@ -49,10 +49,12 @@ class Report:
         }
 
     def __eq__(self, other: "Report"):
-        return all((
-            self.id == other.id,
-            self.target == other.target,
-            self.timestamp == other.timestamp,
-            self.issues == other.issues,
-            self.meta == other.meta,
-        ))
+        return all(
+            (
+                self.id == other.id,
+                self.target == other.target,
+                self.timestamp == other.timestamp,
+                self.issues == other.issues,
+                self.meta == other.meta,
+            )
+        )
