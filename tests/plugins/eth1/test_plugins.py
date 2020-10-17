@@ -19,6 +19,7 @@ from teatime.plugins.eth1 import (
     ParityChangeExtra,
     ParityChangeTarget,
     ParityDevLogs,
+    ParityDropPeers,
     ParityGasCeiling,
     ParityGasFloor,
     ParitySyncMode,
@@ -1713,6 +1714,60 @@ TESTCASES += [
         ["parity_addReservedPeer"],
         [],
         id="PeerlistManipulation parity no issue",
+    ),
+]
+
+# ParityDropPeers
+TESTCASES += [
+    pytest.param(
+        ParityDropPeers(),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityDropPeers geth skipped",
+    ),
+    pytest.param(
+        ParityDropPeers(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["parity_dropNonReservedPeers"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Peer list manipulation",
+                description="Anyone can drop the non-reserved peerlist on the node using the parity_dropNonReservedPeers RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityDropPeers parity issue logged",
+    ),
+    pytest.param(
+        ParityDropPeers(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["parity_dropNonReservedPeers"],
+        [],
+        id="ParityDropPeers parity no issue",
     ),
 ]
 

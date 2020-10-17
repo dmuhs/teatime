@@ -115,6 +115,9 @@ class ParityDropPeers(Plugin):
     INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.PARITY:
+            return
+
         payload = self.get_rpc_json(
             context.target, method="parity_dropNonReservedPeers"
         )
@@ -122,8 +125,7 @@ class ParityDropPeers(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Anyone can drop the non-reserved peerlist on the node using the "
-                    "parity_dropNonReservedPeers RPC call.",
+                    description="Anyone can drop the non-reserved peerlist on the node using the parity_dropNonReservedPeers RPC call.",
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
