@@ -10,8 +10,8 @@ from teatime.reporting.issue import Issue
 class Report:
     """A report class holding multiple issues and meta data."""
 
-    def __init__(self, target, issues=None):
-        self.id: str = str(uuid4())
+    def __init__(self, target, uuid: str = None, issues=None):
+        self.id: str = uuid or str(uuid4())
         self.target: str = target
         self.timestamp: str = datetime.now().isoformat()
         self.issues: List[Issue] = issues or []

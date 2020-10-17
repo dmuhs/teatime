@@ -24,12 +24,13 @@ class Issue:
 
     def __init__(
         self,
+        uuid: str = None,
         title: str = None,
         description: str = None,
         severity: Severity = None,
         raw_data: str = None,
     ):
-        self.id = str(uuid4())
+        self.id = uuid or str(uuid4())
         self.title = title
         self.description = description
         self.severity = severity
