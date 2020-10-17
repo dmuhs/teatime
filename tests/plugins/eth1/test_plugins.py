@@ -1,4 +1,3 @@
-import json
 import uuid
 from unittest.mock import Mock, patch
 
@@ -645,7 +644,8 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="Admin Node Info Leaks",
-                description="Admin-only information can be fetched using the admin_nodeInfo RPC call.",
+                description="Admin-only information can be fetched using the admin_nodeInfo RPC "
+                "call.",
                 severity=Severity.LOW,
                 raw_data={"important": "stuff"},
             )
@@ -703,7 +703,8 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="Developer log information leak",
-                description="The node's developer logs can be fetched using the parity_devLogs RPC call.",
+                description="The node's developer logs can be fetched using the parity_devLogs "
+                "RPC call.",
                 severity=Severity.CRITICAL,
                 raw_data=["important log stuff"],
             )
@@ -728,7 +729,8 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="Peer list information leak",
-                description="Admin-only peer list information can be fetched with the parity_netPeers RPC call.",
+                description="Admin-only peer list information can be fetched with the "
+                "parity_netPeers RPC call.",
                 severity=Severity.MEDIUM,
                 raw_data="peer stuff",
             )
@@ -749,7 +751,8 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="Admin Peerlist Access",
-                description="Admin-only information about the peer list can be fetched using the admin_peers RPC call.",
+                description="Admin-only information about the peer list can be fetched using the "
+                "admin_peers RPC call.",
                 severity=Severity.MEDIUM,
                 raw_data="peer stuff",
             )
@@ -808,7 +811,8 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="Gas ceiling target can be changed",
-                description="Anyone can change the gas ceiling value using the parity_setGasCeilTarget RPC call.",
+                description="Anyone can change the gas ceiling value using the "
+                "parity_setGasCeilTarget RPC call.",
                 severity=Severity.CRITICAL,
                 raw_data=True,
             )
@@ -842,7 +846,6 @@ TESTCASES += [
     ),
 ]
 
-
 # ParityGasFloor
 TESTCASES += [
     pytest.param(
@@ -859,7 +862,8 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="Gas floor target can be changed",
-                description="Anyone can change the gas floor value using the parity_setGasFloorTarget RPC call.",
+                description="Anyone can change the gas floor value using the "
+                "parity_setGasFloorTarget RPC call.",
                 severity=Severity.CRITICAL,
                 raw_data=True,
             )
