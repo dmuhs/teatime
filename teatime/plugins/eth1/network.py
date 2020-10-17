@@ -96,9 +96,7 @@ class PeerlistManipulation(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer "
-                    "RPC "
-                    "call",
+                    description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
                     raw_data=payload,
                     severity=Severity.HIGH,
                 )

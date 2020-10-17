@@ -24,6 +24,7 @@ from teatime.plugins.eth1 import (
     ParitySyncMode,
     PeerCountStatus,
     PeerlistLeak,
+    PeerlistManipulation,
 )
 
 TARGET = "127.0.0.1:8545"
@@ -1505,7 +1506,7 @@ TESTCASES += [
     ),
 ]
 
-# HashrateStatus
+# PeerCountStatus
 TESTCASES += [
     pytest.param(
         PeerCountStatus(minimum_peercount=2),
@@ -1624,6 +1625,94 @@ TESTCASES += [
             )
         ],
         id="PeerCountStatus parity peer count smaller",
+    ),
+]
+
+# PeerlistManipulation
+TESTCASES += [
+    pytest.param(
+        PeerlistManipulation(test_enode="test"),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["admin_addPeer"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Peer list manipulation",
+                description="Arbitrary peers can be added using the admin_addPeer RPC call.",
+                severity=Severity.HIGH,
+                raw_data=True,
+            )
+        ],
+        id="PeerlistManipulation geth issue logged",
+    ),
+    pytest.param(
+        PeerlistManipulation(test_enode="test"),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["admin_addPeer"],
+        [],
+        id="PeerlistManipulation geth no issue",
+    ),
+    pytest.param(
+        PeerlistManipulation(test_enode="test"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["parity_addReservedPeer"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Peer list manipulation",
+                description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
+                severity=Severity.HIGH,
+                raw_data=True,
+            )
+        ],
+        id="PeerlistManipulation parity issue logged",
+    ),
+    pytest.param(
+        PeerlistManipulation(test_enode="test"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["parity_addReservedPeer"],
+        [],
+        id="PeerlistManipulation parity no issue",
     ),
 ]
 
