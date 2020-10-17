@@ -955,6 +955,61 @@ TESTCASES += [
 ]
 
 
+# ParityChangeTarget
+TESTCASES += [
+    pytest.param(
+        ParityChangeTarget(target_chain="test"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["parity_setChain"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Chain preset change possible",
+                description="Anyone can change the node's target chain value using the parity_setChain RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityChangeTarget parity issue logged",
+    ),
+    pytest.param(
+        ParityChangeTarget(target_chain="test"),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityChangeTarget geth skipped",
+    ),
+    pytest.param(
+        ParityChangeTarget(target_chain="test"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setChain"],
+        [],
+        id="ParityChangeTarget parity error",
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
     TESTCASES,
