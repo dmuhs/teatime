@@ -18,6 +18,7 @@ from teatime.plugins.eth1 import (
     ParityDevLogs,
     ParityGasCeiling,
     ParityGasFloor,
+    ParitySyncMode,
     PeerlistLeak,
 )
 
@@ -1061,6 +1062,60 @@ TESTCASES += [
         ["parity_setExtraData"],
         [],
         id="ParityChangeExtra parity error",
+    ),
+]
+
+# ParitySyncMode
+TESTCASES += [
+    pytest.param(
+        ParitySyncMode(mode="offline"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["parity_setMode"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="The sync mode can be changed",
+                description="Anyone can change the node's sync mode using the parity_setMode RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParitySyncMode parity issue logged",
+    ),
+    pytest.param(
+        ParitySyncMode(mode="offline"),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParitySyncMode geth skipped",
+    ),
+    pytest.param(
+        ParitySyncMode(mode="offline"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setMode"],
+        [],
+        id="ParitySyncMode parity error",
     ),
 ]
 
