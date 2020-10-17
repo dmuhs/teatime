@@ -12,6 +12,9 @@ from teatime.plugins.eth1 import (
     GethDatadir,
     GethNodeInfo,
     OpenAccounts,
+    ParityChangeCoinbase,
+    ParityChangeExtra,
+    ParityChangeTarget,
     ParityDevLogs,
     ParityGasCeiling,
     ParityGasFloor,
@@ -894,6 +897,60 @@ TESTCASES += [
         [],
         [],
         id="ParityGasFloor geth skipped",
+    ),
+]
+
+# ParityChangeCoinbase
+TESTCASES += [
+    pytest.param(
+        ParityChangeCoinbase(author="0x0"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["parity_setAuthor"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Coinbase address change possible",
+                description="Anyone can change the coinbase address and redirect miner payouts using the parity_setAuthor RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityChangeCoinbase parity issue logged",
+    ),
+    pytest.param(
+        ParityChangeCoinbase(author="0x0"),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityChangeCoinbase geth skipped",
+    ),
+    pytest.param(
+        ParityChangeCoinbase(author="0x0"),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setAuthor"],
+        [],
+        id="ParityChangeCoinbase parity error",
     ),
 ]
 
