@@ -47,11 +47,9 @@ class PeerCountStatus(Plugin):
         self.minimum_peercount = minimum_peercount
 
     def _check(self, context: Context) -> None:
-        current_peercount = self.get_rpc_json(context.target, "net_peerCount")
+        current_peercount = int(self.get_rpc_json(context.target, "net_peerCount"), 16)
 
-        if self.minimum_peercount is not None and self.minimum_peercount > int(
-            current_peercount, 16
-        ):
+        if self.minimum_peercount > current_peercount:
             context.report.add_issue(
                 Issue(
                     title="Number of peers too low!",
@@ -98,9 +96,7 @@ class PeerlistManipulation(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer "
-                    "RPC "
-                    "call",
+                    description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
                     raw_data=payload,
                     severity=Severity.HIGH,
                 )
@@ -119,6 +115,9 @@ class ParityDropPeers(Plugin):
     INTRUSIVE = True
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.PARITY:
+            return
+
         payload = self.get_rpc_json(
             context.target, method="parity_dropNonReservedPeers"
         )
@@ -126,8 +125,7 @@ class ParityDropPeers(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Anyone can drop the non-reserved peerlist on the node using the "
-                    "parity_dropNonReservedPeers RPC call.",
+                    description="Anyone can drop the non-reserved peerlist on the node using the parity_dropNonReservedPeers RPC call.",
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )

@@ -73,7 +73,7 @@ class Plugin(abc.ABC):
 
     @abc.abstractmethod
     def _check(self, context: Context):
-        pass
+        pass  # pragma: no cover
 
     def run(self, context: Context):
         """The plugin's entrypoint as invoked by the scanner.

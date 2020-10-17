@@ -2,6 +2,7 @@
 
 import json
 from enum import Enum
+from typing import Any
 from uuid import uuid4
 
 
@@ -24,12 +25,13 @@ class Issue:
 
     def __init__(
         self,
+        uuid: str = None,
         title: str = None,
         description: str = None,
         severity: Severity = None,
-        raw_data: str = None,
+        raw_data: Any = None,
     ):
-        self.id = str(uuid4())
+        self.id = uuid or str(uuid4())
         self.title = title
         self.description = description
         self.severity = severity
@@ -40,7 +42,7 @@ class Issue:
 
         :return: A boolean indicating whether the issue is severe
         """
-        return not (self.severity == Severity.LOW or self.severity.NONE)
+        return not (self.severity is Severity.LOW or self.severity is Severity.NONE)
 
     def is_complete(self) -> bool:
         """Returns whether the issue is complete.
@@ -68,3 +70,14 @@ class Issue:
             "severity": str(self.severity).lower(),
             "raw": json.dumps(self.raw_data),
         }
+
+    def __eq__(self, other: "Issue"):
+        return all(
+            (
+                self.id == other.id,
+                self.title == other.title,
+                self.description == other.description,
+                self.severity == other.severity,
+                self.raw_data == other.raw_data,
+            )
+        )

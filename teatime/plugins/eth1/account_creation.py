@@ -31,7 +31,10 @@ class AccountCreation(Plugin):
         context.report.add_issue(
             Issue(
                 title="We managed to create a new account on your node",
-                description="A new account can be generated on the node itself using the personal_newAccount RPC call.",
+                description=(
+                    "A new account can be generated on the node "
+                    "itself using the personal_newAccount RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.MEDIUM,
             )

@@ -14,8 +14,8 @@ class ParityGasCeiling(Plugin):
 
     INTRUSIVE = True
 
-    def __init__(self, gas_target: str):
-        self.gas_target = gas_target
+    def __init__(self, gas_target: int):
+        self.gas_target = hex(gas_target)
 
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
@@ -46,8 +46,8 @@ class ParityGasFloor(Plugin):
 
     INTRUSIVE = True
 
-    def __init__(self, gas_floor: str):
-        self.gas_floor = gas_floor
+    def __init__(self, gas_floor: int):
+        self.gas_floor = hex(gas_floor)
 
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:

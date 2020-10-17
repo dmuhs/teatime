@@ -17,8 +17,9 @@ class GethAccountImport(Plugin):
 
     INTRUSIVE = True
 
-    def __init__(self, test_password: str):
-        self.test_password = test_password
+    def __init__(self, keydata: str, password: str):
+        self.keydata = keydata
+        self.password = password
 
     def _check(self, context: "Context"):
         if context.node_type != NodeType.GETH:
@@ -27,7 +28,7 @@ class GethAccountImport(Plugin):
         payload = self.get_rpc_json(
             target=context.target,
             method="personal_importRawKey",
-            params=[self.test_password, self.test_password],
+            params=[self.keydata, self.password],
         )
         context.report.add_issue(
             Issue(
