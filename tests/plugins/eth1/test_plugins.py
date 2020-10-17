@@ -11,6 +11,8 @@ from teatime.plugins.eth1 import (
     GethAccountImport,
     GethDatadir,
     GethNodeInfo,
+    HashrateStatus,
+    MiningStatus,
     OpenAccounts,
     ParityChangeCoinbase,
     ParityChangeExtra,
@@ -1116,6 +1118,178 @@ TESTCASES += [
         ["parity_setMode"],
         [],
         id="ParitySyncMode parity error",
+    ),
+]
+
+# MiningStatus
+TESTCASES += [
+    pytest.param(
+        MiningStatus(should_mine=True),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [],
+        id="MiningStatus geth is and should be mining",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=False),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [],
+        id="MiningStatus geth is not and should not be mining",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=False),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Mining Status",
+                description="The node should not be mining but is",
+                severity=Severity.MEDIUM,
+                raw_data=True,
+            )
+        ],
+        id="MiningStatus geth not mining but should be",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=True),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Mining Status",
+                description="The node should be mining but isn't",
+                severity=Severity.MEDIUM,
+                raw_data=False,
+            )
+        ],
+        id="MiningStatus geth should be mining but is not",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=True),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [],
+        id="MiningStatus parity is and should be mining",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=False),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [],
+        id="MiningStatus parity is not and should not be mining",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=False),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Mining Status",
+                description="The node should not be mining but is",
+                severity=Severity.MEDIUM,
+                raw_data=True,
+            )
+        ],
+        id="MiningStatus parity not mining but should be",
+    ),
+    pytest.param(
+        MiningStatus(should_mine=True),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["eth_mining"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Mining Status",
+                description="The node should be mining but isn't",
+                severity=Severity.MEDIUM,
+                raw_data=False,
+            )
+        ],
+        id="MiningStatus parity should be mining but is not",
     ),
 ]
 
