@@ -18,6 +18,7 @@ from teatime.plugins.eth1 import (
     HashrateStatus,
     MiningStatus,
     NetworkListening,
+    NodeSync,
     OpenAccounts,
     ParityChangeCoinbase,
     ParityChangeExtra,
@@ -2092,6 +2093,420 @@ TESTCASES += [
     ),
 ]
 
+# NodeSync
+TESTCASES += [
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: True Block Number: 1000",
+                severity=Severity.NONE,
+                raw_data=True,
+            )
+        ],
+        id="NodeSync geth exact match and syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: False Block Number: 1000",
+                severity=Severity.NONE,
+                raw_data=False,
+            )
+        ],
+        id="NodeSync geth exact match and not syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(995),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: True Block Number: 995",
+                severity=Severity.NONE,
+                raw_data=True,
+            )
+        ],
+        id="NodeSync geth in lower threshold and not syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: True Block Number: 1",
+                severity=Severity.NONE,
+                raw_data=True,
+            )
+        ],
+        id="NodeSync geth below threshold but syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="The node's block number is stale and its not synchronizing. The node is stuck!",
+                severity=Severity.CRITICAL,
+                raw_data=False,
+            )
+        ],
+        id="NodeSync geth below threshold and not syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: True Block Number: 1000",
+                severity=Severity.NONE,
+                raw_data=True,
+            )
+        ],
+        id="NodeSync parity exact match and syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: False Block Number: 1000",
+                severity=Severity.NONE,
+                raw_data=False,
+            )
+        ],
+        id="NodeSync parity exact match and not syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(995),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: True Block Number: 995",
+                severity=Severity.NONE,
+                raw_data=True,
+            )
+        ],
+        id="NodeSync parity in lower threshold and not syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": True,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="Syncing: True Block Number: 1",
+                severity=Severity.NONE,
+                raw_data=True,
+            )
+        ],
+        id="NodeSync parity below threshold but syncing",
+    ),
+    pytest.param(
+        NodeSync(infura_url="https://infura", block_threshold=10),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1),
+                },
+            },
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": hex(1000),
+                },
+            },
+        ],
+        ["eth_syncing", "eth_blockNumber", "eth_blockNumber"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Synchronization Status",
+                description="The node's block number is stale and its not synchronizing. The node is stuck!",
+                severity=Severity.CRITICAL,
+                raw_data=False,
+            )
+        ],
+        id="NodeSync parity below threshold and not syncing",
+    ),
+]
+
 
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
@@ -2120,6 +2535,7 @@ def test_issues(plugin, node_type, rpc_results, rpc_methods, issues):
         assert mock.request_history[i].json()["method"] == rpc_methods[i]
 
     assert context.report.meta == {plugin.__class__.__name__: True}
+    assert len(context.report.issues) == len(issues)
     for i1, i2 in zip(context.report.issues, issues):
         # compare dict representations here for more verbose failure diffs
         assert i1.to_dict() == i2.to_dict()
