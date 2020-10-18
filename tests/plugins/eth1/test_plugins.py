@@ -30,6 +30,7 @@ from teatime.plugins.eth1 import (
     PeerCountStatus,
     PeerlistLeak,
     PeerlistManipulation,
+    SHA3Consistency,
 )
 
 TARGET = "127.0.0.1:8545"
@@ -1988,6 +1989,106 @@ TESTCASES += [
         [],
         [],
         id="GethStopWebsocket parity skipped no issue",
+    ),
+]
+
+# SHA3Consistency
+TESTCASES += [
+    pytest.param(
+        SHA3Consistency(
+            test_input="0x68656c6c6f20776f726c64",
+            test_output="0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+        ),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+                },
+            }
+        ],
+        ["web3_sha3"],
+        [],
+        id="SHA3Consistency geth no issue",
+    ),
+    pytest.param(
+        SHA3Consistency(
+            test_input="0x68656c6c6f20776f726c64",
+            test_output="0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+        ),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "lolnope",
+                },
+            }
+        ],
+        ["web3_sha3"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="SHA3 test failed",
+                description="Expected 0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad but received lolnope",
+                severity=Severity.CRITICAL,
+                raw_data="lolnope",
+            )
+        ],
+        id="SHA3Consistency geth issue logged",
+    ),
+    pytest.param(
+        SHA3Consistency(
+            test_input="0x68656c6c6f20776f726c64",
+            test_output="0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+        ),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+                },
+            }
+        ],
+        ["web3_sha3"],
+        [],
+        id="SHA3Consistency parity no issue",
+    ),
+    pytest.param(
+        SHA3Consistency(
+            test_input="0x68656c6c6f20776f726c64",
+            test_output="0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad",
+        ),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "lolnope",
+                },
+            }
+        ],
+        ["web3_sha3"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="SHA3 test failed",
+                description="Expected 0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad but received lolnope",
+                severity=Severity.CRITICAL,
+                raw_data="lolnope",
+            )
+        ],
+        id="SHA3Consistency parity issue logged",
     ),
 ]
 
