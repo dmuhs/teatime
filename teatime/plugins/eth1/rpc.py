@@ -19,14 +19,15 @@ class GethStartRPC(Plugin):
             return
 
         payload = self.get_rpc_json(context.target, method="admin_startRPC")
-        context.report.add_issue(
-            Issue(
-                title="Admin RPC Start Rights",
-                description="The HTTP RPC service can be started using the admin_startRPC RPC call.",
-                raw_data=payload,
-                severity=Severity.CRITICAL,
+        if payload:
+            context.report.add_issue(
+                Issue(
+                    title="Admin RPC Start Rights",
+                    description="The HTTP RPC service can be started using the admin_startRPC RPC call.",
+                    raw_data=payload,
+                    severity=Severity.CRITICAL,
+                )
             )
-        )
 
 
 class GethStopRPC(Plugin):
@@ -47,11 +48,12 @@ class GethStopRPC(Plugin):
             return
 
         payload = self.get_rpc_json(context.target, method="admin_stopRPC")
-        context.report.add_issue(
-            Issue(
-                title="Admin RPC Stop Rights",
-                description="The HTTP RPC service can be stopped using the admin_stopRPC RPC call.",
-                raw_data=payload,
-                severity=Severity.CRITICAL,
+        if payload:
+            context.report.add_issue(
+                Issue(
+                    title="Admin RPC Stop Rights",
+                    description="The HTTP RPC service can be stopped using the admin_stopRPC RPC call.",
+                    raw_data=payload,
+                    severity=Severity.CRITICAL,
+                )
             )
-        )
