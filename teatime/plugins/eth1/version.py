@@ -58,7 +58,9 @@ class NodeVersion(Plugin):
         elif context.node_type == NodeType.PARITY:
             node_semver = self.latest_repo_release(self.parity_url)
         else:
-            raise PluginException(f"No repo known for node type {context.node_type}")
+            raise PluginException(
+                f"No repo known for node type {context.node_type}"
+            )  # pragma: no cover
 
         if client_semver != node_semver:
             context.report.add_issue(

@@ -15,10 +15,13 @@ from teatime.plugins.eth1 import (
     GethStartWebsocket,
     GethStopRPC,
     GethStopWebsocket,
+    GethTxPoolInspection,
+    GethTxPoolStatus,
     HashrateStatus,
     MiningStatus,
     NetworkListening,
     NodeSync,
+    NodeVersion,
     OpenAccounts,
     ParityChangeCoinbase,
     ParityChangeExtra,
@@ -30,10 +33,13 @@ from teatime.plugins.eth1 import (
     ParityMinGasPrice,
     ParitySyncMode,
     ParityTxCeiling,
+    ParityTxPoolStatistics,
+    ParityUpgrade,
     PeerCountStatus,
     PeerlistLeak,
     PeerlistManipulation,
     SHA3Consistency,
+    TxPoolContent,
 )
 
 TARGET = "127.0.0.1:8545"
@@ -2643,6 +2649,630 @@ TESTCASES += [
     ),
 ]
 
+# TxPoolContent
+TESTCASES += [
+    pytest.param(
+        TxPoolContent(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": "txpool content stuff"},
+            }
+        ],
+        ["parity_pendingTransactions"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Content",
+                description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool content stuff",
+            )
+        ],
+        id="TxPoolContent parity issue logged",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": "txpool content stuff"},
+            }
+        ],
+        ["txpool_content"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Content",
+                description="Anyone can see the transcation pool contents using the txpool_content RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool content stuff",
+            )
+        ],
+        id="TxPoolContent geth issue logged",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["txpool_content"],
+        [],
+        id="TxPoolContent geth error",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_pendingTransactions"],
+        [],
+        id="TxPoolContent parity error",
+    ),
+]
+
+# GethTxPoolInspection
+TESTCASES += [
+    pytest.param(
+        GethTxPoolInspection(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "txpool stuff",
+                },
+            }
+        ],
+        ["txpool_inspect"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Inspection",
+                description="Anyone can inspect the transaction pool using the txpool_inspect RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool stuff",
+            )
+        ],
+        id="GethTxPoolInspection geth issue logged",
+    ),
+    pytest.param(
+        GethTxPoolInspection(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["txpool_inspect"],
+        [],
+        id="GethTxPoolInspection geth no issue",
+    ),
+    pytest.param(
+        GethTxPoolInspection(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethTxPoolInspection parity skipped no issue",
+    ),
+]
+
+
+# GethTxPoolStatus
+TESTCASES += [
+    pytest.param(
+        GethTxPoolStatus(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "txpool stuff",
+                },
+            }
+        ],
+        ["txpool_status"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Status",
+                description="Anyone can see the transaction pool status using the txpool_status RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool stuff",
+            )
+        ],
+        id="GethTxPoolStatus geth issue logged",
+    ),
+    pytest.param(
+        GethTxPoolStatus(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["txpool_status"],
+        [],
+        id="GethTxPoolStatus geth no issue",
+    ),
+    pytest.param(
+        GethTxPoolStatus(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethTxPoolStatus parity skipped no issue",
+    ),
+]
+
+# ParityTxPoolStatistics
+TESTCASES += [
+    pytest.param(
+        ParityTxPoolStatistics(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "txpool statistics",
+                },
+            }
+        ],
+        ["parity_pendingTransactionsStats"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Statistics",
+                description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool statistics",
+            )
+        ],
+        id="ParityTxPoolStatistics parity issue logged",
+    ),
+    pytest.param(
+        ParityTxPoolStatistics(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_pendingTransactionsStats"],
+        [],
+        id="ParityTxPoolStatistics parity no issue",
+    ),
+    pytest.param(
+        ParityTxPoolStatistics(),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityTxPoolStatistics geth skipped no issue",
+    ),
+]
+
+# ParityUpgrade
+TESTCASES += [
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": {"upgrade": "stuff"},
+                },
+            }
+        ],
+        ["parity_upgradeReady"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="The node can be upgraded",
+                description="A new node upgrade has been detected using the parity_upgradeReady RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data={"upgrade": "stuff"},
+            )
+        ],
+        id="ParityUpgrade parity issue logged",
+    ),
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": None,
+                },
+            }
+        ],
+        ["parity_upgradeReady"],
+        [],
+        id="ParityUpgrade parity no issue",
+    ),
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_upgradeReady"],
+        [],
+        id="ParityUpgrade parity no issue",
+    ),
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityUpgrade geth skipped no issue",
+    ),
+]
+
+# NodeVersion
+TESTCASES += [
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v3.0.1"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity latest no issue",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v2.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v3.0.1"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v2.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Node version out of date",
+                description="2.0.1 != 3.0.1",
+                severity=Severity.HIGH,
+                raw_data="OpenEthereum//v2.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity old issue logged",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [],
+        id="NodeVersion parity error",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v1.9.23/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v1.9.23"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v1.9.23/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth latest no issue",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v0.9.3/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v1.9.23"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Node version out of date",
+                description="0.9.3 != 1.9.23",
+                severity=Severity.HIGH,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth old issue logged",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [],
+        id="NodeVersion geth error",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v0.9.3/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "text": "rate limited"},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth github invalid JSON",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v0.9.3/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "json": {}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth github missing tag",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "text": "rate limited"},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity github invalid JSON",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "json": {}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity github missing tag",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "no valid version here",
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="no valid version here",
+            ),
+        ],
+        id="NodeVersion geth no version found",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "no valid version here",
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="no valid version here",
+            ),
+        ],
+        id="NodeVersion parity no version found",
+    ),
+]
+
 
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
@@ -2668,6 +3298,8 @@ def test_issues(plugin, node_type, rpc_results, rpc_methods, issues):
 
     assert mock.call_count == len(rpc_results)
     for i, response in enumerate(rpc_results):
+        if "api.github.com" in mock.request_history[i].url:
+            continue
         assert mock.request_history[i].json()["method"] == rpc_methods[i]
 
     assert context.report.meta == {plugin.__class__.__name__: True}

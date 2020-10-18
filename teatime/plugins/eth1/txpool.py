@@ -33,8 +33,7 @@ class TxPoolContent(Plugin):
             context.report.add_issue(
                 Issue(
                     title="TxPool Content",
-                    description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC "
-                    "call.",
+                    description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC call.",
                     raw_data=payload,
                     severity=Severity.LOW,
                 )
@@ -52,6 +51,8 @@ class GethTxPoolInspection(Plugin):
     INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
         payload = self.get_rpc_json(context.target, method="txpool_inspect")
         context.report.add_issue(
             Issue(
@@ -74,6 +75,8 @@ class GethTxPoolStatus(Plugin):
     INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
         payload = self.get_rpc_json(context.target, method="txpool_status")
         context.report.add_issue(
             Issue(
@@ -96,14 +99,15 @@ class ParityTxPoolStatistics(Plugin):
     INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.PARITY:
+            return
         payload = self.get_rpc_json(
             context.target, method="parity_pendingTransactionsStats"
         )
         context.report.add_issue(
             Issue(
                 title="TxPool Statistics",
-                description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats "
-                "RPC call.",
+                description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats RPC call.",
                 raw_data=payload,
                 severity=Severity.LOW,
             )
