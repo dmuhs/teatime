@@ -15,6 +15,8 @@ from teatime.plugins.eth1 import (
     GethStartWebsocket,
     GethStopRPC,
     GethStopWebsocket,
+    GethTxPoolInspection,
+    GethTxPoolStatus,
     HashrateStatus,
     MiningStatus,
     NetworkListening,
@@ -30,10 +32,12 @@ from teatime.plugins.eth1 import (
     ParityMinGasPrice,
     ParitySyncMode,
     ParityTxCeiling,
+    ParityTxPoolStatistics,
     PeerCountStatus,
     PeerlistLeak,
     PeerlistManipulation,
     SHA3Consistency,
+    TxPoolContent,
 )
 
 TARGET = "127.0.0.1:8545"
@@ -2640,6 +2644,249 @@ TESTCASES += [
         [],
         [],
         id="ParityMinGasPrice geth skipped",
+    ),
+]
+
+# TxPoolContent
+TESTCASES += [
+    pytest.param(
+        TxPoolContent(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": "txpool content stuff"},
+            }
+        ],
+        ["parity_pendingTransactions"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Content",
+                description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool content stuff",
+            )
+        ],
+        id="TxPoolContent parity issue logged",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": "txpool content stuff"},
+            }
+        ],
+        ["txpool_content"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Content",
+                description="Anyone can see the transcation pool contents using the txpool_content RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool content stuff",
+            )
+        ],
+        id="TxPoolContent geth issue logged",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["txpool_content"],
+        [],
+        id="TxPoolContent geth error",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_pendingTransactions"],
+        [],
+        id="TxPoolContent parity error",
+    ),
+]
+
+# GethTxPoolInspection
+TESTCASES += [
+    pytest.param(
+        GethTxPoolInspection(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "txpool stuff",
+                },
+            }
+        ],
+        ["txpool_inspect"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Inspection",
+                description="Anyone can inspect the transaction pool using the txpool_inspect RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool stuff",
+            )
+        ],
+        id="GethTxPoolInspection geth issue logged",
+    ),
+    pytest.param(
+        GethTxPoolInspection(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["txpool_inspect"],
+        [],
+        id="GethTxPoolInspection geth no issue",
+    ),
+    pytest.param(
+        GethTxPoolInspection(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethTxPoolInspection parity skipped no issue",
+    ),
+]
+
+
+# GethTxPoolStatus
+TESTCASES += [
+    pytest.param(
+        GethTxPoolStatus(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "txpool stuff",
+                },
+            }
+        ],
+        ["txpool_status"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Status",
+                description="Anyone can see the transaction pool status using the txpool_status RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool stuff",
+            )
+        ],
+        id="GethTxPoolStatus geth issue logged",
+    ),
+    pytest.param(
+        GethTxPoolStatus(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["txpool_status"],
+        [],
+        id="GethTxPoolStatus geth no issue",
+    ),
+    pytest.param(
+        GethTxPoolStatus(),
+        NodeType.PARITY,
+        [],
+        [],
+        [],
+        id="GethTxPoolStatus parity skipped no issue",
+    ),
+]
+
+# ParityTxPoolStatistics
+TESTCASES += [
+    pytest.param(
+        ParityTxPoolStatistics(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "txpool statistics",
+                },
+            }
+        ],
+        ["parity_pendingTransactionsStats"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="TxPool Statistics",
+                description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats RPC call.",
+                severity=Severity.LOW,
+                raw_data="txpool statistics",
+            )
+        ],
+        id="ParityTxPoolStatistics parity issue logged",
+    ),
+    pytest.param(
+        ParityTxPoolStatistics(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_pendingTransactionsStats"],
+        [],
+        id="ParityTxPoolStatistics parity no issue",
+    ),
+    pytest.param(
+        ParityTxPoolStatistics(),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityTxPoolStatistics geth skipped no issue",
     ),
 ]
 
