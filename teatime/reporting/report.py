@@ -58,3 +58,6 @@ class Report:
                 self.meta == other.meta,
             )
         )
+
+    def __repr__(self):
+        return f"<Report target={self.target} issues={len(self.issues)}>"
