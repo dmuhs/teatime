@@ -5,7 +5,7 @@ from contextlib import closing
 from typing import List
 
 import requests
-from requests import ConnectTimeout, ReadTimeout
+from requests.exceptions import ConnectTimeout, ReadTimeout
 
 from teatime.plugins import PluginException
 
@@ -26,6 +26,7 @@ def check_port(host: str, port: int, timeout: int = 2) -> bool:
         return sock.connect_ex((host, port)) == 0
 
 
+# TODO: Make base Plugin method
 def decode_rpc_int(target, method, params: List[str] = None, idx: int = 1) -> int:
     """Attempt to make an RPC call and decode the result as an integer.
 
