@@ -18,11 +18,12 @@ class ParityUpgrade(Plugin):
             return
 
         payload = self.get_rpc_json(context.target, method="parity_upgradeReady")
-        context.report.add_issue(
-            Issue(
-                title="The node can be upgraded",
-                description="A new node upgrade has been detected using the parity_upgradeReady RPC call.",
-                raw_data=payload,
-                severity=Severity.CRITICAL,
+        if payload:
+            context.report.add_issue(
+                Issue(
+                    title="The node can be upgraded",
+                    description="A new node upgrade has been detected using the parity_upgradeReady RPC call.",
+                    raw_data=payload,
+                    severity=Severity.CRITICAL,
+                )
             )
-        )

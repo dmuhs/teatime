@@ -33,6 +33,7 @@ from teatime.plugins.eth1 import (
     ParitySyncMode,
     ParityTxCeiling,
     ParityTxPoolStatistics,
+    ParityUpgrade,
     PeerCountStatus,
     PeerlistLeak,
     PeerlistManipulation,
@@ -2887,6 +2888,77 @@ TESTCASES += [
         [],
         [],
         id="ParityTxPoolStatistics geth skipped no issue",
+    ),
+]
+
+# ParityUpgrade
+TESTCASES += [
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": {"upgrade": "stuff"},
+                },
+            }
+        ],
+        ["parity_upgradeReady"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="The node can be upgraded",
+                description="A new node upgrade has been detected using the parity_upgradeReady RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data={"upgrade": "stuff"},
+            )
+        ],
+        id="ParityUpgrade parity issue logged",
+    ),
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": None,
+                },
+            }
+        ],
+        ["parity_upgradeReady"],
+        [],
+        id="ParityUpgrade parity no issue",
+    ),
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_upgradeReady"],
+        [],
+        id="ParityUpgrade parity no issue",
+    ),
+    pytest.param(
+        ParityUpgrade(),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityUpgrade geth skipped no issue",
     ),
 ]
 
