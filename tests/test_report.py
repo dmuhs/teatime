@@ -1,6 +1,10 @@
+from uuid import uuid4
+
 import pytest
 
 from teatime import Issue, Report, Severity
+
+TEST_UUID = str(uuid4())
 
 
 def test_valid_report():
@@ -47,3 +51,46 @@ def test_report_add_meta():
     report.add_meta("test-key", "test-value")
     assert report.meta["test-key"] == "test-value"
     assert report.to_dict()["meta"]["test-key"] == "test-value"
+
+
+def test_report_repr():
+    report = Report(target="127.0.0.1:8545", issues=[None, None])
+    assert report.target in str(report)
+    assert str(len(report.issues)) in str(report)
+
+
+@pytest.mark.parametrize(
+    "report_1,report_2,expected",
+    (
+        pytest.param(
+            Report(
+                uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None], timestamp="lol"
+            ),
+            Report(
+                uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None], timestamp="lol"
+            ),
+            True,
+            id="equals",
+        ),
+        pytest.param(
+            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None]),
+            Report(uuid=str(uuid4()), target="127.0.0.1:8545", issues=[None]),
+            False,
+            id="uuid different",
+        ),
+        pytest.param(
+            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None]),
+            Report(uuid=TEST_UUID, target="lel", issues=[None]),
+            False,
+            id="target different",
+        ),
+        pytest.param(
+            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None]),
+            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[]),
+            False,
+            id="issues different",
+        ),
+    ),
+)
+def test_report_equality(report_1, report_2, expected):
+    assert (report_1 == report_2) == expected
