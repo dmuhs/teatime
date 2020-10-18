@@ -27,7 +27,9 @@ from teatime.plugins.eth1 import (
     ParityDropPeers,
     ParityGasCeiling,
     ParityGasFloor,
+    ParityMinGasPrice,
     ParitySyncMode,
+    ParityTxCeiling,
     PeerCountStatus,
     PeerlistLeak,
     PeerlistManipulation,
@@ -2504,6 +2506,140 @@ TESTCASES += [
             )
         ],
         id="NodeSync parity below threshold and not syncing",
+    ),
+]
+
+# ParityTxCeiling
+TESTCASES += [
+    pytest.param(
+        ParityTxCeiling(gas_limit=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": True},
+            }
+        ],
+        ["parity_setMaxTransactionGas"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Transaction maximum gas can be changed",
+                description="Anyone can change the maximum transaction gas limit using the parity_setMaxTransactionGas RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityTxCeiling parity issue logged",
+    ),
+    pytest.param(
+        ParityTxCeiling(gas_limit=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["parity_setMaxTransactionGas"],
+        [],
+        id="ParityTxCeiling parity error",
+    ),
+    pytest.param(
+        ParityTxCeiling(gas_limit=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setMaxTransactionGas"],
+        [],
+        id="ParityTxCeiling parity error",
+    ),
+    pytest.param(
+        ParityTxCeiling(gas_limit=1000),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityTxCeiling geth skipped",
+    ),
+]
+
+# ParityMinGasPrice
+TESTCASES += [
+    pytest.param(
+        ParityMinGasPrice(gas_price=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {"id": 1, "jsonrpc": "2.0", "result": True},
+            }
+        ],
+        ["parity_setMinGasPrice"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Transaction minimum gas can be changed",
+                description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC call.",
+                severity=Severity.CRITICAL,
+                raw_data=True,
+            )
+        ],
+        id="ParityMinGasPrice parity issue logged",
+    ),
+    pytest.param(
+        ParityMinGasPrice(gas_price=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": False,
+                },
+            }
+        ],
+        ["parity_setMinGasPrice"],
+        [],
+        id="ParityMinGasPrice parity error",
+    ),
+    pytest.param(
+        ParityMinGasPrice(gas_price=1000),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            }
+        ],
+        ["parity_setMinGasPrice"],
+        [],
+        id="ParityMinGasPrice parity error",
+    ),
+    pytest.param(
+        ParityMinGasPrice(gas_price=1000),
+        NodeType.GETH,
+        [],
+        [],
+        [],
+        id="ParityMinGasPrice geth skipped",
     ),
 ]
 

@@ -13,8 +13,8 @@ class ParityTxCeiling(Plugin):
 
     INTRUSIVE = True
 
-    def __init__(self, gas_limit: str):
-        self.gas_limit = gas_limit
+    def __init__(self, gas_limit: int):
+        self.gas_limit = hex(gas_limit)
 
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
@@ -25,15 +25,15 @@ class ParityTxCeiling(Plugin):
             method="parity_setMaxTransactionGas",
             params=[self.gas_limit],
         )
-        context.report.add_issue(
-            Issue(
-                title="Transaction maximum gas can be changed",
-                description="Anyone can change the maximum transaction gas limit using the "
-                "parity_setMaxTransactionGas RPC call.",
-                raw_data=payload,
-                severity=Severity.CRITICAL,
+        if payload:
+            context.report.add_issue(
+                Issue(
+                    title="Transaction maximum gas can be changed",
+                    description="Anyone can change the maximum transaction gas limit using the parity_setMaxTransactionGas RPC call.",
+                    raw_data=payload,
+                    severity=Severity.CRITICAL,
+                )
             )
-        )
 
 
 class ParityMinGasPrice(Plugin):
@@ -46,8 +46,8 @@ class ParityMinGasPrice(Plugin):
 
     INTRUSIVE = True
 
-    def __init__(self, gas_price: str):
-        self.gas_price = gas_price
+    def __init__(self, gas_price: int):
+        self.gas_price = hex(gas_price)
 
     def _check(self, context: Context) -> None:
         if context.node_type != NodeType.PARITY:
@@ -56,12 +56,12 @@ class ParityMinGasPrice(Plugin):
         payload = self.get_rpc_json(
             context.target, method="parity_setMinGasPrice", params=[self.gas_price]
         )
-        context.report.add_issue(
-            Issue(
-                title="Transaction minimum gas can be changed",
-                description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC "
-                "call.",
-                raw_data=payload,
-                severity=Severity.CRITICAL,
+        if payload:
+            context.report.add_issue(
+                Issue(
+                    title="Transaction minimum gas can be changed",
+                    description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC call.",
+                    raw_data=payload,
+                    severity=Severity.CRITICAL,
+                )
             )
-        )
