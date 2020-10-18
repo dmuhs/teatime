@@ -63,8 +63,8 @@ def test_report_repr():
     "report_1,report_2,expected",
     (
         pytest.param(
-            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None]),
-            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None]),
+            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None], timestamp="lol"),
+            Report(uuid=TEST_UUID, target="127.0.0.1:8545", issues=[None], timestamp="lol"),
             True,
             id="equals",
         ),
