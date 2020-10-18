@@ -1,6 +1,10 @@
+from uuid import uuid4
+
 import pytest
 
 from teatime import Issue, Severity
+
+TEST_UUID = str(uuid4())
 
 
 def test_valid_issue():
@@ -74,6 +78,117 @@ def test_issue_complete(issue: Issue, complete: bool):
 )
 def test_issue_severe(issue: Issue, severe: bool):
     assert issue.is_severe() == severe
+
+
+@pytest.mark.parametrize(
+    "issue_1,issue_2,expected",
+    (
+        pytest.param(
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            True,
+            id="equals",
+        ),
+        pytest.param(
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="foo",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            False,
+            id="name different",
+        ),
+        pytest.param(
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="foo",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            False,
+            id="description different",
+        ),
+        pytest.param(
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.HIGH,
+                raw_data=None,
+            ),
+            False,
+            id="severity different",
+        ),
+        pytest.param(
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data=None,
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="test",
+                description="test",
+                severity=Severity.NONE,
+                raw_data="lel",
+            ),
+            False,
+            id="raw data different",
+        ),
+    ),
+)
+def test_issue_equals(issue_1, issue_2, expected):
+    assert (issue_1 == issue_2) == expected
+
+
+def test_issue_repr():
+    i = Issue(
+        uuid=TEST_UUID,
+        title="test",
+        description="test",
+        severity=Severity.NONE,
+        raw_data=None,
+    )
+    assert str(i.severity) in str(i)
+    assert str(i.title) in str(i)
 
 
 def test_issue_dict():
