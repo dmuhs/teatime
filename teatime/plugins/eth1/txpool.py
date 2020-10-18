@@ -52,6 +52,8 @@ class GethTxPoolInspection(Plugin):
     INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
         payload = self.get_rpc_json(context.target, method="txpool_inspect")
         context.report.add_issue(
             Issue(
@@ -74,6 +76,8 @@ class GethTxPoolStatus(Plugin):
     INTRUSIVE = False
 
     def _check(self, context: Context) -> None:
+        if context.node_type != NodeType.GETH:
+            return
         payload = self.get_rpc_json(context.target, method="txpool_status")
         context.report.add_issue(
             Issue(
