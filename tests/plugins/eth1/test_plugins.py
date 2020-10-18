@@ -21,6 +21,7 @@ from teatime.plugins.eth1 import (
     MiningStatus,
     NetworkListening,
     NodeSync,
+    NodeVersion,
     OpenAccounts,
     ParityChangeCoinbase,
     ParityChangeExtra,
@@ -2962,6 +2963,316 @@ TESTCASES += [
     ),
 ]
 
+# NodeVersion
+TESTCASES += [
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v3.0.1"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity latest no issue",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v2.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v3.0.1"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v2.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Node version out of date",
+                description="2.0.1 != 3.0.1",
+                severity=Severity.HIGH,
+                raw_data="OpenEthereum//v2.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity old issue logged",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [],
+        id="NodeVersion parity error",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v1.9.23/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v1.9.23"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v1.9.23/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth latest no issue",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v0.9.3/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "json": {"tag_name": "v1.9.23"}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Node version out of date",
+                description="0.9.3 != 1.9.23",
+                severity=Severity.HIGH,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth old issue logged",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "error": {"message": "Method not found"},
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [],
+        id="NodeVersion geth error",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v0.9.3/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "text": "rate limited"},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth github invalid JSON",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "Geth/v0.9.3/darwin/go1.4.1",
+                },
+            },
+            {"status_code": 200, "json": {}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="Geth/v0.9.3/darwin/go1.4.1",
+            ),
+        ],
+        id="NodeVersion geth github missing tag",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "text": "rate limited"},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity github invalid JSON",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+                },
+            },
+            {"status_code": 200, "json": {}},
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="OpenEthereum//v3.0.1-stable-8ca8089-20200601/x86_64-unknown-linux-gnu/rustc1.43.1",
+            ),
+        ],
+        id="NodeVersion parity github missing tag",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.GETH,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "no valid version here",
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="no valid version here",
+            ),
+        ],
+        id="NodeVersion geth no version found",
+    ),
+    pytest.param(
+        NodeVersion(),
+        NodeType.PARITY,
+        [
+            {
+                "status_code": 200,
+                "json": {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "result": "no valid version here",
+                },
+            },
+        ],
+        ["web3_clientVersion"],
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="NodeVersion",
+                description="The node surfaces it's version information",
+                severity=Severity.NONE,
+                raw_data="no valid version here",
+            ),
+        ],
+        id="NodeVersion parity no version found",
+    ),
+]
+
 
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,rpc_methods,issues",
@@ -2987,6 +3298,8 @@ def test_issues(plugin, node_type, rpc_results, rpc_methods, issues):
 
     assert mock.call_count == len(rpc_results)
     for i, response in enumerate(rpc_results):
+        if "api.github.com" in mock.request_history[i].url:
+            continue
         assert mock.request_history[i].json()["method"] == rpc_methods[i]
 
     assert context.report.meta == {plugin.__class__.__name__: True}
