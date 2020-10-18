@@ -81,3 +81,6 @@ class Issue:
                 self.raw_data == other.raw_data,
             )
         )
+
+    def __repr__(self):
+        return f'<Issue severity={self.severity} title="{self.title}">'

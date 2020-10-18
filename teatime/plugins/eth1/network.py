@@ -79,28 +79,30 @@ class PeerlistManipulation(Plugin):
             payload = self.get_rpc_json(
                 context.target, method="admin_addPeer", params=[self.test_enode]
             )
-            context.report.add_issue(
-                Issue(
-                    title="Peer list manipulation",
-                    description="Arbitrary peers can be added using the admin_addPeer RPC call.",
-                    raw_data=payload,
-                    severity=Severity.HIGH,
+            if payload:
+                context.report.add_issue(
+                    Issue(
+                        title="Peer list manipulation",
+                        description="Arbitrary peers can be added using the admin_addPeer RPC call.",
+                        raw_data=payload,
+                        severity=Severity.HIGH,
+                    )
                 )
-            )
         elif context.node_type == NodeType.PARITY:
             payload = self.get_rpc_json(
                 context.target,
                 method="parity_addReservedPeer",
                 params=[self.test_enode],
             )
-            context.report.add_issue(
-                Issue(
-                    title="Peer list manipulation",
-                    description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
-                    raw_data=payload,
-                    severity=Severity.HIGH,
+            if payload:
+                context.report.add_issue(
+                    Issue(
+                        title="Peer list manipulation",
+                        description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
+                        raw_data=payload,
+                        severity=Severity.HIGH,
+                    )
                 )
-            )
 
 
 class ParityDropPeers(Plugin):
