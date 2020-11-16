@@ -1,6 +1,6 @@
 """This module contains checks regarding a node's transaction pool."""
 
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 

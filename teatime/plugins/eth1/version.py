@@ -5,7 +5,7 @@ import re
 
 import requests
 
-from teatime.plugins import Context, NodeType, PluginException, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType, PluginException
 from teatime.reporting import Issue, Severity
 
 SEMVER_REGEX = r"\d+.\d+.\d+"

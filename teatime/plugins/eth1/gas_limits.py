@@ -1,6 +1,6 @@
 """This module contains plugins around the gas-setting RPC endpoints."""
 
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 

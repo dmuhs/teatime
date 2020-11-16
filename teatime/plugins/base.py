@@ -1,22 +1,24 @@
 """This module holds the base plugin class and exception."""
 
 import abc
-from typing import List, Union
+from functools import wraps
 from json import JSONDecodeError
+from typing import List, Optional, Union
+
 import requests
 from loguru import logger
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
 
 from .context import Context
-from functools import wraps
 
 
 def handle_connection_errors(func):
     """Catch connection-related excetions and reraise.
 
-    This slim wrapper will catch connection and decoding errors, and requests-related
-    exceptions to reraise them as PluginErrors so we can catch them in a standardized way.
+    This slim wrapper will catch connection and decoding errors, and requests-related exceptions to
+    reraise them as PluginErrors so we can catch them in a standardized way.
     """
+
     @wraps(func)
     def handle(*args, **kwargs):
         try:
@@ -24,6 +26,7 @@ def handle_connection_errors(func):
         except (ConnectTimeout, ConnectionError, ReadTimeout, JSONDecodeError) as e:
             raise PluginException(f"Connection Error: {e}")
         return resp
+
     return handle
 
 
@@ -119,13 +122,31 @@ class JSONRPCPlugin(BasePlugin, abc.ABC):
 class IPFSRPCPlugin(BasePlugin, abc.ABC):
     @staticmethod
     @handle_connection_errors
-    def get_rpc_json(target: str, params: dict):
+    def get_rpc_json(
+        target: str,
+        route: str = "",
+        params: dict = None,
+        headers: Optional[dict] = None,
+        files: Optional[dict] = None,
+    ):
+        """
+        TODO: write this
+        """
+        files = files or {".teatime": "teatime test".encode("utf-8")}
+        params = params or {}
+        headers = headers or {}
+        request_headers = {"User-Agent": "This is for research purposes, I promise!"}
+        request_headers.update(headers)
+
         resp = requests.post(
-            target,
+            url=target + route,
             params=params,
             timeout=3,
-            headers={"User-Agent": "This is for research purposes, I promise!"},
+            headers=request_headers,
+            files=files,
         )
+        print(resp.content)
         if resp.status_code != 200:
             raise PluginException(f"RPC call returned with status {resp.status_code}")
+
         return resp.json()

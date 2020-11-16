@@ -1,11 +1,11 @@
 """This module contains a scanner class running various Plugins."""
 
 import time
-from typing import List
+from typing import List, Union
 
 from loguru import logger
 
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, IPFSRPCPlugin, JSONRPCPlugin, NodeType
 from teatime.reporting import Report
 from teatime.utils import reverse_dns
 
@@ -18,7 +18,7 @@ class Scanner:
         ip: str,
         port: int,
         node_type: NodeType,
-        plugins: List[JSONRPCPlugin],
+        plugins: List[Union[JSONRPCPlugin, IPFSRPCPlugin]],
         prefix: str = "http://",
     ):
         self.target = f"{prefix}{ip}:{port}"

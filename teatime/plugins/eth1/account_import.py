@@ -1,5 +1,5 @@
 """This module holds the plugin checking for accound imports."""
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 

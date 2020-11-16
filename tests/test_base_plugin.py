@@ -4,7 +4,7 @@ import pytest
 import requests_mock
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
 
-from teatime import Context, NodeType, PluginException, Report, JSONRPCPlugin
+from teatime import Context, JSONRPCPlugin, NodeType, PluginException, Report
 
 
 class SampleRPCPlugin(JSONRPCPlugin):

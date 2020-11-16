@@ -1,6 +1,6 @@
 """This module contains a plugin for network-related checks."""
 
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 

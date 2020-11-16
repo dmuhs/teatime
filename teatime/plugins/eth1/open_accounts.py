@@ -2,7 +2,7 @@
 
 from loguru import logger
 
-from teatime.plugins import Context, PluginException, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, PluginException
 from teatime.reporting import Issue, Severity
 from teatime.utils import decode_rpc_int
 

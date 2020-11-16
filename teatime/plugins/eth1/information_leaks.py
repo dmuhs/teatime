@@ -1,6 +1,6 @@
 """This module contains plugins with admin interface checks."""
 
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 

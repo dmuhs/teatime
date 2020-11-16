@@ -1,5 +1,5 @@
 """This module contains plugins for controlling the HTTP RPC server status."""
-from teatime.plugins import Context, NodeType, JSONRPCPlugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 

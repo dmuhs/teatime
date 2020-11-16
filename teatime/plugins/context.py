@@ -17,6 +17,7 @@ class NodeType(Enum):
 
     GETH = 0
     PARITY = 1
+    IPFS = 2
 
 
 class Context:
