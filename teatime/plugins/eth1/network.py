@@ -1,10 +1,10 @@
 """This module contains a plugin for network-related checks."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class NetworkListening(Plugin):
+class NetworkListening(JSONRPCPlugin):
     """Check whether the node is listening for peers.
 
     Severity: High
@@ -31,7 +31,7 @@ class NetworkListening(Plugin):
             )
 
 
-class PeerCountStatus(Plugin):
+class PeerCountStatus(JSONRPCPlugin):
     """Check whether the node has a certain peer count.
 
     Severity: Medium
@@ -60,7 +60,7 @@ class PeerCountStatus(Plugin):
             )
 
 
-class PeerlistManipulation(Plugin):
+class PeerlistManipulation(JSONRPCPlugin):
     """Try to add a peer to the node's peer list.
 
     Severity: High
@@ -105,7 +105,7 @@ class PeerlistManipulation(Plugin):
                 )
 
 
-class ParityDropPeers(Plugin):
+class ParityDropPeers(JSONRPCPlugin):
     """Try to remove non-reserved peers from the peer list.
 
     Severity: Critical

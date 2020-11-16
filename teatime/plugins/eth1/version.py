@@ -5,13 +5,13 @@ import re
 
 import requests
 
-from teatime.plugins import Context, NodeType, Plugin, PluginException
+from teatime.plugins import Context, NodeType, PluginException, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 SEMVER_REGEX = r"\d+.\d+.\d+"
 
 
-class NodeVersion(Plugin):
+class NodeVersion(JSONRPCPlugin):
     """Check whether a given node's version is stale.
 
     Severity: None/High

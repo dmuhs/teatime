@@ -2,12 +2,12 @@
 
 from loguru import logger
 
-from teatime.plugins import Context, Plugin, PluginException
+from teatime.plugins import Context, PluginException, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 from teatime.utils import decode_rpc_int
 
 
-class OpenAccounts(Plugin):
+class OpenAccounts(JSONRPCPlugin):
     """Check for any accounts registered on the node.
 
     Severity: Medium
@@ -38,7 +38,7 @@ class OpenAccounts(Plugin):
             )
 
 
-class AccountUnlock(Plugin):
+class AccountUnlock(JSONRPCPlugin):
     """Check whether any accounts on the node are weakly protected.
 
     Severity: Critical

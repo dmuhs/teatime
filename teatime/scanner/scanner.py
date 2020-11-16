@@ -5,7 +5,7 @@ from typing import List
 
 from loguru import logger
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Report
 from teatime.utils import reverse_dns
 
@@ -18,7 +18,7 @@ class Scanner:
         ip: str,
         port: int,
         node_type: NodeType,
-        plugins: List[Plugin],
+        plugins: List[JSONRPCPlugin],
         prefix: str = "http://",
     ):
         self.target = f"{prefix}{ip}:{port}"

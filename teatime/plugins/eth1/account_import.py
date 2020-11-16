@@ -1,9 +1,9 @@
 """This module holds the plugin checking for accound imports."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class GethAccountImport(Plugin):
+class GethAccountImport(JSONRPCPlugin):
     """Detect whether it's possible to import an account on the node.
 
     Severity: Medium

@@ -1,11 +1,11 @@
 """This module contains a plugin checking for node sync issues."""
 
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 from teatime.utils import decode_rpc_int
 
 
-class NodeSync(Plugin):
+class NodeSync(JSONRPCPlugin):
     """Check the node's sync state and whether it's stuck.
 
     Severity: None/Critical

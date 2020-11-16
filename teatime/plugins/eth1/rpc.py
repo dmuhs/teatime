@@ -1,9 +1,9 @@
 """This module contains plugins for controlling the HTTP RPC server status."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class GethStartRPC(Plugin):
+class GethStartRPC(JSONRPCPlugin):
     """Try to start the RPC service.
 
     Severity: Critical
@@ -30,7 +30,7 @@ class GethStartRPC(Plugin):
             )
 
 
-class GethStopRPC(Plugin):
+class GethStopRPC(JSONRPCPlugin):
     """Try to stop the RPC service.
 
     Severity: Critical

@@ -1,10 +1,10 @@
 """This module contains checks regarding a node's transaction pool."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class TxPoolContent(Plugin):
+class TxPoolContent(JSONRPCPlugin):
     """Try to fetch the transaction pool contents.
 
     Severity: Low
@@ -40,7 +40,7 @@ class TxPoolContent(Plugin):
             )
 
 
-class GethTxPoolInspection(Plugin):
+class GethTxPoolInspection(JSONRPCPlugin):
     """Try to inspect the transaction pool.
 
     Severity: Low
@@ -64,7 +64,7 @@ class GethTxPoolInspection(Plugin):
         )
 
 
-class GethTxPoolStatus(Plugin):
+class GethTxPoolStatus(JSONRPCPlugin):
     """Try to fetch the transaction pool status.
 
     Severity: Low
@@ -88,7 +88,7 @@ class GethTxPoolStatus(Plugin):
         )
 
 
-class ParityTxPoolStatistics(Plugin):
+class ParityTxPoolStatistics(JSONRPCPlugin):
     """Try to fetch the transaction pool statistics.
 
     Severity: Low

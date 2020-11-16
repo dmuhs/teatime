@@ -1,10 +1,10 @@
 """This module contains plugins for controlling the Websocket RPC server
 status."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class GethStartWebsocket(Plugin):
+class GethStartWebsocket(JSONRPCPlugin):
     """Try to start the websocket service.
 
     Severity: Critical
@@ -29,7 +29,7 @@ class GethStartWebsocket(Plugin):
             )
 
 
-class GethStopWebsocket(Plugin):
+class GethStopWebsocket(JSONRPCPlugin):
     """Try to stop the websocket service.
 
     Severity: Critical

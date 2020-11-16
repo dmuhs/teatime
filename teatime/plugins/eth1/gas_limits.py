@@ -1,10 +1,10 @@
 """This module contains plugins around the gas-setting RPC endpoints."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class ParityGasCeiling(Plugin):
+class ParityGasCeiling(JSONRPCPlugin):
     """Try to set a new gas ceiling target for mined blocks.
 
     Severity: Critical
@@ -36,7 +36,7 @@ class ParityGasCeiling(Plugin):
         )
 
 
-class ParityGasFloor(Plugin):
+class ParityGasFloor(JSONRPCPlugin):
     """Try to set a new gas floor target for mined blocks.
 
     Severity: Critical

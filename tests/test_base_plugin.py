@@ -4,15 +4,15 @@ import pytest
 import requests_mock
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
 
-from teatime import Context, NodeType, Plugin, PluginException, Report
+from teatime import Context, NodeType, PluginException, Report, JSONRPCPlugin
 
 
-class SamplePlugin(Plugin):
+class SampleRPCPlugin(JSONRPCPlugin):
     def _check(self, context: Context):
         pass
 
 
-class IncompletePlugin(Plugin):
+class IncompleteRPCPlugin(JSONRPCPlugin):
     pass
 
 
@@ -36,15 +36,15 @@ def assert_report(report: Report, target, meta):
 
 
 def test_repr_name():
-    plugin = SamplePlugin()
-    assert "SamplePlugin" in str(plugin)
+    plugin = SampleRPCPlugin()
+    assert "SampleRPCPlugin" in str(plugin)
 
 
 def test_run_context():
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     target = "127.0.0.1:8545"
     node_type = NodeType.GETH
-    expected_meta = {"SamplePlugin": True}
+    expected_meta = {"SampleRPCPlugin": True}
     context = Context(
         target=target,
         report=Report(target=target),
@@ -62,10 +62,10 @@ def test_run_context():
 
 
 def test_run_plugin_exception():
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     target = "127.0.0.1:8545"
     node_type = NodeType.GETH
-    expected_meta = {"SamplePlugin": True}
+    expected_meta = {"SampleRPCPlugin": True}
     context = Context(
         target=target,
         report=Report(target=target),
@@ -84,13 +84,13 @@ def test_run_plugin_exception():
 
 def test_incomplete_plugin():
     with pytest.raises(TypeError):
-        IncompletePlugin()
+        IncompleteRPCPlugin()
 
 
 def test_valid_json_rpc():
     target = "http://127.0.0.1:8545"
     expected_result = "0x65a8db"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock:
         mock.request(
             requests_mock.ANY,
@@ -107,7 +107,7 @@ def test_valid_json_rpc():
 
 def test_json_rpc_connection_timeout():
     target = "http://127.0.0.1:8545"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(requests_mock.ANY, target, exc=ConnectTimeout)
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
@@ -115,7 +115,7 @@ def test_json_rpc_connection_timeout():
 
 def test_json_rpc_read_timeout():
     target = "http://127.0.0.1:8545"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(requests_mock.ANY, target, exc=ReadTimeout)
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
@@ -123,7 +123,7 @@ def test_json_rpc_read_timeout():
 
 def test_json_rpc_connection_error():
     target = "http://127.0.0.1:8545"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(requests_mock.ANY, target, exc=ConnectionError)
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
@@ -131,7 +131,7 @@ def test_json_rpc_connection_error():
 
 def test_json_rpc_non_ok():
     target = "http://127.0.0.1:8545"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(requests_mock.ANY, target, json={}, status_code=500)
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
@@ -139,7 +139,7 @@ def test_json_rpc_non_ok():
 
 def test_json_rpc_missing_result():
     target = "http://127.0.0.1:8545"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(requests_mock.ANY, target, json={})
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
@@ -147,7 +147,7 @@ def test_json_rpc_missing_result():
 
 def test_json_rpc_error_key():
     target = "http://127.0.0.1:8545"
-    plugin = SamplePlugin()
+    plugin = SampleRPCPlugin()
     with requests_mock.Mocker() as mock, pytest.raises(PluginException):
         mock.request(
             requests_mock.ANY,

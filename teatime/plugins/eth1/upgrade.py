@@ -1,9 +1,9 @@
 """This module contains a plugin checking for Parity/OpenEthereum upgrades."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class ParityUpgrade(Plugin):
+class ParityUpgrade(JSONRPCPlugin):
     """Try to check for an available upgrade.
 
     Severity: Critical

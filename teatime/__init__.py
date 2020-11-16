@@ -1,6 +1,6 @@
 """Let's toast some nodes, eh?"""
 
-from teatime.plugins.base import Plugin, PluginException
+from teatime.plugins.base import PluginException, JSONRPCPlugin
 from teatime.plugins.context import Context, NodeType
 from teatime.reporting import Issue, Report, Severity
 from teatime.scanner import Scanner

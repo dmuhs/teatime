@@ -26,7 +26,7 @@ def check_port(host: str, port: int, timeout: int = 2) -> bool:
         return sock.connect_ex((host, port)) == 0
 
 
-# TODO: Make base Plugin method
+# TODO: Make base JSONRPCPlugin method
 def decode_rpc_int(target, method, params: List[str] = None, idx: int = 1) -> int:
     """Attempt to make an RPC call and decode the result as an integer.
 

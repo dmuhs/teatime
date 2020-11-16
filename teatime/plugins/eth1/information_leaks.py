@@ -1,10 +1,10 @@
 """This module contains plugins with admin interface checks."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class GethDatadir(Plugin):
+class GethDatadir(JSONRPCPlugin):
     """Try to fetch Geth's data directory.
 
     Severity: Low
@@ -29,7 +29,7 @@ class GethDatadir(Plugin):
         )
 
 
-class GethNodeInfo(Plugin):
+class GethNodeInfo(JSONRPCPlugin):
     """Try to fetch admin info about the node.
 
     Severity: Low
@@ -54,7 +54,7 @@ class GethNodeInfo(Plugin):
         )
 
 
-class ParityDevLogs(Plugin):
+class ParityDevLogs(JSONRPCPlugin):
     """Try to fetch the node's developer logs.
 
     Severity: Critical
@@ -79,7 +79,7 @@ class ParityDevLogs(Plugin):
         )
 
 
-class PeerlistLeak(Plugin):
+class PeerlistLeak(JSONRPCPlugin):
     """Try to fetch peer list information.
 
     Severity: Medium

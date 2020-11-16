@@ -1,10 +1,10 @@
 """This module contains a plugin with checks for account creation."""
 
-from teatime.plugins import Plugin
+from teatime.plugins import JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class AccountCreation(Plugin):
+class AccountCreation(JSONRPCPlugin):
     """Detect whether it's possible to create an account on the node.
 
     Severity: Medium

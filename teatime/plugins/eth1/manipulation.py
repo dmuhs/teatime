@@ -1,9 +1,9 @@
 """This module contains plugins around setting vital execution parameters."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class ParityChangeCoinbase(Plugin):
+class ParityChangeCoinbase(JSONRPCPlugin):
     """Try to change the coinbase address.
 
     Severity: Critical
@@ -36,7 +36,7 @@ class ParityChangeCoinbase(Plugin):
         )
 
 
-class ParityChangeTarget(Plugin):
+class ParityChangeTarget(JSONRPCPlugin):
     """Try to change the target chain.
 
     Severity: Critical
@@ -68,7 +68,7 @@ class ParityChangeTarget(Plugin):
         )
 
 
-class ParityChangeExtra(Plugin):
+class ParityChangeExtra(JSONRPCPlugin):
     """Try to set the extra data field.
 
     Severity: Low
@@ -101,7 +101,7 @@ class ParityChangeExtra(Plugin):
         )
 
 
-class ParitySyncMode(Plugin):
+class ParitySyncMode(JSONRPCPlugin):
     """Try to set the node's sync mode.
 
     Severity: Critical

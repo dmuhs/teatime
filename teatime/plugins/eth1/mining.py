@@ -1,10 +1,10 @@
 """This module contains a plugin for mining-related checks."""
 
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class MiningStatus(Plugin):
+class MiningStatus(JSONRPCPlugin):
     """Check whether the node is mining.
 
     Severity: Medium
@@ -37,7 +37,7 @@ class MiningStatus(Plugin):
             )
 
 
-class HashrateStatus(Plugin):
+class HashrateStatus(JSONRPCPlugin):
     """Check whether the node has a certain hash rate.
 
     Severity: Medium

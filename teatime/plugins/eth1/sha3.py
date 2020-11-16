@@ -1,10 +1,10 @@
 """This module contains a plugin to check for SHA3 consistency."""
 
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class SHA3Consistency(Plugin):
+class SHA3Consistency(JSONRPCPlugin):
     """Check for SHA3 consistency.
 
     Severity: Critical

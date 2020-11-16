@@ -1,9 +1,9 @@
 """This module contains plugins around setting transaction-related limits."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, NodeType, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class ParityTxCeiling(Plugin):
+class ParityTxCeiling(JSONRPCPlugin):
     """Try to set the maximum transaction gas.
 
     Severity: Critical
@@ -36,7 +36,7 @@ class ParityTxCeiling(Plugin):
             )
 
 
-class ParityMinGasPrice(Plugin):
+class ParityMinGasPrice(JSONRPCPlugin):
     """Try to set the minimum transaction gas price.
 
     Severity: Critical

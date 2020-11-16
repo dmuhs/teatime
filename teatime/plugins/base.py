@@ -2,12 +2,29 @@
 
 import abc
 from typing import List, Union
-
+from json import JSONDecodeError
 import requests
 from loguru import logger
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout
 
 from .context import Context
+from functools import wraps
+
+
+def handle_connection_errors(func):
+    """Catch connection-related excetions and reraise.
+
+    This slim wrapper will catch connection and decoding errors, and requests-related
+    exceptions to reraise them as PluginErrors so we can catch them in a standardized way.
+    """
+    @wraps(func)
+    def handle(*args, **kwargs):
+        try:
+            resp = func(*args, **kwargs)
+        except (ConnectTimeout, ConnectionError, ReadTimeout, JSONDecodeError) as e:
+            raise PluginException(f"Connection Error: {e}")
+        return resp
+    return handle
 
 
 class PluginException(Exception):
@@ -16,15 +33,45 @@ class PluginException(Exception):
     pass
 
 
-class Plugin(abc.ABC):
+class BasePlugin(abc.ABC):
     """The base plugin class."""
 
     INTRUSIVE: bool = True
 
     def __repr__(self):
-        return f"<Plugin[{self.__class__.__name__}]>"
+        return f"<JSONRPCPlugin[{self.__class__.__name__}]>"
+
+    @abc.abstractmethod
+    def _check(self, context: Context):
+        pass  # pragma: no cover
+
+    def run(self, context: Context):
+        """The plugin's entrypoint as invoked by the scanner.
+
+        This method will call the plugin's :code:`_check` method, which should
+        be overridden by concrete JSONRPCPlugin instances. It will catch any
+        :code:`PluginException` and skip the execution. In any case, at the end
+        of the check run, the plugin name is added as a meta field to denote
+        that it has been executed.
+
+        :param context: The context object containing report-related information
+        """
+        scan_name = self.__class__.__name__
+
+        logger.info(f"Running scan: {scan_name}")
+        try:
+            self._check(context)
+        except PluginException as e:
+            logger.info(f"{scan_name}: Terminated with exception {e}")
+
+        context.report.add_meta(scan_name, True)
+
+
+class JSONRPCPlugin(BasePlugin, abc.ABC):
+    """A base plugin for JSON-RPC APIs."""
 
     @staticmethod
+    @handle_connection_errors
     def get_rpc_json(
         target: str, method: str, params: List[Union[str, int]] = None, idx: int = 0
     ):
@@ -42,21 +89,18 @@ class Plugin(abc.ABC):
         :return: The response payload's "result" field
         :raises PluginException: If the request faied or the response is inconsistent
         """
-        try:
-            resp = requests.post(
-                target,
-                json={
-                    "jsonrpc": "2.0",
-                    "method": method,
-                    "params": params or [],
-                    "id": idx,
-                },
-                timeout=3,
-                # verify=False,
-                headers={"User-Agent": "This is for research purposes, I promise!"},
-            )
-        except (ConnectTimeout, ConnectionError, ReadTimeout) as e:
-            raise PluginException(f"Connection Error: {e}")
+
+        resp = requests.post(
+            target,
+            json={
+                "jsonrpc": "2.0",
+                "method": method,
+                "params": params or [],
+                "id": idx,
+            },
+            timeout=3,
+            headers={"User-Agent": "This is for research purposes, I promise!"},
+        )
 
         if resp.status_code != 200:
             raise PluginException(f"RPC call returned with status {resp.status_code}")
@@ -71,27 +115,17 @@ class Plugin(abc.ABC):
 
         return payload["result"]
 
-    @abc.abstractmethod
-    def _check(self, context: Context):
-        pass  # pragma: no cover
 
-    def run(self, context: Context):
-        """The plugin's entrypoint as invoked by the scanner.
-
-        This method will call the plugin's :code:`_check` method, which should
-        be overridden by concrete Plugin instances. It will catch any
-        :code:`PluginException` and skip the execution. In any case, at the end
-        of the check run, the plugin name is added as a meta field to denote
-        that it has been executed.
-
-        :param context: The context object containing report-related information
-        """
-        scan_name = self.__class__.__name__
-
-        logger.info(f"Running scan: {scan_name}")
-        try:
-            self._check(context)
-        except PluginException as e:
-            logger.info(f"{scan_name}: Terminated with exception {e}")
-
-        context.report.add_meta(scan_name, True)
+class IPFSRPCPlugin(BasePlugin, abc.ABC):
+    @staticmethod
+    @handle_connection_errors
+    def get_rpc_json(target: str, params: dict):
+        resp = requests.post(
+            target,
+            params=params,
+            timeout=3,
+            headers={"User-Agent": "This is for research purposes, I promise!"},
+        )
+        if resp.status_code != 200:
+            raise PluginException(f"RPC call returned with status {resp.status_code}")
+        return resp.json()
