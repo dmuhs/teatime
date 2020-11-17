@@ -1,13 +1,13 @@
 import json
 
 from teatime import Context, NodeType, Scanner
-from teatime.plugins.ipfs.commands import CommandCheck
+from teatime.plugins.ipfs.version import DependencyVersion
 
 s = Scanner(
-    ip="136.144.57.15",
-    port=80,
+    ip="127.0.0.1",
+    port=5001,
     node_type=NodeType.IPFS,
-    plugins=[CommandCheck(allowlist=[("tar", "add")])],
+    plugins=[DependencyVersion()],
 )
 report = s.run()
 

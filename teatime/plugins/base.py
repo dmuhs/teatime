@@ -128,6 +128,7 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
         params: dict = None,
         headers: Optional[dict] = None,
         files: Optional[dict] = None,
+        raw: bool = False,
     ):
         """
         TODO: write this
@@ -148,4 +149,7 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
         if resp.status_code != 200:
             raise PluginException(f"RPC call returned with status {resp.status_code}")
 
-        return resp.json()
+        if raw:
+            return resp.text
+        else:
+            return resp.json()
