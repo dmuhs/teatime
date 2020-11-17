@@ -145,7 +145,6 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
             headers=request_headers,
             files=files,
         )
-        print(resp.content)
         if resp.status_code != 200:
             raise PluginException(f"RPC call returned with status {resp.status_code}")
 

@@ -1,7 +1,12 @@
-from teatime.scanner import Scanner
 from teatime.plugins.context import NodeType
-from teatime.plugins.eth1 import GethDatadir, GethNodeInfo, NodeVersion, OpenAccounts, PeerlistLeak
-
+from teatime.plugins.eth1 import (
+    GethDatadir,
+    GethNodeInfo,
+    NodeVersion,
+    OpenAccounts,
+    PeerlistLeak,
+)
+from teatime.scanner import Scanner
 
 TARGET_IP = "127.0.0.1"
 TARGET_PORT = 8545
@@ -20,11 +25,11 @@ def get_scanner():
             GethNodeInfo(),
             OpenAccounts(INFURA_URL),
             PeerlistLeak(),
-        ]
+        ],
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     scanner = get_scanner()
     report = scanner.run()
     print(report.to_dict())

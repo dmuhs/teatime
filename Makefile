@@ -27,8 +27,8 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 format:
-	isort teatime tests
-	black -t py37 teatime tests docs
+	isort teatime tests examples
+	black -t py37 teatime tests docs examples
 	docformatter --wrap-descriptions 100 -ri teatime/
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
