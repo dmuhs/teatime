@@ -16,6 +16,8 @@ class Version(IPFSRPCPlugin):
     data.
     """
 
+    INTRUSIVE = False
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return
@@ -50,6 +52,8 @@ class DependencyVersion(IPFSRPCPlugin):
     along with repository and system information, which may contain sensitive
     data.
     """
+
+    INTRUSIVE = False
 
     def __init__(self, check_dependencies: bool = True):
         self.check_dependencies = check_dependencies
