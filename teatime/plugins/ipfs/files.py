@@ -69,6 +69,8 @@ class UnixFSEnum(IPFSRPCPlugin):
             )
         )
 
+        # TODO: Optional attempt to write
+
 
 class FilestoreEnum(IPFSRPCPlugin):
 

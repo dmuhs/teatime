@@ -1,13 +1,13 @@
 import json
 
 from teatime import Context, NodeType, Scanner
-from teatime.plugins.ipfs.files import FilestoreEnum
+from teatime.plugins.ipfs.pins import RemovePin
 
 s = Scanner(
     ip="127.0.0.1",
     port=5001,
     node_type=NodeType.IPFS,
-    plugins=[FilestoreEnum()],
+    plugins=[RemovePin()],
 )
 report = s.run()
 
