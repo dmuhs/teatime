@@ -16,9 +16,7 @@ class AddPin(IPFSRPCPlugin):
 
     INTRUSIVE = True
 
-    def __init__(
-        self, cid: str = "Qmf9vKuR6MnTEGYXhzwpMib5EFGoXPWCJh3mXTvasb3Cas"
-    ):
+    def __init__(self, cid: str = "Qmf9vKuR6MnTEGYXhzwpMib5EFGoXPWCJh3mXTvasb3Cas"):
         self.cid = cid  # file named "teatime" without content
 
     def _check(self, context: Context):
@@ -26,9 +24,7 @@ class AddPin(IPFSRPCPlugin):
             return
 
         payload = self.get_rpc_json(
-            target=context.target,
-            route="/api/v0/pin/add",
-            params={"arg": self.cid}
+            target=context.target, route="/api/v0/pin/add", params={"arg": self.cid}
         )
 
         context.report.add_issue(
@@ -55,9 +51,7 @@ class EnumeratePins(IPFSRPCPlugin):
 
     INTRUSIVE = False
 
-    def __init__(
-        self, cid: str = "Qmf9vKuR6MnTEGYXhzwpMib5EFGoXPWCJh3mXTvasb3Cas"
-    ):
+    def __init__(self, cid: str = "Qmf9vKuR6MnTEGYXhzwpMib5EFGoXPWCJh3mXTvasb3Cas"):
         self.cid = cid  # file named "teatime" without content
 
     def _check(self, context: Context):
@@ -93,7 +87,9 @@ class RemovePin(IPFSRPCPlugin):
     INTRUSIVE = True
 
     def __init__(
-        self, pin: str = "Qmf9vKuR6MnTEGYXhzwpMib5EFGoXPWCJh3mXTvasb3Cas", restore: bool = True
+        self,
+        pin: str = "Qmf9vKuR6MnTEGYXhzwpMib5EFGoXPWCJh3mXTvasb3Cas",
+        restore: bool = True,
     ):
         self.pin = pin
         self.restore = restore
@@ -103,9 +99,7 @@ class RemovePin(IPFSRPCPlugin):
             return
 
         payload = self.get_rpc_json(
-            target=context.target,
-            route="/api/v0/pin/rm",
-            params={"arg": self.pin}
+            target=context.target, route="/api/v0/pin/rm", params={"arg": self.pin}
         )
 
         context.report.add_issue(
@@ -126,9 +120,8 @@ class RemovePin(IPFSRPCPlugin):
             # Attempt to restore the deleted pin
             # TODO: log message if restoration succeeded/failed
             self.get_rpc_json(
-                target=context.target,
-                route="/api/v0/pin/add",
-                params={"arg": self.pin}
+                target=context.target, route="/api/v0/pin/add", params={"arg": self.pin}
             )
+
 
 # TODO: Test whether pins can be updated

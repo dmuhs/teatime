@@ -81,7 +81,8 @@ class FilestoreEnum(IPFSRPCPlugin):
             return
 
         payload = self.get_rpc_json(
-            target=context.target, route="/api/v0/filestore/ls",
+            target=context.target,
+            route="/api/v0/filestore/ls",
         )
 
         context.report.add_issue(
