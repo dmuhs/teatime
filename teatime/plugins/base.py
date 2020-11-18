@@ -133,7 +133,7 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
         """
         TODO: write this
         """
-        files = files or {".teatime": "teatime test".encode("utf-8")}
+        files = files
         params = params or {}
         headers = headers or {}
         request_headers = {"User-Agent": "This is for research purposes, I promise!"}

@@ -1,13 +1,13 @@
 import json
 
 from teatime import Context, NodeType, Scanner
-from teatime.plugins.ipfs.version import DependencyVersion
+from teatime.plugins.ipfs.files import FilestoreEnum
 
 s = Scanner(
     ip="127.0.0.1",
     port=5001,
     node_type=NodeType.IPFS,
-    plugins=[DependencyVersion()],
+    plugins=[FilestoreEnum()],
 )
 report = s.run()
 
