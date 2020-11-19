@@ -1,9 +1,11 @@
 """This module holds the base plugin class and exception."""
 
 import abc
+import io
+import json
 from functools import wraps
 from json import JSONDecodeError
-from typing import List, Optional, Union
+from typing import List, Optional, Sequence, Union
 
 import requests
 from loguru import logger
@@ -125,10 +127,12 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
     def get_rpc_json(
         target: str,
         route: str = "",
-        params: dict = None,
+        params: Union[dict, Sequence[tuple]] = None,
         headers: Optional[dict] = None,
         files: Optional[dict] = None,
         raw: bool = False,
+        timeout: int = 3,
+        stream_limit: int = None,
     ):
         """
         TODO: write this
@@ -139,17 +143,35 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
         request_headers = {"User-Agent": "This is for research purposes, I promise!"}
         request_headers.update(headers)
 
-        resp = requests.post(
-            url=target + route,
-            params=params,
-            timeout=3,
-            headers=request_headers,
-            files=files,
-        )
+        if stream_limit is None:
+            resp = requests.post(
+                url=target + route,
+                params=params,
+                timeout=timeout,
+                headers=request_headers,
+                files=files,
+            )
+            content = resp.text
+        else:
+            resp = requests.post(
+                url=target + route,
+                params=params,
+                timeout=timeout,
+                headers=request_headers,
+                files=files,
+                stream=True,
+            )
+            resp.raise_for_status()
+            content = ""
+            for i, chunk in enumerate(resp.iter_lines(decode_unicode=True)):
+                if i >= stream_limit:
+                    break
+                content += chunk + "\n"
+
         if resp.status_code != 200:
             raise PluginException(f"RPC call returned with status {resp.status_code}")
 
-        if raw:
-            return resp.text
+        if raw or stream_limit:
+            return content
         else:
-            return resp.json()
+            return json.loads(content)
