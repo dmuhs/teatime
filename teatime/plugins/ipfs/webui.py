@@ -5,6 +5,18 @@ from teatime.plugins.base import IPFSRPCPlugin, handle_connection_errors
 
 
 class WebUIEnabled(IPFSRPCPlugin):
+    """Attempt to access the target's Web UI.
+
+    Severity: HIGH
+
+    Anyone can access the Web UI. A plethora of administrative
+    actions can be done through the web interface. This includes
+    changing the node's configuration, which can be used to open
+    other potential attack vectors.
+    """
+
+    INTRUSIVE = False
+
     def __init__(self, route: str = "/webui"):
         self.route = route
 
@@ -30,7 +42,7 @@ class WebUIEnabled(IPFSRPCPlugin):
                         "changing the node's configuration, which can be used to open "
                         "other potential attack vectors."
                     ),
-                    severity=Severity.MEDIUM,
+                    severity=Severity.HIGH,
                     raw_data=payload,
                 )
             )

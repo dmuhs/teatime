@@ -5,6 +5,17 @@ from teatime.plugins.base import IPFSRPCPlugin
 
 
 class CIDFSEnum(IPFSRPCPlugin):
+    """Check whether the given CIDs are present on the node.
+
+    Severity: Medium
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-ls
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-file-ls
+
+    A common IPFS file path is leaking directory contents of UNIX filesystem
+    objects. Depending on where IPFS has been mounted, this can leak
+    f"confidential information.
+    """
 
     INTRUSIVE = False
 
@@ -42,6 +53,16 @@ class CIDFSEnum(IPFSRPCPlugin):
 
 
 class UnixFSEnum(IPFSRPCPlugin):
+    """Check whether the objects in the local mutable namespace can be listed.
+
+    Severity: Medium
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-files-ls
+
+    The UNIX root directory path is leaking contents of UNIX filesystem
+    objects. An attacker can use this endpoint along with the /files/read
+    endpoint to enumerate potentially confidential data on the system.
+    """
 
     INTRUSIVE = False
 
@@ -73,6 +94,16 @@ class UnixFSEnum(IPFSRPCPlugin):
 
 
 class FilestoreEnum(IPFSRPCPlugin):
+    """Check whether the objects in the filestore can be listed.
+
+    Severity: Medium
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-filestore-ls
+
+    The filestore endpoint is leaking contents of its objects. An attacker
+    can use this endpoint to enumerate potentially confidential data on the
+    system.
+    """
 
     INTRUSIVE = False
 

@@ -3,6 +3,19 @@ from teatime.plugins.base import IPFSRPCPlugin
 
 
 class P2PListListeners(IPFSRPCPlugin):
+    """Attempt to list all active P2P listeners.
+
+    Severity: Low
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-p2p-ls
+
+    Anyone is able to list the P2P listener services running on this node.
+    This method may leak internal information on other peer-to-peer services
+    running on this node.
+    """
+
+    INTRUSIVE = False
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return
@@ -26,6 +39,19 @@ class P2PListListeners(IPFSRPCPlugin):
 
 
 class P2PListStreams(IPFSRPCPlugin):
+    """Attempt to list all active P2P streams.
+
+    Severity: Low
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-p2p-stream-ls
+
+    Anyone is able to list the active P2P streams on this node.
+    This method may leak internal information on other peer-to-peer services
+    and connections on this node.
+    """
+
+    INTRUSIVE = False
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return
@@ -49,6 +75,19 @@ class P2PListStreams(IPFSRPCPlugin):
 
 
 class P2PCloseStream(IPFSRPCPlugin):
+    """Attempt to close all active P2P streams.
+
+    Severity: High
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-p2p-stream-close
+
+    Anyone is able to close active P2P streams on this node.
+    This exposed functionality may be used by an attacker to
+    disrupt the node's availability and block connections.
+    """
+
+    INTRUSIVE = True
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return
@@ -73,6 +112,19 @@ class P2PCloseStream(IPFSRPCPlugin):
 
 
 class P2PStopForwarding(IPFSRPCPlugin):
+    """Attempt to stop the node from listening to new connection forwards.
+
+    Severity: High
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-p2p-close
+
+    Anyone is able to close active P2P forwardings on this node.
+    This exposed functionality may be used by an attacker to
+    disrupt the node's availability and block connections.
+    """
+
+    INTRUSIVE = True
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return
@@ -95,6 +147,19 @@ class P2PStopForwarding(IPFSRPCPlugin):
 
 
 class P2PEnableForwarding(IPFSRPCPlugin):
+    """Attempt to enable forwarding new connections to the libp2p service.
+
+    Severity: High
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-p2p-forward
+
+    Anyone is able to register P2P forwardings on this node.
+    This exposed functionality may be used by an attacker to
+    disrupt the node's availability and block connections.
+    """
+
+    INTRUSIVE = True
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return
@@ -120,6 +185,19 @@ class P2PEnableForwarding(IPFSRPCPlugin):
 
 
 class P2PCreateListener(IPFSRPCPlugin):
+    """Attempt to enable forwarding new connections to the libp2p service.
+
+    Severity: High
+
+    Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-p2p-listen
+
+    Anyone is able to register P2P listeners on this node.
+    This exposed functionality may be used by an attacker to
+    disrupt the node's availability and block connections.
+    """
+
+    INTRUSIVE = True
+
     def _check(self, context: Context):
         if context.node_type != NodeType.IPFS:
             return

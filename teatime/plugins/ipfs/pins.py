@@ -47,6 +47,8 @@ class EnumeratePins(IPFSRPCPlugin):
     Severity: Low
 
     Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-pin-ls
+
+    It is possible to list all the content IDs that are pinned to the node's local storage.
     """
 
     INTRUSIVE = False
@@ -68,7 +70,7 @@ class EnumeratePins(IPFSRPCPlugin):
                 title="Anyone can list the node's pins",
                 description=(
                     "It is possible to list all the content IDs that "
-                    "are pinned to the node's local storage"
+                    "are pinned to the node's local storage."
                 ),
                 raw_data=payload,
                 severity=Severity.LOW,
@@ -82,6 +84,11 @@ class RemovePin(IPFSRPCPlugin):
     Severity: High
 
     Endpoint: https://docs.ipfs.io/reference/http/api/#api-v0-pin-rm
+
+    It is possible to remove all the content IDs that
+    are pinned to the node's local storage. This poses
+    a risk to data availability as an attacker can unpin
+    any file.
     """
 
     INTRUSIVE = True
