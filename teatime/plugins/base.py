@@ -161,7 +161,7 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
                 files=files,
                 stream=True,
             )
-            resp.raise_for_status()
+
             content = ""
             for i, chunk in enumerate(resp.iter_lines(decode_unicode=True)):
                 if i >= stream_limit:
