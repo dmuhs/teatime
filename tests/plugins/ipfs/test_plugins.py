@@ -357,7 +357,10 @@ TESTCASES += [
                     "operating system, as well as the IPFS node's version and origin repository"
                 ),
                 severity=Severity.LOW,
-                raw_data='[{"Path": "<string>", "Sum": "<string>", "ReplacedBy": "<string>", "Version": "<string>"}]',
+                raw_data=(
+                    '[{"Path": "<string>", "Sum": "<string>", '
+                    '"ReplacedBy": "<string>", "Version": "<string>"}]'
+                ),
             ),
             Issue(
                 uuid=TEST_UUID,
@@ -367,7 +370,10 @@ TESTCASES += [
                     "Consider upgrading it for the latest feature and security updates."
                 ),
                 severity=Severity.LOW,
-                raw_data='{"Path": "<string>", "Sum": "<string>", "ReplacedBy": "<string>", "Version": "<string>"}',
+                raw_data=(
+                    '{"Path": "<string>", "Sum": "<string>", '
+                    '"ReplacedBy": "<string>", "Version": "<string>"}'
+                ),
             ),
         ],
         id="DependencyVersion dep-check success issues logged",
@@ -451,6 +457,283 @@ TESTCASES += [
         "/api/v0/version/deps",
         [],
         id="DependencyVersion bad node no issue logged",
+    ),
+]
+
+
+# P2PListListeners
+TESTCASES += [
+    pytest.param(
+        P2PListListeners(),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Listeners": [
+                        {
+                            "ListenAddress": "<string>",
+                            "Protocol": "<string>",
+                            "TargetAddress": "<string>",
+                        }
+                    ]
+                }
+            },
+        ),
+        "/api/v0/p2p/ls",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Exposed P2P Listener List",
+                description=(
+                    "Anyone is able to list the P2P listener services running on this node. "
+                    "This method may leak internal information on other peer-to-peer services "
+                    "running on this node."
+                ),
+                severity=Severity.LOW,
+                raw_data=(
+                    '{"Listeners": [{"ListenAddress": "<string>", '
+                    '"Protocol": "<string>", "TargetAddress": "<string>"}]}'
+                ),
+            )
+        ],
+        id="P2PListListeners success issue logged",
+    ),
+    pytest.param(
+        P2PListListeners(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/p2p/ls",
+        [],
+        id="P2PListListeners failed no issue logged",
+    ),
+    pytest.param(
+        P2PListListeners(),
+        NodeType.GETH,
+        [],
+        "/api/v0/p2p/ls",
+        [],
+        id="P2PListListeners bad node no issue logged",
+    ),
+]
+
+
+# P2PListStreams
+TESTCASES += [
+    pytest.param(
+        P2PListStreams(),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Streams": [
+                        {
+                            "HandlerID": "<string>",
+                            "OriginAddress": "<string>",
+                            "Protocol": "<string>",
+                            "TargetAddress": "<string>",
+                        }
+                    ]
+                }
+            },
+        ),
+        "/api/v0/p2p/stream/ls",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Exposed P2P Stream List",
+                description=(
+                    "Anyone is able to list the active P2P streams on this node. "
+                    "This method may leak internal information on other peer-to-peer services "
+                    "and connections on this node."
+                ),
+                severity=Severity.LOW,
+                raw_data=(
+                    '{"Streams": [{"HandlerID": "<string>", "OriginAddress": "<string>", '
+                    '"Protocol": "<string>", "TargetAddress": "<string>"}]}'
+                ),
+            )
+        ],
+        id="P2PListStreams success issue logged",
+    ),
+    pytest.param(
+        P2PListStreams(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/p2p/stream/ls",
+        [],
+        id="P2PListStreams failed no issue logged",
+    ),
+    pytest.param(
+        P2PListStreams(),
+        NodeType.GETH,
+        [],
+        "/api/v0/p2p/stream/ls",
+        [],
+        id="P2PListStreams bad node no issue logged",
+    ),
+]
+
+
+# P2PCloseStream
+TESTCASES += [
+    pytest.param(
+        P2PCloseStream(),
+        NodeType.IPFS,
+        ({"text": ""},),
+        "/api/v0/p2p/stream/close",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Exposed P2P Stream Management endpoint",
+                description=(
+                    "Anyone is able to close active P2P streams on this node. "
+                    "This exposed functionality may be used by an attacker to "
+                    "disrupt the node's availability and block connections."
+                ),
+                severity=Severity.HIGH,
+                raw_data="",
+            )
+        ],
+        id="P2PCloseStream success issue logged",
+    ),
+    pytest.param(
+        P2PCloseStream(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/p2p/stream/close",
+        [],
+        id="P2PCloseStream failed no issue logged",
+    ),
+    pytest.param(
+        P2PCloseStream(),
+        NodeType.GETH,
+        [],
+        "/api/v0/p2p/stream/close",
+        [],
+        id="P2PCloseStream bad node no issue logged",
+    ),
+]
+
+
+# P2PStopForwarding
+TESTCASES += [
+    pytest.param(
+        P2PStopForwarding(),
+        NodeType.IPFS,
+        ({"text": "1"},),
+        "/api/v0/p2p/close",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Exposed P2P Management endpoint",
+                description=(
+                    "Anyone is able to close active P2P forwardings on this node. "
+                    "This exposed functionality may be used by an attacker to "
+                    "disrupt the node's availability and block connections."
+                ),
+                severity=Severity.HIGH,
+                raw_data="1",
+            )
+        ],
+        id="P2PStopForwarding success issue logged",
+    ),
+    pytest.param(
+        P2PStopForwarding(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/p2p/close",
+        [],
+        id="P2PStopForwarding failed no issue logged",
+    ),
+    pytest.param(
+        P2PStopForwarding(),
+        NodeType.GETH,
+        [],
+        "/api/v0/p2p/close",
+        [],
+        id="P2PStopForwarding bad node no issue logged",
+    ),
+]
+
+
+# P2PEnableForwarding
+TESTCASES += [
+    pytest.param(
+        P2PEnableForwarding(),
+        NodeType.IPFS,
+        ({"text": ""},),
+        "/api/v0/p2p/forward",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Exposed P2P Management endpoint",
+                description=(
+                    "Anyone is able to register P2P forwardings on this node. "
+                    "This exposed functionality may be used by an attacker to "
+                    "disrupt the node's availability and block connections."
+                ),
+                severity=Severity.HIGH,
+                raw_data="",
+            )
+        ],
+        id="P2PEnableForwarding success issue logged",
+    ),
+    pytest.param(
+        P2PEnableForwarding(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/p2p/forward",
+        [],
+        id="P2PEnableForwarding failed no issue logged",
+    ),
+    pytest.param(
+        P2PEnableForwarding(),
+        NodeType.GETH,
+        [],
+        "/api/v0/p2p/forward",
+        [],
+        id="P2PEnableForwarding bad node no issue logged",
+    ),
+]
+
+
+# P2PCreateListener
+TESTCASES += [
+    pytest.param(
+        P2PCreateListener(),
+        NodeType.IPFS,
+        ({"text": ""},),
+        "/api/v0/p2p/listen",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Exposed P2P Management endpoint",
+                description=(
+                    "Anyone is able to register P2P listeners on this node. "
+                    "This exposed functionality may be used by an attacker to "
+                    "disrupt the node's availability and block connections."
+                ),
+                severity=Severity.HIGH,
+                raw_data="",
+            )
+        ],
+        id="P2PCreateListener success issue logged",
+    ),
+    pytest.param(
+        P2PCreateListener(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/p2p/listen",
+        [],
+        id="P2PCreateListener failed no issue logged",
+    ),
+    pytest.param(
+        P2PCreateListener(),
+        NodeType.GETH,
+        [],
+        "/api/v0/p2p/listen",
+        [],
+        id="P2PCreateListener bad node no issue logged",
     ),
 ]
 

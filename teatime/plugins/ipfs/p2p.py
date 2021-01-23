@@ -96,6 +96,7 @@ class P2PCloseStream(IPFSRPCPlugin):
             target=context.target,
             route="/api/v0/p2p/stream/close",
             params={"all": True},
+            raw=True,
         )
         context.report.add_issue(
             Issue(
@@ -130,7 +131,10 @@ class P2PStopForwarding(IPFSRPCPlugin):
             return
 
         payload = self.get_rpc_json(
-            target=context.target, route="/api/v0/p2p/close", params={"all": True}
+            target=context.target,
+            route="/api/v0/p2p/close",
+            params={"all": True},
+            raw=True,
         )
         context.report.add_issue(
             Issue(
@@ -169,6 +173,7 @@ class P2PEnableForwarding(IPFSRPCPlugin):
             target=context.target,
             route="/api/v0/p2p/forward",
             params=[("arg", "/x/"), ("arg", "127.0.0.1"), ("arg", "127.0.0.1")],
+            raw=True,
         )
         context.report.add_issue(
             Issue(
@@ -207,6 +212,7 @@ class P2PCreateListener(IPFSRPCPlugin):
             target=context.target,
             route="/api/v0/p2p/listen",
             params=[("arg", "/teatime/"), ("arg", "127.0.0.1")],
+            raw=True,
         )
         context.report.add_issue(
             Issue(
