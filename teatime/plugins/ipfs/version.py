@@ -84,7 +84,7 @@ class DependencyVersion(IPFSRPCPlugin):
             return
 
         for dependency in payload:
-            if dependency.get("ReplacedBy") != "":
+            if dependency.get("ReplacedBy", "") != "":
                 context.report.add_issue(
                     Issue(
                         title="Outdated Dependency",
