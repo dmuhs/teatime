@@ -1,16 +1,18 @@
 """This module contains checks regarding a node's transaction pool."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class TxPoolContent(Plugin):
+class TxPoolContent(JSONRPCPlugin):
     """Try to fetch the transaction pool contents.
 
     Severity: Low
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactions
-    Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactions
+    Geth:
+    https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content
     """
 
     INTRUSIVE = False
@@ -21,7 +23,10 @@ class TxPoolContent(Plugin):
             context.report.add_issue(
                 Issue(
                     title="TxPool Content",
-                    description="Anyone can see the transcation pool contents using the txpool_content RPC call.",
+                    description=(
+                        "Anyone can see the transcation pool contents "
+                        "using the txpool_content RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.LOW,
                 )
@@ -33,14 +38,17 @@ class TxPoolContent(Plugin):
             context.report.add_issue(
                 Issue(
                     title="TxPool Content",
-                    description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC call.",
+                    description=(
+                        "Anyone can see the transaction pool contents "
+                        "using the parity_pendingTransactions RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.LOW,
                 )
             )
 
 
-class GethTxPoolInspection(Plugin):
+class GethTxPoolInspection(JSONRPCPlugin):
     """Try to inspect the transaction pool.
 
     Severity: Low
@@ -57,14 +65,17 @@ class GethTxPoolInspection(Plugin):
         context.report.add_issue(
             Issue(
                 title="TxPool Inspection",
-                description="Anyone can inspect the transaction pool using the txpool_inspect RPC call.",
+                description=(
+                    "Anyone can inspect the transaction pool "
+                    "using the txpool_inspect RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
 
-class GethTxPoolStatus(Plugin):
+class GethTxPoolStatus(JSONRPCPlugin):
     """Try to fetch the transaction pool status.
 
     Severity: Low
@@ -81,19 +92,23 @@ class GethTxPoolStatus(Plugin):
         context.report.add_issue(
             Issue(
                 title="TxPool Status",
-                description="Anyone can see the transaction pool status using the txpool_status RPC call.",
+                description=(
+                    "Anyone can see the transaction pool status "
+                    "using the txpool_status RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
 
-class ParityTxPoolStatistics(Plugin):
+class ParityTxPoolStatistics(JSONRPCPlugin):
     """Try to fetch the transaction pool statistics.
 
     Severity: Low
 
-    Parity: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactionsstats
+    Parity:
+    https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactionsstats
     """
 
     INTRUSIVE = False
@@ -107,7 +122,10 @@ class ParityTxPoolStatistics(Plugin):
         context.report.add_issue(
             Issue(
                 title="TxPool Statistics",
-                description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats RPC call.",
+                description=(
+                    "Anyone can see the transaction pool statistics "
+                    "using the parity_pendingTransactionsStats RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )

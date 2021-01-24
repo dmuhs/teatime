@@ -1,7 +1,6 @@
-from teatime.scanner import Scanner
 from teatime.plugins.context import NodeType
-from teatime.plugins.eth1 import NodeSync, MiningStatus
-
+from teatime.plugins.eth1 import MiningStatus, NodeSync
+from teatime.scanner import Scanner
 
 TARGET_IP = "127.0.0.1"
 TARGET_PORT = 8545
@@ -15,12 +14,12 @@ def get_scanner():
         node_type=NodeType.GETH,
         plugins=[
             NodeSync(infura_url=INFURA_URL, block_threshold=10),
-            MiningStatus(should_mine=False)
-        ]
+            MiningStatus(should_mine=False),
+        ],
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     scanner = get_scanner()
     report = scanner.run()
     print(report.to_dict())

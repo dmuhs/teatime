@@ -1,10 +1,10 @@
 """This module contains plugins for controlling the Websocket RPC server
 status."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class GethStartWebsocket(Plugin):
+class GethStartWebsocket(JSONRPCPlugin):
     """Try to start the websocket service.
 
     Severity: Critical
@@ -22,14 +22,17 @@ class GethStartWebsocket(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Websocket Start Rights",
-                    description="The RPC Websocket service can be started using the admin_startWS RPC call.",
+                    description=(
+                        "The RPC Websocket service can be started "
+                        "using the admin_startWS RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
             )
 
 
-class GethStopWebsocket(Plugin):
+class GethStopWebsocket(JSONRPCPlugin):
     """Try to stop the websocket service.
 
     Severity: Critical
@@ -47,7 +50,10 @@ class GethStopWebsocket(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Websocket Stop Rights",
-                    description="The RPC Websocket service can be stopped using the admin_stopWS RPC call.",
+                    description=(
+                        "The RPC Websocket service can be "
+                        "stopped using the admin_stopWS RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )

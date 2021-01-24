@@ -2,12 +2,11 @@
 
 from loguru import logger
 
-from teatime.plugins import Context, Plugin, PluginException
+from teatime.plugins import Context, JSONRPCPlugin, PluginException
 from teatime.reporting import Issue, Severity
-from teatime.utils import decode_rpc_int
 
 
-class OpenAccounts(Plugin):
+class OpenAccounts(JSONRPCPlugin):
     """Check for any accounts registered on the node.
 
     Severity: Medium
@@ -25,7 +24,7 @@ class OpenAccounts(Plugin):
     def _check(self, context: Context) -> None:
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
-            balance = decode_rpc_int(
+            balance = self.get_rpc_int(
                 self.infura_url, method="eth_getBalance", params=[account, "latest"]
             )
             context.report.add_issue(
@@ -38,7 +37,7 @@ class OpenAccounts(Plugin):
             )
 
 
-class AccountUnlock(Plugin):
+class AccountUnlock(JSONRPCPlugin):
     """Check whether any accounts on the node are weakly protected.
 
     Severity: Critical
@@ -61,7 +60,7 @@ class AccountUnlock(Plugin):
     def _check(self, context: Context) -> None:
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
-            balance = decode_rpc_int(
+            balance = self.get_rpc_int(
                 self.infura_url, method="eth_getBalance", params=[account, "latest"]
             )
             if self.skip_below is not None and balance < self.skip_below:
@@ -92,7 +91,10 @@ class AccountUnlock(Plugin):
                 context.report.add_issue(
                     Issue(
                         title="Weak password detected!",
-                        description=f"The account ({account}) is only protected by a weak password ({password})",
+                        description=(
+                            f"The account ({account}) is only protected "
+                            f"by a weak password ({password})"
+                        ),
                         raw_data=payload,
                         severity=Severity.CRITICAL,
                     )

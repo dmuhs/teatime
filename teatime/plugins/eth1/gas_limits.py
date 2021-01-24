@@ -1,15 +1,16 @@
 """This module contains plugins around the gas-setting RPC endpoints."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class ParityGasCeiling(Plugin):
+class ParityGasCeiling(JSONRPCPlugin):
     """Try to set a new gas ceiling target for mined blocks.
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasceiltarget
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasceiltarget
     """
 
     INTRUSIVE = True
@@ -29,19 +30,23 @@ class ParityGasCeiling(Plugin):
         context.report.add_issue(
             Issue(
                 title="Gas ceiling target can be changed",
-                description="Anyone can change the gas ceiling value using the parity_setGasCeilTarget RPC call.",
+                description=(
+                    "Anyone can change the gas ceiling value "
+                    "using the parity_setGasCeilTarget RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
         )
 
 
-class ParityGasFloor(Plugin):
+class ParityGasFloor(JSONRPCPlugin):
     """Try to set a new gas floor target for mined blocks.
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasfloortarget
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setgasfloortarget
     """
 
     INTRUSIVE = True
@@ -59,7 +64,10 @@ class ParityGasFloor(Plugin):
         context.report.add_issue(
             Issue(
                 title="Gas floor target can be changed",
-                description="Anyone can change the gas floor value using the parity_setGasFloorTarget RPC call.",
+                description=(
+                    "Anyone can change the gas floor value using "
+                    "the parity_setGasFloorTarget RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )

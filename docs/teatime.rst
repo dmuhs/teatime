@@ -18,17 +18,14 @@ teatime.utils module
 --------------------
 
 .. automodule:: teatime.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :private-members:
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------
 
 .. automodule:: teatime
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :private-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:

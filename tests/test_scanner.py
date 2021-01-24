@@ -30,12 +30,23 @@ def test_scanner_report(node_type: NodeType):
 @pytest.mark.parametrize("node_type", [NodeType.GETH, NodeType.PARITY])
 @patch("teatime.scanner.scanner.logger")
 def test_intrusive_logging(logger_mock, node_type: NodeType):
-    plugin_mock = MagicMock()
-    plugin_mock.INTRUSIVE = True
-    scanner = Scanner(
-        ip="127.0.0.1", port=8545, node_type=node_type, plugins=[plugin_mock]
+    intrusive_plugin_mock = MagicMock()
+    non_intrusive_plugin_mock = MagicMock()
+    intrusive_plugin_mock.INTRUSIVE = True
+    non_intrusive_plugin_mock.INTRUSIVE = False
+
+    intrusive_scanner = Scanner(
+        ip="127.0.0.1", port=8545, node_type=node_type, plugins=[intrusive_plugin_mock]
     )
-    scanner.run()
+    non_intrusive_scanner = Scanner(
+        ip="127.0.0.1",
+        port=8545,
+        node_type=node_type,
+        plugins=[non_intrusive_plugin_mock],
+    )
+    intrusive_scanner.run()
+    non_intrusive_scanner.run()
+
     logger_mock.warning.assert_called_once()
 
 

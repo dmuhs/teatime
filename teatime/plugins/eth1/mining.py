@@ -1,10 +1,10 @@
 """This module contains a plugin for mining-related checks."""
 
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
 
 
-class MiningStatus(Plugin):
+class MiningStatus(JSONRPCPlugin):
     """Check whether the node is mining.
 
     Severity: Medium
@@ -37,7 +37,7 @@ class MiningStatus(Plugin):
             )
 
 
-class HashrateStatus(Plugin):
+class HashrateStatus(JSONRPCPlugin):
     """Check whether the node has a certain hash rate.
 
     Severity: Medium
@@ -59,7 +59,10 @@ class HashrateStatus(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Mining Hashrate Low",
-                    description=f"The hashrate should be >= {self.expected_hashrate} but only is {current_hashrate}",
+                    description=(
+                        f"The hashrate should be >= {self.expected_hashrate} "
+                        f"but only is {current_hashrate}"
+                    ),
                     raw_data=current_hashrate,
                     severity=Severity.MEDIUM,
                 )

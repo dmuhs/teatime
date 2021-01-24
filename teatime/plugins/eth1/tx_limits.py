@@ -1,14 +1,15 @@
 """This module contains plugins around setting transaction-related limits."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class ParityTxCeiling(Plugin):
+class ParityTxCeiling(JSONRPCPlugin):
     """Try to set the maximum transaction gas.
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmaxtransactiongas
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmaxtransactiongas
     """
 
     INTRUSIVE = True
@@ -29,19 +30,23 @@ class ParityTxCeiling(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Transaction maximum gas can be changed",
-                    description="Anyone can change the maximum transaction gas limit using the parity_setMaxTransactionGas RPC call.",
+                    description=(
+                        "Anyone can change the maximum transaction "
+                        "gas limit using the parity_setMaxTransactionGas RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
             )
 
 
-class ParityMinGasPrice(Plugin):
+class ParityMinGasPrice(JSONRPCPlugin):
     """Try to set the minimum transaction gas price.
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmingasprice
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmingasprice
     """
 
     INTRUSIVE = True
@@ -60,7 +65,10 @@ class ParityMinGasPrice(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Transaction minimum gas can be changed",
-                    description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC call.",
+                    description=(
+                        "Anyone can change the minimum transaction gas limit "
+                        "using the parity_setMinGasPrice RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )

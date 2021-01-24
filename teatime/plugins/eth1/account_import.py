@@ -1,9 +1,9 @@
 """This module holds the plugin checking for accound imports."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class GethAccountImport(Plugin):
+class GethAccountImport(JSONRPCPlugin):
     """Detect whether it's possible to import an account on the node.
 
     Severity: Medium
@@ -33,8 +33,11 @@ class GethAccountImport(Plugin):
         context.report.add_issue(
             Issue(
                 title="We managed to import an account on your node",
-                description="A private key can be imported on the node to initialize an account using the "
-                "personal_importRawKey RPC call.",
+                description=(
+                    "A private key can be imported on the "
+                    "node to initialize an account using the "
+                    "personal_importRawKey RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.MEDIUM,
             )

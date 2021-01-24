@@ -1,11 +1,10 @@
 """This module contains a plugin checking for node sync issues."""
 
-from teatime.plugins import Context, Plugin
+from teatime.plugins import Context, JSONRPCPlugin
 from teatime.reporting import Issue, Severity
-from teatime.utils import decode_rpc_int
 
 
-class NodeSync(Plugin):
+class NodeSync(JSONRPCPlugin):
     """Check the node's sync state and whether it's stuck.
 
     Severity: None/Critical
@@ -27,13 +26,16 @@ class NodeSync(Plugin):
     def _check(self, context: Context) -> None:
         node_syncing = self.get_rpc_json(context.target, "eth_syncing")
         node_blocknum = int(self.get_rpc_json(context.target, "eth_blockNumber"), 16)
-        net_blocknum = decode_rpc_int(self.infura_url, "eth_blockNumber")
+        net_blocknum = self.get_rpc_int(self.infura_url, "eth_blockNumber")
 
         if node_blocknum < (net_blocknum - self.block_threshold) and not node_syncing:
             context.report.add_issue(
                 Issue(
                     title="Synchronization Status",
-                    description="The node's block number is stale and its not synchronizing. The node is stuck!",
+                    description=(
+                        "The node's block number is stale and "
+                        "its not synchronizing. The node is stuck!"
+                    ),
                     raw_data=node_syncing,
                     severity=Severity.CRITICAL,
                 )

@@ -1,13 +1,12 @@
 """This module contains a scanner class running various Plugins."""
 
 import time
-from typing import List
+from typing import List, Union
 
 from loguru import logger
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, IPFSRPCPlugin, JSONRPCPlugin, NodeType
 from teatime.reporting import Report
-from teatime.utils import reverse_dns
 
 
 class Scanner:
@@ -18,7 +17,7 @@ class Scanner:
         ip: str,
         port: int,
         node_type: NodeType,
-        plugins: List[Plugin],
+        plugins: List[Union[JSONRPCPlugin, IPFSRPCPlugin]],
         prefix: str = "http://",
     ):
         self.target = f"{prefix}{ip}:{port}"
@@ -40,12 +39,20 @@ class Scanner:
             if plugin.INTRUSIVE:
                 name = plugin.__class__.__name__
                 logger.warning(
-                    f"Plugin {name} is intrusive. Please make sure you have permission to run this scan on "
-                    "the target. Don't be a douchebag."
+                    (
+                        f"Plugin {name} is intrusive. Please make sure you "
+                        "have permission to run this scan on the target. "
+                        "Don't be a douchebag."
+                    )
                 )
             plugin.run(context)
         context.report.add_meta("elapsed", time.time() - start)
         return context.report
 
     def __repr__(self):
-        return f"<Scanner target={self.target} plugins={len(self.plugins)} node_type={self.node_type}>"
+        return (
+            f"<Scanner "
+            f"target={self.target} "
+            f"plugins={len(self.plugins)} "
+            f"node_type={self.node_type}>"
+        )

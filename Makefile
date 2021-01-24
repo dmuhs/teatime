@@ -27,8 +27,8 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 format:
-	isort teatime tests
-	black -t py37 teatime tests docs
+	isort teatime tests examples
+	black -t py37 teatime tests docs examples
 	docformatter --wrap-descriptions 100 -ri teatime/
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
@@ -53,7 +53,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 test: ## run tests quickly with the default Python
-	pytest --cov-report html --cov-report term --cov-branch --cov=teatime -vv
+	pytest -vv --basetemp={envtmpdir} --cov=teatime --cov-report=term --cov-report=xml --cov-report=html --cov-branch
 
 test-all: ## run tests on every Python version with tox
 	tox

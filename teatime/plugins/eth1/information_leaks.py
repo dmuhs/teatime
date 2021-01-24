@@ -1,10 +1,10 @@
 """This module contains plugins with admin interface checks."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class GethDatadir(Plugin):
+class GethDatadir(JSONRPCPlugin):
     """Try to fetch Geth's data directory.
 
     Severity: Low
@@ -22,14 +22,17 @@ class GethDatadir(Plugin):
         context.report.add_issue(
             Issue(
                 title="Admin datadir access",
-                description="The datadir directory path can be fetched using the admin_datadir RPC call.",
+                description=(
+                    "The datadir directory path can be fetched "
+                    "using the admin_datadir RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
 
-class GethNodeInfo(Plugin):
+class GethNodeInfo(JSONRPCPlugin):
     """Try to fetch admin info about the node.
 
     Severity: Low
@@ -47,14 +50,17 @@ class GethNodeInfo(Plugin):
         context.report.add_issue(
             Issue(
                 title="Admin Node Info Leaks",
-                description="Admin-only information can be fetched using the admin_nodeInfo RPC call.",
+                description=(
+                    "Admin-only information can be fetched using "
+                    "the admin_nodeInfo RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
         )
 
 
-class ParityDevLogs(Plugin):
+class ParityDevLogs(JSONRPCPlugin):
     """Try to fetch the node's developer logs.
 
     Severity: Critical
@@ -72,14 +78,17 @@ class ParityDevLogs(Plugin):
         context.report.add_issue(
             Issue(
                 title="Developer log information leak",
-                description="The node's developer logs can be fetched using the parity_devLogs RPC call.",
+                description=(
+                    "The node's developer logs can be fetched "
+                    "using the parity_devLogs RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
         )
 
 
-class PeerlistLeak(Plugin):
+class PeerlistLeak(JSONRPCPlugin):
     """Try to fetch peer list information.
 
     Severity: Medium
@@ -96,7 +105,10 @@ class PeerlistLeak(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list information leak",
-                    description="Admin-only peer list information can be fetched with the parity_netPeers RPC call.",
+                    description=(
+                        "Admin-only peer list information can be fetched "
+                        "with the parity_netPeers RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.MEDIUM,
                 )
@@ -106,8 +118,10 @@ class PeerlistLeak(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Peerlist Access",
-                    description="Admin-only information about the peer list can be fetched using the admin_peers RPC "
-                    "call.",
+                    description=(
+                        "Admin-only information about the peer list can be "
+                        "fetched using the admin_peers RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.MEDIUM,
                 )

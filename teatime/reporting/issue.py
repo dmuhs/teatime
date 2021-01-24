@@ -68,7 +68,9 @@ class Issue:
             "title": self.title,
             "description": self.description,
             "severity": str(self.severity).lower(),
-            "raw": json.dumps(self.raw_data),
+            "raw": self.raw_data
+            if type(self.raw_data) is str
+            else json.dumps(self.raw_data),
         }
 
     def __eq__(self, other: "Issue"):

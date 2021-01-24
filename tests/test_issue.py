@@ -204,4 +204,4 @@ def test_issue_dict():
     assert issue_dict["title"] == title
     assert issue_dict["description"] == description
     assert issue_dict["severity"] == severity.name.lower()
-    assert issue_dict["raw"] == '"raw_data"'
+    assert issue_dict["raw"] == "raw_data"

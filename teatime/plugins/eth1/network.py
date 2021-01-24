@@ -1,10 +1,10 @@
 """This module contains a plugin for network-related checks."""
 
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class NetworkListening(Plugin):
+class NetworkListening(JSONRPCPlugin):
     """Check whether the node is listening for peers.
 
     Severity: High
@@ -31,7 +31,7 @@ class NetworkListening(Plugin):
             )
 
 
-class PeerCountStatus(Plugin):
+class PeerCountStatus(JSONRPCPlugin):
     """Check whether the node has a certain peer count.
 
     Severity: Medium
@@ -53,14 +53,17 @@ class PeerCountStatus(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Number of peers too low!",
-                    description=f"Too few peers (current < minimum): {current_peercount} < {self.minimum_peercount}",
+                    description=(
+                        f"Too few peers (current < minimum): "
+                        f"{current_peercount} < {self.minimum_peercount}"
+                    ),
                     raw_data=current_peercount,
                     severity=Severity.MEDIUM,
                 )
             )
 
 
-class PeerlistManipulation(Plugin):
+class PeerlistManipulation(JSONRPCPlugin):
     """Try to add a peer to the node's peer list.
 
     Severity: High
@@ -83,7 +86,10 @@ class PeerlistManipulation(Plugin):
                 context.report.add_issue(
                     Issue(
                         title="Peer list manipulation",
-                        description="Arbitrary peers can be added using the admin_addPeer RPC call.",
+                        description=(
+                            "Arbitrary peers can be added using "
+                            "the admin_addPeer RPC call."
+                        ),
                         raw_data=payload,
                         severity=Severity.HIGH,
                     )
@@ -98,14 +104,17 @@ class PeerlistManipulation(Plugin):
                 context.report.add_issue(
                     Issue(
                         title="Peer list manipulation",
-                        description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
+                        description=(
+                            "Reserved peers can be added to the node's "
+                            "peer list using the parity_addReservedPeer RPC call"
+                        ),
                         raw_data=payload,
                         severity=Severity.HIGH,
                     )
                 )
 
 
-class ParityDropPeers(Plugin):
+class ParityDropPeers(JSONRPCPlugin):
     """Try to remove non-reserved peers from the peer list.
 
     Severity: Critical
@@ -127,7 +136,10 @@ class ParityDropPeers(Plugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Anyone can drop the non-reserved peerlist on the node using the parity_dropNonReservedPeers RPC call.",
+                    description=(
+                        "Anyone can drop the non-reserved peerlist on the "
+                        "node using the parity_dropNonReservedPeers RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )

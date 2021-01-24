@@ -1,14 +1,15 @@
 """This module contains a plugin checking for Parity/OpenEthereum upgrades."""
-from teatime.plugins import Context, NodeType, Plugin
+from teatime.plugins import Context, JSONRPCPlugin, NodeType
 from teatime.reporting import Issue, Severity
 
 
-class ParityUpgrade(Plugin):
+class ParityUpgrade(JSONRPCPlugin):
     """Try to check for an available upgrade.
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module.html#parity_upgradeready
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module.html#parity_upgradeready
     """
 
     INTRUSIVE = False
@@ -18,12 +19,14 @@ class ParityUpgrade(Plugin):
             return
 
         payload = self.get_rpc_json(context.target, method="parity_upgradeReady")
-        if payload:
-            context.report.add_issue(
-                Issue(
-                    title="The node can be upgraded",
-                    description="A new node upgrade has been detected using the parity_upgradeReady RPC call.",
-                    raw_data=payload,
-                    severity=Severity.CRITICAL,
-                )
+        context.report.add_issue(
+            Issue(
+                title="The node can be upgraded",
+                description=(
+                    "A new node upgrade has been detected using "
+                    "the parity_upgradeReady RPC call."
+                ),
+                raw_data=payload,
+                severity=Severity.CRITICAL,
             )
+        )

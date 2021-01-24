@@ -3,21 +3,21 @@ Teatime - A Blockchain RPC Attack Framework
 ===========================================
 
 .. image:: https://img.shields.io/pypi/v/teatime.svg
-        :target: https://pypi.python.org/pypi/teatime
+    :target: https://pypi.python.org/pypi/teatime
 
 .. image:: https://img.shields.io/travis/dmuhs/teatime.svg
-        :target: https://travis-ci.com/dmuhs/teatime
+    :target: https://travis-ci.com/dmuhs/teatime
 
-.. image:: https://coveralls.io/repos/github/dmuhs/teatime/badge.svg?branch=master
-        :target: https://coveralls.io/github/dmuhs/teatime?branch=master
+.. image:: https://codecov.io/gh/dmuhs/teatime/branch/master/graph/badge.svg?token=RP0WZ6NXUP
+    :target: https://codecov.io/gh/dmuhs/teatime
 
 .. image:: https://readthedocs.org/projects/teatime/badge/?version=latest
-        :target: https://teatime.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+    :target: https://teatime.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/dmuhs/teatime/shield.svg
-     :target: https://pyup.io/repos/github/dmuhs/teatime/
-     :alt: Updates
+    :target: https://pyup.io/repos/github/dmuhs/teatime/
+    :alt: Updates
 
 
 Deployed a node? Have a cup.
