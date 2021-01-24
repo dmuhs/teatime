@@ -963,6 +963,219 @@ TESTCASES += [
 ]
 
 
+# CIDFSEnum
+TESTCASES += [
+    pytest.param(
+        CIDFSEnum(cid_paths=["test"]),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Objects": [
+                        {
+                            "Hash": "<string>",
+                            "Links": [
+                                {
+                                    "Hash": "<string>",
+                                    "Name": "<string>",
+                                    "Size": "<uint64>",
+                                    "Target": "<string>",
+                                    "Type": "<int32>",
+                                }
+                            ],
+                        }
+                    ]
+                }
+            },
+            {
+                "json": {
+                    "Arguments": {"<string>": "<string>"},
+                    "Objects": {
+                        "<string>": {
+                            "Hash": "<string>",
+                            "Links": [
+                                {
+                                    "Hash": "<string>",
+                                    "Name": "<string>",
+                                    "Size": "<uint64>",
+                                    "Type": "<string>",
+                                }
+                            ],
+                            "Size": "<uint64>",
+                            "Type": "<string>",
+                        }
+                    },
+                }
+            },
+        ),
+        "/api/v0/ls",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Found an Exposed IPFS Content ID",
+                description=(
+                    "A common IPFS file path is leaking directory contents of UNIX filesystem "
+                    "objects. Depending on where IPFS has been mounted, this can leak "
+                    f"confidential information. Endpoint: /api/v0/ls"
+                ),
+                severity=Severity.MEDIUM,
+                raw_data=(
+                    '{"Objects": [{"Hash": "<string>", "Links": [{"Hash": "<string>", '
+                    '"Name": "<string>", "Size": "<uint64>", "Target": "<string>", '
+                    '"Type": "<int32>"}]}]}'
+                ),
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Found an Exposed IPFS Content ID",
+                description=(
+                    "A common IPFS file path is leaking directory contents of UNIX filesystem "
+                    "objects. Depending on where IPFS has been mounted, this can leak "
+                    f"confidential information. Endpoint: /api/v0/file/ls"
+                ),
+                severity=Severity.MEDIUM,
+                raw_data=(
+                    '{"Arguments": {"<string>": "<string>"}, "Objects": {"<string>": '
+                    '{"Hash": "<string>", "Links": [{"Hash": "<string>", "Name": "<string>",'
+                    ' "Size": "<uint64>", "Type": "<string>"}], "Size": "<uint64>", "Type": '
+                    '"<string>"}}}'
+                ),
+            ),
+        ],
+        id="CIDFSEnum success issue logged",
+    ),
+    pytest.param(
+        CIDFSEnum(cid_paths=["test"]),
+        NodeType.IPFS,
+        ({"status_code": 403}, {"status_code": 403}),
+        "/api/v0/ls",
+        [],
+        id="CIDFSEnum failed no issue logged",
+    ),
+    pytest.param(
+        CIDFSEnum(cid_paths=["test"]),
+        NodeType.GETH,
+        [],
+        "/api/v0/ls",
+        [],
+        id="CIDFSEnum bad node no issue logged",
+    ),
+]
+
+
+# UnixFSEnum
+TESTCASES += [
+    pytest.param(
+        UnixFSEnum(),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Entries": [
+                        {
+                            "Hash": "<string>",
+                            "Name": "<string>",
+                            "Size": "<int64>",
+                            "Type": "<int>",
+                        }
+                    ]
+                }
+            },
+        ),
+        "/api/v0/files/ls",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Found an Exposed UNIX Filesystem Root",
+                description=(
+                    "The UNIX root directory path is leaking contents of UNIX filesystem "
+                    "objects. An attacker can use this endpoint along with the /files/read "
+                    "endpoint to enumerate potentially confidential data on the system."
+                ),
+                severity=Severity.MEDIUM,
+                raw_data=(
+                    '{"Entries": [{"Hash": "<string>", "Name": "<string>", '
+                    '"Size": "<int64>", "Type": "<int>"}]}'
+                ),
+            ),
+        ],
+        id="UnixFSEnum success issue logged",
+    ),
+    pytest.param(
+        UnixFSEnum(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/files/ls",
+        [],
+        id="UnixFSEnum failed no issue logged",
+    ),
+    pytest.param(
+        UnixFSEnum(),
+        NodeType.GETH,
+        [],
+        "/api/v0/files/ls",
+        [],
+        id="UnixFSEnum bad node no issue logged",
+    ),
+]
+
+
+# UnixFSEnum
+TESTCASES += [
+    pytest.param(
+        FilestoreEnum(),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "ErrorMsg": "<string>",
+                    "FilePath": "<string>",
+                    "Key": {"/": "<cid-string>"},
+                    "Offset": "<uint64>",
+                    "Size": "<uint64>",
+                    "Status": "<int32>",
+                }
+            },
+        ),
+        "/api/v0/filestore/ls",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Found Exposed Filestore Objects",
+                description=(
+                    "The filestore endpoint is leaking contents of its objects. An attacker "
+                    "can use this endpoint to enumerate potentially confidential data on the "
+                    "system."
+                ),
+                severity=Severity.MEDIUM,
+                raw_data=(
+                    '{"ErrorMsg": "<string>", "FilePath": "<string>", "Key": '
+                    '{"/": "<cid-string>"}, "Offset": "<uint64>", "Size": "<uint64>", '
+                    '"Status": "<int32>"}'
+                ),
+            ),
+        ],
+        id="FilestoreEnum success issue logged",
+    ),
+    pytest.param(
+        FilestoreEnum(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/filestore/ls",
+        [],
+        id="FilestoreEnum failed no issue logged",
+    ),
+    pytest.param(
+        FilestoreEnum(),
+        NodeType.GETH,
+        [],
+        "/api/v0/filestore/ls",
+        [],
+        id="FilestoreEnum bad node no issue logged",
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,endpoint,issues",
     TESTCASES,
@@ -987,6 +1200,7 @@ def test_issues(plugin, node_type, rpc_results, endpoint, issues):
 
     assert mock.call_count == len(rpc_results)
     for i, response in enumerate(rpc_results):
+        # TODO: allow for endpoint list if multiple are hit
         mock.request_history[i].url.endswith(endpoint)
 
     assert context.report.meta == {plugin.__class__.__name__: True}
