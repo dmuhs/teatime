@@ -53,7 +53,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 test: ## run tests quickly with the default Python
-	pytest --cov-report html --cov-report term --cov-branch --cov=teatime -vv
+	pytest -vv --basetemp={envtmpdir} --cov=teatime --cov-report=term --cov-report=xml --cov-report=html --cov-branch
 
 test-all: ## run tests on every Python version with tox
 	tox
