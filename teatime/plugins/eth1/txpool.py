@@ -9,8 +9,10 @@ class TxPoolContent(JSONRPCPlugin):
 
     Severity: Low
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactions
-    Geth: https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactions
+    Geth:
+    https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content
     """
 
     INTRUSIVE = False
@@ -21,7 +23,10 @@ class TxPoolContent(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="TxPool Content",
-                    description="Anyone can see the transcation pool contents using the txpool_content RPC call.",
+                    description=(
+                        "Anyone can see the transcation pool contents "
+                        "using the txpool_content RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.LOW,
                 )
@@ -33,7 +38,10 @@ class TxPoolContent(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="TxPool Content",
-                    description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC call.",
+                    description=(
+                        "Anyone can see the transaction pool contents "
+                        "using the parity_pendingTransactions RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.LOW,
                 )
@@ -57,7 +65,10 @@ class GethTxPoolInspection(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="TxPool Inspection",
-                description="Anyone can inspect the transaction pool using the txpool_inspect RPC call.",
+                description=(
+                    "Anyone can inspect the transaction pool "
+                    "using the txpool_inspect RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
@@ -81,7 +92,10 @@ class GethTxPoolStatus(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="TxPool Status",
-                description="Anyone can see the transaction pool status using the txpool_status RPC call.",
+                description=(
+                    "Anyone can see the transaction pool status "
+                    "using the txpool_status RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
@@ -93,7 +107,8 @@ class ParityTxPoolStatistics(JSONRPCPlugin):
 
     Severity: Low
 
-    Parity: https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactionsstats
+    Parity:
+    https://openethereum.github.io/wiki/JSONRPC-parity-module#parity_pendingtransactionsstats
     """
 
     INTRUSIVE = False
@@ -107,7 +122,10 @@ class ParityTxPoolStatistics(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="TxPool Statistics",
-                description="Anyone can see the transaction pool statistics using the parity_pendingTransactionsStats RPC call.",
+                description=(
+                    "Anyone can see the transaction pool statistics "
+                    "using the parity_pendingTransactionsStats RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )

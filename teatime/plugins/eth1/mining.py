@@ -59,7 +59,10 @@ class HashrateStatus(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Mining Hashrate Low",
-                    description=f"The hashrate should be >= {self.expected_hashrate} but only is {current_hashrate}",
+                    description=(
+                        f"The hashrate should be >= {self.expected_hashrate} "
+                        f"but only is {current_hashrate}"
+                    ),
                     raw_data=current_hashrate,
                     severity=Severity.MEDIUM,
                 )

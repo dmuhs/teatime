@@ -13,8 +13,10 @@ class AccountCreation(JSONRPCPlugin):
     :code:`personal_newAccount` and lock the new account with the given
     password.
 
-    Geth: https://geth.ethereum.org/docs/rpc/ns-personal#personal_newaccount
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-personal-module#personal_newaccount
+    Geth:
+    https://geth.ethereum.org/docs/rpc/ns-personal#personal_newaccount
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-personal-module#personal_newaccount
     """
 
     INTRUSIVE = True

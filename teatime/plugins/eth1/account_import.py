@@ -33,8 +33,11 @@ class GethAccountImport(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="We managed to import an account on your node",
-                description="A private key can be imported on the node to initialize an account using the "
-                "personal_importRawKey RPC call.",
+                description=(
+                    "A private key can be imported on the "
+                    "node to initialize an account using the "
+                    "personal_importRawKey RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.MEDIUM,
             )

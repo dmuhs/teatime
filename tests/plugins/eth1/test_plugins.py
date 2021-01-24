@@ -817,6 +817,14 @@ TESTCASES += [
         [],
         id="PeerlistLeak parity error",
     ),
+    pytest.param(
+        PeerlistLeak(),
+        NodeType.IPFS,
+        [],
+        [],
+        [],
+        id="PeerlistLeak unknown node error",
+    ),
 ]
 
 # ParityGasCeiling
@@ -1728,6 +1736,14 @@ TESTCASES += [
         ["parity_addReservedPeer"],
         [],
         id="PeerlistManipulation parity no issue",
+    ),
+    pytest.param(
+        PeerlistManipulation(test_enode="test"),
+        NodeType.IPFS,
+        [],
+        [],
+        [],
+        id="PeerlistManipulation unknown node no issue",
     ),
 ]
 
@@ -2665,7 +2681,10 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="TxPool Content",
-                description="Anyone can see the transaction pool contents using the parity_pendingTransactions RPC call.",
+                description=(
+                    "Anyone can see the transaction pool contents using "
+                    "the parity_pendingTransactions RPC call."
+                ),
                 severity=Severity.LOW,
                 raw_data="txpool content stuff",
             )
@@ -2726,6 +2745,14 @@ TESTCASES += [
         ["parity_pendingTransactions"],
         [],
         id="TxPoolContent parity error",
+    ),
+    pytest.param(
+        TxPoolContent(),
+        NodeType.IPFS,
+        [],
+        [],
+        [],
+        id="TxPoolContent unknown node",
     ),
 ]
 
@@ -2912,7 +2939,10 @@ TESTCASES += [
             Issue(
                 uuid=TEST_UUID,
                 title="The node can be upgraded",
-                description="A new node upgrade has been detected using the parity_upgradeReady RPC call.",
+                description=(
+                    "A new node upgrade has been detected using "
+                    "the parity_upgradeReady RPC call."
+                ),
                 severity=Severity.CRITICAL,
                 raw_data={"upgrade": "stuff"},
             )

@@ -53,7 +53,10 @@ class PeerCountStatus(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Number of peers too low!",
-                    description=f"Too few peers (current < minimum): {current_peercount} < {self.minimum_peercount}",
+                    description=(
+                        f"Too few peers (current < minimum): "
+                        f"{current_peercount} < {self.minimum_peercount}"
+                    ),
                     raw_data=current_peercount,
                     severity=Severity.MEDIUM,
                 )
@@ -83,7 +86,10 @@ class PeerlistManipulation(JSONRPCPlugin):
                 context.report.add_issue(
                     Issue(
                         title="Peer list manipulation",
-                        description="Arbitrary peers can be added using the admin_addPeer RPC call.",
+                        description=(
+                            "Arbitrary peers can be added using "
+                            "the admin_addPeer RPC call."
+                        ),
                         raw_data=payload,
                         severity=Severity.HIGH,
                     )
@@ -98,7 +104,10 @@ class PeerlistManipulation(JSONRPCPlugin):
                 context.report.add_issue(
                     Issue(
                         title="Peer list manipulation",
-                        description="Reserved peers can be added to the node's peer list using the parity_addReservedPeer RPC call",
+                        description=(
+                            "Reserved peers can be added to the node's "
+                            "peer list using the parity_addReservedPeer RPC call"
+                        ),
                         raw_data=payload,
                         severity=Severity.HIGH,
                     )
@@ -127,7 +136,10 @@ class ParityDropPeers(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list manipulation",
-                    description="Anyone can drop the non-reserved peerlist on the node using the parity_dropNonReservedPeers RPC call.",
+                    description=(
+                        "Anyone can drop the non-reserved peerlist on the "
+                        "node using the parity_dropNonReservedPeers RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )

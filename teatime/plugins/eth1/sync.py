@@ -33,7 +33,10 @@ class NodeSync(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Synchronization Status",
-                    description="The node's block number is stale and its not synchronizing. The node is stuck!",
+                    description=(
+                        "The node's block number is stale and "
+                        "its not synchronizing. The node is stuck!"
+                    ),
                     raw_data=node_syncing,
                     severity=Severity.CRITICAL,
                 )

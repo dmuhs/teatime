@@ -40,12 +40,20 @@ class Scanner:
             if plugin.INTRUSIVE:
                 name = plugin.__class__.__name__
                 logger.warning(
-                    f"Plugin {name} is intrusive. Please make sure you have permission to run this scan on "
-                    "the target. Don't be a douchebag."
+                    (
+                        f"Plugin {name} is intrusive. Please make sure you "
+                        "have permission to run this scan on the target. "
+                        "Don't be a douchebag."
+                    )
                 )
             plugin.run(context)
         context.report.add_meta("elapsed", time.time() - start)
         return context.report
 
     def __repr__(self):
-        return f"<Scanner target={self.target} plugins={len(self.plugins)} node_type={self.node_type}>"
+        return (
+            f"<Scanner "
+            f"target={self.target} "
+            f"plugins={len(self.plugins)} "
+            f"node_type={self.node_type}>"
+        )

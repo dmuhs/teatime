@@ -92,7 +92,10 @@ class AccountUnlock(JSONRPCPlugin):
                 context.report.add_issue(
                     Issue(
                         title="Weak password detected!",
-                        description=f"The account ({account}) is only protected by a weak password ({password})",
+                        description=(
+                            f"The account ({account}) is only protected "
+                            f"by a weak password ({password})"
+                        ),
                         raw_data=payload,
                         severity=Severity.CRITICAL,
                     )

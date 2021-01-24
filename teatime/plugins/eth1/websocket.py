@@ -22,7 +22,10 @@ class GethStartWebsocket(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Websocket Start Rights",
-                    description="The RPC Websocket service can be started using the admin_startWS RPC call.",
+                    description=(
+                        "The RPC Websocket service can be started "
+                        "using the admin_startWS RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
@@ -47,7 +50,10 @@ class GethStopWebsocket(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Websocket Stop Rights",
-                    description="The RPC Websocket service can be stopped using the admin_stopWS RPC call.",
+                    description=(
+                        "The RPC Websocket service can be "
+                        "stopped using the admin_stopWS RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )

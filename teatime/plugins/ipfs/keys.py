@@ -49,7 +49,7 @@ class KeyLeaks(IPFSRPCPlugin):
                     params={"arg": key["Name"]},
                     raw=True,
                 )
-            except PluginException as e:
+            except PluginException:
                 continue
 
             context.report.add_issue(

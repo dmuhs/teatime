@@ -8,7 +8,8 @@ class ParityChangeCoinbase(JSONRPCPlugin):
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setauthor
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setauthor
     """
 
     INTRUSIVE = True
@@ -28,8 +29,11 @@ class ParityChangeCoinbase(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="Coinbase address change possible",
-                description="Anyone can change the coinbase address and redirect miner payouts using the "
-                "parity_setAuthor RPC call.",
+                description=(
+                    "Anyone can change the coinbase address "
+                    "and redirect miner payouts using the "
+                    "parity_setAuthor RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
@@ -41,7 +45,8 @@ class ParityChangeTarget(JSONRPCPlugin):
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setchain
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setchain
     """
 
     INTRUSIVE = True
@@ -61,7 +66,10 @@ class ParityChangeTarget(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="Chain preset change possible",
-                description="Anyone can change the node's target chain value using the parity_setChain RPC call.",
+                description=(
+                    "Anyone can change the node's target chain "
+                    "value using the parity_setChain RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
@@ -73,7 +81,8 @@ class ParityChangeExtra(JSONRPCPlugin):
 
     Severity: Low
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setextradata
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setextradata
     """
 
     INTRUSIVE = True
@@ -93,8 +102,11 @@ class ParityChangeExtra(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="Extra data change possible",
-                description="Anyone can change the extra data attached to newly mined blocks using the "
-                "parity_setExtraData RPC call.",
+                description=(
+                    "Anyone can change the extra data attached "
+                    "to newly mined blocks using the "
+                    "parity_setExtraData RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
@@ -106,7 +118,8 @@ class ParitySyncMode(JSONRPCPlugin):
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmode
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmode
     """
 
     INTRUSIVE = True
@@ -124,7 +137,10 @@ class ParitySyncMode(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="The sync mode can be changed",
-                description="Anyone can change the node's sync mode using the parity_setMode RPC call.",
+                description=(
+                    "Anyone can change the node's sync "
+                    "mode using the parity_setMode RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )

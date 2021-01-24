@@ -22,7 +22,10 @@ class GethDatadir(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="Admin datadir access",
-                description="The datadir directory path can be fetched using the admin_datadir RPC call.",
+                description=(
+                    "The datadir directory path can be fetched "
+                    "using the admin_datadir RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
@@ -47,7 +50,10 @@ class GethNodeInfo(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="Admin Node Info Leaks",
-                description="Admin-only information can be fetched using the admin_nodeInfo RPC call.",
+                description=(
+                    "Admin-only information can be fetched using "
+                    "the admin_nodeInfo RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.LOW,
             )
@@ -72,7 +78,10 @@ class ParityDevLogs(JSONRPCPlugin):
         context.report.add_issue(
             Issue(
                 title="Developer log information leak",
-                description="The node's developer logs can be fetched using the parity_devLogs RPC call.",
+                description=(
+                    "The node's developer logs can be fetched "
+                    "using the parity_devLogs RPC call."
+                ),
                 raw_data=payload,
                 severity=Severity.CRITICAL,
             )
@@ -96,7 +105,10 @@ class PeerlistLeak(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Peer list information leak",
-                    description="Admin-only peer list information can be fetched with the parity_netPeers RPC call.",
+                    description=(
+                        "Admin-only peer list information can be fetched "
+                        "with the parity_netPeers RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.MEDIUM,
                 )
@@ -106,8 +118,10 @@ class PeerlistLeak(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Admin Peerlist Access",
-                    description="Admin-only information about the peer list can be fetched using the admin_peers RPC "
-                    "call.",
+                    description=(
+                        "Admin-only information about the peer list can be "
+                        "fetched using the admin_peers RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.MEDIUM,
                 )

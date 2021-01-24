@@ -8,7 +8,8 @@ class ParityTxCeiling(JSONRPCPlugin):
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmaxtransactiongas
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmaxtransactiongas
     """
 
     INTRUSIVE = True
@@ -29,7 +30,10 @@ class ParityTxCeiling(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Transaction maximum gas can be changed",
-                    description="Anyone can change the maximum transaction gas limit using the parity_setMaxTransactionGas RPC call.",
+                    description=(
+                        "Anyone can change the maximum transaction "
+                        "gas limit using the parity_setMaxTransactionGas RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
@@ -41,7 +45,8 @@ class ParityMinGasPrice(JSONRPCPlugin):
 
     Severity: Critical
 
-    Parity/OpenEthereum: https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmingasprice
+    Parity/OpenEthereum:
+    https://openethereum.github.io/wiki/JSONRPC-parity_set-module#parity_setmingasprice
     """
 
     INTRUSIVE = True
@@ -60,7 +65,10 @@ class ParityMinGasPrice(JSONRPCPlugin):
             context.report.add_issue(
                 Issue(
                     title="Transaction minimum gas can be changed",
-                    description="Anyone can change the minimum transaction gas limit using the parity_setMinGasPrice RPC call.",
+                    description=(
+                        "Anyone can change the minimum transaction gas limit "
+                        "using the parity_setMinGasPrice RPC call."
+                    ),
                     raw_data=payload,
                     severity=Severity.CRITICAL,
                 )
