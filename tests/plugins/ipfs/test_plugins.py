@@ -863,6 +863,106 @@ TESTCASES += [
 ]
 
 
+# KeyLeaks
+TESTCASES += [
+    pytest.param(
+        KeyLeaks(export=True),
+        NodeType.IPFS,
+        (
+            {"json": {"Keys": [{"Id": "<string>", "Name": "<string>"}]}},
+            {"text": "test"},
+        ),
+        "/api/v0/key/list",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Key List Information Leak",
+                description=(
+                    "Anyone is able to list the keys registered on the node. The name of "
+                    "a key can leak information as well and is required for other actions "
+                    "such as exporting the key contents."
+                ),
+                severity=Severity.MEDIUM,
+                raw_data='{"Keys": [{"Id": "<string>", "Name": "<string>"}]}',
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Unauthorized Key Export",
+                description=(
+                    "Anyone can export keys from the node. All secrets should be invalidated, "
+                    "rotated, and reapplied. The endpoint must be protected against future "
+                    "unauthorized use."
+                ),
+                severity=Severity.CRITICAL,
+                raw_data="test",
+            ),
+        ],
+        id="KeyLeaks list success export issues logged",
+    ),
+    pytest.param(
+        KeyLeaks(export=True),
+        NodeType.IPFS,
+        (
+            {
+                "json": {"Keys": [{"Id": "<string>", "Name": "<string>"}]},
+            },
+            {"status_code": 403},
+        ),
+        "/api/v0/key/list",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Key List Information Leak",
+                description=(
+                    "Anyone is able to list the keys registered on the node. The name of "
+                    "a key can leak information as well and is required for other actions "
+                    "such as exporting the key contents."
+                ),
+                severity=Severity.MEDIUM,
+                raw_data='{"Keys": [{"Id": "<string>", "Name": "<string>"}]}',
+            ),
+        ],
+        id="KeyLeaks list success export fail no issue logged",
+    ),
+    pytest.param(
+        KeyLeaks(),
+        NodeType.IPFS,
+        ({"json": {"Keys": [{"Id": "<string>", "Name": "<string>"}]}},),
+        "/api/v0/key/list",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Key List Information Leak",
+                description=(
+                    "Anyone is able to list the keys registered on the node. The name of "
+                    "a key can leak information as well and is required for other actions "
+                    "such as exporting the key contents."
+                ),
+                severity=Severity.MEDIUM,
+                raw_data='{"Keys": [{"Id": "<string>", "Name": "<string>"}]}',
+            ),
+        ],
+        id="KeyLeaks list no export success issue logged",
+    ),
+    pytest.param(
+        KeyLeaks(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/key/list",
+        [],
+        id="KeyLeaks failed no issue logged",
+    ),
+    pytest.param(
+        KeyLeaks(),
+        NodeType.GETH,
+        [],
+        "/api/v0/key/list",
+        [],
+        id="KeyLeaks bad node no issue logged",
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,endpoint,issues",
     TESTCASES,

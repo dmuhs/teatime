@@ -47,13 +47,14 @@ class KeyLeaks(IPFSRPCPlugin):
                     target=context.target,
                     route="/api/v0/key/export",
                     params={"arg": key["Name"]},
+                    raw=True,
                 )
-            except PluginException:
+            except PluginException as e:
                 continue
 
             context.report.add_issue(
                 Issue(
-                    title=" Unauthorized Key Export",
+                    title="Unauthorized Key Export",
                     description=(
                         "Anyone can export keys from the node. All secrets should be invalidated, "
                         "rotated, and reapplied. The endpoint must be protected against future "
