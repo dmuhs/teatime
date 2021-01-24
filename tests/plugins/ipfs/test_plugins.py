@@ -1290,6 +1290,112 @@ TESTCASES += [
 ]
 
 
+# OpenUploadAdd
+TESTCASES += [
+    pytest.param(
+        OpenUploadAdd(),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Bytes": "<int64>",
+                    "Hash": "<string>",
+                    "Name": "<string>",
+                    "Size": "<string>",
+                }
+            },
+        ),
+        "/api/v0/add",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Anyone can upload data to the node",
+                description=(
+                    "Anyone is able to upload files to the node. An attacker can use this to "
+                    "upload large amounts of data and thus prevent the node from accepting "
+                    "further uploads, performing a Denial of Service (DoS) attack."
+                ),
+                severity=Severity.HIGH,
+                raw_data=(
+                    '{"Bytes": "<int64>", "Hash": "<string>", '
+                    '"Name": "<string>", "Size": "<string>"}'
+                ),
+            ),
+        ],
+        id="OpenUploadAdd success issue logged",
+    ),
+    pytest.param(
+        OpenUploadAdd(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/add",
+        [],
+        id="OpenUploadAdd failed no issue logged",
+    ),
+    pytest.param(
+        OpenUploadAdd(),
+        NodeType.GETH,
+        [],
+        "/api/v0/add",
+        [],
+        id="OpenUploadAdd bad node no issue logged",
+    ),
+]
+
+
+# OpenUploadTarAdd
+TESTCASES += [
+    pytest.param(
+        OpenUploadTarAdd(),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Bytes": "<int64>",
+                    "Hash": "<string>",
+                    "Name": "<string>",
+                    "Size": "<string>",
+                }
+            },
+        ),
+        "/api/v0/add",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Anyone can upload compressed data to the node",
+                description=(
+                    "Anyone is able to upload files to the node. An attacker can use this to "
+                    "upload large amounts of data and thus prevent the node from accepting "
+                    "further uploads, performing a Denial of Service (DoS) attack."
+                ),
+                severity=Severity.HIGH,
+                raw_data=(
+                    '{"Bytes": "<int64>", "Hash": "<string>", '
+                    '"Name": "<string>", "Size": "<string>"}'
+                ),
+            ),
+        ],
+        id="OpenUploadTarAdd success issue logged",
+    ),
+    pytest.param(
+        OpenUploadTarAdd(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/add",
+        [],
+        id="OpenUploadTarAdd failed no issue logged",
+    ),
+    pytest.param(
+        OpenUploadTarAdd(),
+        NodeType.GETH,
+        [],
+        "/api/v0/add",
+        [],
+        id="OpenUploadTarAdd bad node no issue logged",
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,endpoint,issues",
     TESTCASES,
