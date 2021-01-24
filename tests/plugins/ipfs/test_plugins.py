@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 import pytest
 import requests_mock
 
-from teatime import Context, Issue, NodeType, Report, Severity
+from teatime import Context, Issue, NodeType, PluginException, Report, Severity
 from teatime.plugins.ipfs import (
     AddPin,
     ChangeLogLevel,
@@ -1176,6 +1176,120 @@ TESTCASES += [
 ]
 
 
+# CommandCheck
+TESTCASES += [
+    pytest.param(
+        CommandCheck(denylist=[("tar",)]),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Name": "<string>",
+                    "Options": [{"Names": ["<string>"]}],
+                    "Subcommands": [
+                        {
+                            "Name": "tar",
+                            "Options": [{"Names": ["<string>"]}],
+                            "Subcommands": [{"Name": "add"}],
+                        }
+                    ],
+                }
+            },
+        ),
+        "/api/v0/commands",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Forbidden Method is Exposed",
+                description=(
+                    "A forbidden API method is open to the Internet. Attackers "
+                    "may be able to use the exposed functionality to cause undesired "
+                    "effects to the system."
+                ),
+                severity=Severity.HIGH,
+                raw_data=(
+                    '{"Name": "tar", "Options": [{"Names": ["<string>"]}], "Subcommands": '
+                    '[{"Name": "add"}]}'
+                ),
+            ),
+            Issue(
+                uuid=TEST_UUID,
+                title="Forbidden Method is Exposed",
+                description=(
+                    "A forbidden API method is open to the Internet. Attackers "
+                    "may be able to use the exposed functionality to cause undesired "
+                    "effects to the system."
+                ),
+                severity=Severity.HIGH,
+                raw_data='{"Name": "add"}',
+            ),
+        ],
+        id="CommandCheck success denylist issue logged",
+    ),
+    pytest.param(
+        CommandCheck(denylist=[("tar",)]),
+        NodeType.IPFS,
+        ({"json": {}},),
+        "/api/v0/commands",
+        [],
+        id="CommandCheck success empty result no issue logged",
+    ),
+    pytest.param(
+        CommandCheck(allowlist=[("tar", "add")]),
+        NodeType.IPFS,
+        (
+            {
+                "json": {
+                    "Name": "<string>",
+                    "Options": [{"Names": ["<string>"]}],
+                    "Subcommands": [
+                        {
+                            "Name": "tar",
+                            "Options": [{"Names": ["<string>"]}],
+                            "Subcommands": [{"Name": "add"}],
+                        }
+                    ],
+                }
+            },
+        ),
+        "/api/v0/commands",
+        [
+            Issue(
+                uuid=TEST_UUID,
+                title="Forbidden Method is Exposed",
+                description=(
+                    "A forbidden API method is open to the Internet. Attackers "
+                    "may be able to use the exposed functionality to cause undesired "
+                    "effects to the system."
+                ),
+                severity=Severity.HIGH,
+                raw_data=(
+                    '{"Name": "tar", "Options": [{"Names": ["<string>"]}], "Subcommands": '
+                    '[{"Name": "add"}]}'
+                ),
+            ),
+        ],
+        id="CommandCheck success allowlist no issue logged",
+    ),
+    pytest.param(
+        CommandCheck(),
+        NodeType.IPFS,
+        ({"status_code": 403},),
+        "/api/v0/commands",
+        [],
+        id="CommandCheck failed no issue logged",
+    ),
+    pytest.param(
+        CommandCheck(),
+        NodeType.GETH,
+        [],
+        "/api/v0/commands",
+        [],
+        id="CommandCheck bad node no issue logged",
+    ),
+]
+
+
 @pytest.mark.parametrize(
     "plugin,node_type,rpc_results,endpoint,issues",
     TESTCASES,
@@ -1208,3 +1322,8 @@ def test_issues(plugin, node_type, rpc_results, endpoint, issues):
     for i1, i2 in zip(context.report.issues, issues):
         # compare dict representations here for more verbose failure diffs
         assert i1.to_dict() == i2.to_dict()
+
+
+def test_command_overlap():
+    with pytest.raises(PluginException):
+        CommandCheck(allowlist=[("tar", "add")], denylist=[("tar", "add")])
