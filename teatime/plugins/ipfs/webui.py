@@ -1,3 +1,5 @@
+"""This module contains a plugin detect a node's exposed web interface."""
+
 import requests
 
 from teatime import Context, Issue, NodeType, Severity

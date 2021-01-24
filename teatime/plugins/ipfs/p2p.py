@@ -1,3 +1,5 @@
+"""This module contains plugins regarding leaked P2P network information"""
+
 from teatime import Context, Issue, NodeType, Severity
 from teatime.plugins.base import IPFSRPCPlugin
 

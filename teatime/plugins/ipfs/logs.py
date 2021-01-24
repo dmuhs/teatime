@@ -1,3 +1,5 @@
+"""This module contains plugins regarding log information leaked by the node."""
+
 from teatime import Context, Issue, NodeType, Severity
 from teatime.plugins.base import IPFSRPCPlugin
 

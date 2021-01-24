@@ -1,7 +1,6 @@
 """This module holds the base plugin class and exception."""
 
 import abc
-import io
 import json
 from functools import wraps
 from json import JSONDecodeError
@@ -157,8 +156,17 @@ class IPFSRPCPlugin(BasePlugin, abc.ABC):
         timeout: int = 3,
         stream_limit: int = None,
     ):
-        """
-        TODO: write this
+        """Send a  request to the IPFS HTTP API.
+
+        :param target: The target to send the request to
+        :param route: The URL to send the API request to
+        :param params: A dict of URL parameters to add
+        :param headers: Optional headers to attach
+        :param files: A dictionary of files to upload
+        :param raw: If true, the result will not interpreted as JSON
+        :param timeout: Number of seconds to wait until timing out
+        :param stream_limit: Maximum number of lines to read
+        :return:
         """
         files = files
         params = params or {}

@@ -1,3 +1,5 @@
+"""This module contains plugins to probe a node's version and find outdated dependencies."""
+
 import json
 
 from teatime import Context, Issue, NodeType, Severity

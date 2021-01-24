@@ -1,3 +1,5 @@
+"""This module contains a plugin to test a node's remote shutdown functionality."""
+
 from teatime import Context, Issue, NodeType, Severity
 from teatime.plugins.base import IPFSRPCPlugin
 

@@ -1,3 +1,5 @@
+"""This module contains plugins regarding file uploads to the node."""
+
 import io
 import tarfile
 

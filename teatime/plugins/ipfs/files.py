@@ -1,3 +1,5 @@
+"""This module contains plugins regarding listing files provided by the node."""
+
 from typing import Sequence
 
 from teatime import Context, Issue, NodeType, PluginException, Severity

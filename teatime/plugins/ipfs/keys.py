@@ -1,3 +1,5 @@
+"""This module contains plugins regarding listing and extracting keys."""
+
 from teatime import Context, Issue, NodeType, PluginException, Severity
 from teatime.plugins.base import IPFSRPCPlugin
 

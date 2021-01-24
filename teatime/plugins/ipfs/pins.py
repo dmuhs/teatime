@@ -1,3 +1,5 @@
+"""This module contains plugins regarding listing and manipulating a node's pins."""
+
 from teatime import Context, Issue, NodeType, Severity
 from teatime.plugins.base import IPFSRPCPlugin
 

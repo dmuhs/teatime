@@ -1,3 +1,5 @@
+"""This module contains plugins regarding commands surfaced by the node."""
+
 from typing import Optional, Sequence
 
 from teatime import Context, Issue, NodeType, PluginException, Severity
