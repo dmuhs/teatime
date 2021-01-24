@@ -15,10 +15,6 @@ Teatime - A Blockchain RPC Attack Framework
     :target: https://teatime.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/dmuhs/teatime/shield.svg
-    :target: https://pyup.io/repos/github/dmuhs/teatime/
-    :alt: Updates
-
 
 Deployed a node? Have a cup.
 ----------------------------
