@@ -43,6 +43,6 @@ setup(
     setup_requires=setup_requirements,
     test_suite="tests",
     url="https://github.com/dmuhs/teatime",
-    version="0.3.0",
+    version="0.3.1",
     zip_safe=False,
 )
