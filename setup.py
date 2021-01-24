@@ -13,9 +13,6 @@ with open("requirements_dev.txt", "r") as f:
 with open("README.rst") as readme_file:
     readme = readme_file.read()
 
-with open("HISTORY.rst") as history_file:
-    history = history_file.read()
-
 setup(
     author="Dominik Muhs",
     author_email="dmuhs@protonmail.ch",
@@ -41,7 +38,7 @@ setup(
     description="Just deployed a blockchain node? Have some tea.",
     install_requires=setup_requirements,
     license="MIT license",
-    long_description=readme + "\n\n" + history,
+    long_description=readme,
     include_package_data=True,
     keywords="teatime",
     name="teatime",
