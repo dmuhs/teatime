@@ -7,7 +7,6 @@ from loguru import logger
 
 from teatime.plugins import Context, IPFSRPCPlugin, JSONRPCPlugin, NodeType
 from teatime.reporting import Report
-from teatime.utils import reverse_dns
 
 
 class Scanner:

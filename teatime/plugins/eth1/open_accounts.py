@@ -4,7 +4,6 @@ from loguru import logger
 
 from teatime.plugins import Context, JSONRPCPlugin, PluginException
 from teatime.reporting import Issue, Severity
-from teatime.utils import decode_rpc_int
 
 
 class OpenAccounts(JSONRPCPlugin):
@@ -25,7 +24,7 @@ class OpenAccounts(JSONRPCPlugin):
     def _check(self, context: Context) -> None:
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
-            balance = decode_rpc_int(
+            balance = self.get_rpc_int(
                 self.infura_url, method="eth_getBalance", params=[account, "latest"]
             )
             context.report.add_issue(
@@ -61,7 +60,7 @@ class AccountUnlock(JSONRPCPlugin):
     def _check(self, context: Context) -> None:
         accounts = self.get_rpc_json(context.target, "eth_accounts")
         for account in accounts:
-            balance = decode_rpc_int(
+            balance = self.get_rpc_int(
                 self.infura_url, method="eth_getBalance", params=[account, "latest"]
             )
             if self.skip_below is not None and balance < self.skip_below:

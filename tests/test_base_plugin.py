@@ -160,3 +160,19 @@ def test_json_rpc_error_key():
             },
         )
         plugin.get_rpc_json(target=target, method="eth_blockNumber", params=[])
+
+
+def test_json_rpc_value_error():
+    target = "http://127.0.0.1:8545"
+    plugin = SampleRPCPlugin()
+    with requests_mock.Mocker() as mock, pytest.raises(PluginException):
+        mock.request(
+            requests_mock.ANY,
+            target,
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "result": "invalid",
+            },
+        )
+        plugin.get_rpc_int(target=target, method="eth_blockNumber", params=[])
