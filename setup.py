@@ -7,9 +7,6 @@ from setuptools import find_packages, setup
 with open("requirements.txt", "r") as f:
     setup_requirements = [x for x in map(str.strip, f.read().split("\n")) if x != ""]
 
-with open("requirements_dev.txt", "r") as f:
-    test_requirements = [x for x in map(str.strip, f.read().split("\n")) if x != ""] + setup_requirements
-
 with open("README.rst") as readme_file:
     readme = readme_file.read()
 
@@ -45,7 +42,6 @@ setup(
     packages=find_packages(exclude=["tests"]),
     setup_requires=setup_requirements,
     test_suite="tests",
-    tests_require=test_requirements,
     url="https://github.com/dmuhs/teatime",
     version="0.3.0",
     zip_safe=False,
