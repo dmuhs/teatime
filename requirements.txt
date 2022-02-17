@@ -1,2 +1,2 @@
 requests==2.27.1
-loguru==0.5.3
+loguru==0.6.0
